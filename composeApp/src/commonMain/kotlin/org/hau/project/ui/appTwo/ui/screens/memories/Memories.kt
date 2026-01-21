@@ -1,552 +1,3 @@
-/*package org.hau.project.ui.appTwo.ui.screens
-
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.AddAPhoto
-import androidx.compose.material.icons.outlined.Attachment
-import androidx.compose.material.icons.outlined.Audiotrack
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.Photo
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Verified
-import androidx.compose.material.icons.outlined.Videocam
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import hau.composeapp.generated.resources.Res
-import hau.composeapp.generated.resources.grattitude
-import hau.composeapp.generated.resources.image_two
-import hau.composeapp.generated.resources.story_1
-import hau.composeapp.generated.resources.story_2
-import hau.composeapp.generated.resources.story_3
-import hau.composeapp.generated.resources.story_4
-import hau.composeapp.generated.resources.story_5
-import org.hau.project.ui.appTwo.data.repositories.ChatRepository
-import org.hau.project.ui.appTwo.data.repositories.formatCount
-import org.hau.project.ui.appTwo.domain.models.AttachmentType
-import org.hau.project.ui.appTwo.domain.models.Channels
-import org.hau.project.ui.appTwo.domain.models.RecommendedChannels
-import org.hau.project.ui.appTwo.viewModels.ChatViewModel
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import kotlin.math.round
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MemoriesScreen(
-    viewModel: ChatViewModel,
-    onChannelClick: ()-> Unit,
-    onAddMemoryClick: ()-> Unit
-){
-    val uiChannelState by viewModel.channelState.collectAsState()
-    val uiRecommendedChannels by viewModel.recommendedState.collectAsState()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Memories",
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
-                ),
-                actions = {
-                    IconButton(
-                        onClick = {}
-                    ){
-                        Icon(
-                            Icons.Outlined.Search,
-                            contentDescription = "Search Icon",
-                            tint = Color.Black
-                        )
-                    }
-                    IconButton(
-                        onClick = {}
-                    ){
-                        Icon(
-                            Icons.Outlined.MoreVert,
-                            contentDescription = "More Options",
-                            tint = Color.Black
-                        )
-                    }
-                }
-            )
-        },
-        floatingActionButton = {
-            Box(
-                modifier = Modifier
-                    .clickable{
-                        onAddMemoryClick()
-                    }
-                    .background(MaterialTheme.colorScheme.primary,CircleShape)
-                    .size(64.dp),
-                contentAlignment = Alignment.Center
-            ){
-                Icon(
-                    Icons.Outlined.AddAPhoto,
-                    contentDescription = "Add Memory",
-                    tint = Color.White
-                )
-            }
-        },
-        containerColor = Color.White
-    ){paddingValues ->
-       if (uiChannelState.isLoading && uiRecommendedChannels.isLoading){
-           Box(
-               modifier = Modifier
-                   .fillMaxSize(),
-               contentAlignment = Alignment.Center
-           ){
-               CircularProgressIndicator()
-           }
-       } else if (uiChannelState.error != null ){
-           Box(
-               modifier = Modifier
-                   .fillMaxSize(),
-               contentAlignment = Alignment.Center
-           ){
-               Text(
-                   text = "Error: ${uiChannelState.error}",
-                   color = MaterialTheme.colorScheme.error
-               )
-           }
-       } else if (uiRecommendedChannels.error != null){
-           Box(
-               modifier = Modifier
-                   .fillMaxSize(),
-               contentAlignment = Alignment.Center
-           ){
-               Text(
-                   text = "Error: ${uiRecommendedChannels.error}",
-                   color = MaterialTheme.colorScheme.error
-               )
-           }
-    } else{
-        
-       }
-
-    }
-}
-@Composable
-@Preview
-fun StatusScreenPreview(){
-    val fakeRepository = ChatRepository()
-    val previewViewModel = ChatViewModel(fakeRepository)
-
-    MemoriesScreen(
-        viewModel = previewViewModel,
-        onChannelClick = {},
-        onAddMemoryClick = {}
-    )
-}
-
-@Composable
-fun MemoriesActionItem(
-    callItem: CallActions
-){
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Box(
-            modifier = Modifier
-                .size(64.dp)
-                .background(Color.Black.copy(alpha = 0.2f), CircleShape),
-            contentAlignment = Alignment.Center
-        ){
-            if (callItem.isCommunity){
-                Image(
-                    painter = painterResource(Res.drawable.grattitude),
-                    contentDescription = "Community",
-                    modifier = Modifier.clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-            }
-            Icon(
-                callItem.icon,
-                contentDescription = callItem.actionText,
-                tint = Color.Black
-            )
-        }
-        Text(
-            text = callItem.actionText,
-
-            )
-    }
-}
-
-@Composable
-fun MemoriesBanner(
-    isWide: Boolean = false,
-    onClick: () -> Unit = {}
-) {
-
-    val bannerHeight = if (isWide) 120.dp else 100.dp
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(bannerHeight)
-            .clickable { onClick() }
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                shape = RoundedCornerShape(16.dp)
-            )
-            .clip(RoundedCornerShape(16.dp)),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                            Color.Transparent
-                        )
-                    )
-                )
-                .padding(20.dp),
-        ){
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Box(
-                    contentAlignment = Alignment.BottomEnd
-                ){
-                    Image(
-                        painter = painterResource(Res.drawable.story_3),
-                        contentDescription = "Story Image",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.clip(CircleShape).size(56.dp)
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .size(22.dp)
-                            .offset(y= -1.dp, x = 2.dp)
-                            .background(MaterialTheme.colorScheme.primary,CircleShape),
-                        contentAlignment = Alignment.Center
-                    ){
-                        Icon(
-                            imageVector = Icons.Outlined.Add,
-                            contentDescription = "Add",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                }
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        "Add Memories",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            //fontSize = titleFontSize,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        "Disappears after 24 hours",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            }
-        }
-
-    }
-}
-
-@Composable
-fun ChannelItem(channels: Channels){
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
-    ){
-        Row(
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ){
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .background(
-                        Color.White.copy(alpha = 0.3f),
-                        CircleShape
-                    )
-            ){
-                Image(
-                    painter = painterResource(channels.channelRes),
-                    contentDescription = "Profile Image",
-                    modifier = Modifier.clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-
-            }
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ){
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ){
-                        Text(
-                            text = channels.channelName,
-                            fontSize = 18.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Text(
-                        text = channels.timestamp,
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 16.sp,
-                        maxLines = 1,
-                        color = if(!channels.isRead)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            Color.Black,
-                        fontWeight = FontWeight.Normal
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.End
-                ){
-                    when(channels.attachmentType){
-                        AttachmentType.IMAGE -> Icon(
-                            Icons.Outlined.Photo,
-                            contentDescription = channels.channelName,
-                            modifier = Modifier.padding(end = 8.dp),
-                            tint = Color.Black.copy(alpha = 0.5f)
-                        )
-                        AttachmentType.AUDIO -> Icon(
-                            Icons.Outlined.Audiotrack,
-                            contentDescription = channels.channelName,
-                            modifier = Modifier.padding(end = 8.dp),
-                            tint = Color.Black.copy(alpha = 0.5f)
-                        )
-                        AttachmentType.VIDEO -> Icon(
-                            Icons.Outlined.Videocam,
-                            contentDescription = channels.channelName,
-                            modifier = Modifier.padding(end = 8.dp),
-                            tint = Color.Black.copy(alpha = 0.5f)
-                        )
-                        else -> Icon(
-                            Icons.Outlined.Attachment,
-                            contentDescription = channels.channelName,
-                            modifier = Modifier.padding(end = 8.dp),
-                            tint = Color.Black.copy(alpha = 0.5f)
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ){
-                        Text(
-                            text = channels.message,
-                            fontSize = 18.sp,
-                            color = Color.Black.copy(alpha = 0.5f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            fontWeight = FontWeight.Normal,
-                            //modifier = Modifier.weight(1f, fill = false).padding(end = 8.dp)
-                        )
-                    }
-
-                    if (channels.unreadMessages>0){
-                        Box(
-                            modifier = Modifier
-                                //.size(20.dp)
-                                .background(Color(0xFF703EFF),CircleShape),
-                            contentAlignment = Alignment.Center
-                        ){
-                            Text(
-                                text = channels.unreadMessages.toString(),
-                                fontSize = 14.sp,
-                                modifier = Modifier.padding(4.dp),
-                                fontWeight = FontWeight.Normal,
-                                color = Color.White
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun RecommendedChannelsItem(
-    recommended: RecommendedChannels
-){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        Image(
-            painter = painterResource(recommended.channelRes),
-            contentDescription = recommended.channelName,
-            modifier = Modifier.clip(CircleShape).size(60.dp),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .weight(1f),
-            verticalArrangement = Arrangement.SpaceEvenly
-        ){
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ){
-                Text(
-                    text = recommended.channelName,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                if(recommended.isVerified){
-                    Icon(
-                        Icons.Outlined.Verified,
-                        contentDescription = recommended.channelName,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-            Row {
-                Text(
-                    text = "${formatCount(recommended.followerCount)} followers",
-                    color = Color.Black.copy(alpha = 0.6f),
-                    style = MaterialTheme.typography.titleMedium
-
-                )
-            }
-        }
-        IconButton(
-            onClick = {},
-            modifier = Modifier.width(90.dp),
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)
-            )
-        ){
-           Text(
-               text = "Follow",
-           )
-
-        }
-    }
-}
-@Composable
-@Preview(showBackground = true)
-fun RecommendedChannelsItemPreview(){
-    RecommendedChannelsItem(
-        RecommendedChannels(
-            channelName = "Gratitude",
-            channelRes = Res.drawable.grattitude,
-            isVerified = true,
-            followerCount = 123000
-        )
-    )
-}
-@Composable
-@Preview(showBackground = true)
-fun MemoriesBannerPreview(){
-    MemoriesBanner(
-        isWide = false,
-        onClick = {}
-    )
-}
-
-@Composable
-@Preview(showBackground = true)
-fun ChannelsItemPreview(){
-    ChannelItem(
-        Channels(
-            channelName = "Mugumya Ali",
-            channelRes = Res.drawable.story_3,
-            timestamp = "Just now",
-            attachmentType = AttachmentType.AUDIO,
-            message = "I just found out that the best way of making your self better is to keep going",
-            unreadMessages = 126,
-            isRead = false
-        ),
-    )
-}
-@Composable
-@Preview(showBackground = true)
-fun MemoriesPreview(){
-    MemoriesActionItem(
-        CallActions( Icons.Outlined.FavoriteBorder,"Favourites", isCommunity = false)
-    )
-}
-
-
-*/
-
 package org.hau.project.ui.appTwo.ui.screens.memories
 
 import androidx.compose.foundation.Image
@@ -567,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.AddAPhoto
@@ -585,6 +37,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -593,6 +46,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -607,6 +61,8 @@ import org.hau.project.ui.appTwo.data.repositories.formatCount
 import org.hau.project.ui.appTwo.domain.models.AttachmentType
 import org.hau.project.ui.appTwo.domain.models.Channels
 import org.hau.project.ui.appTwo.domain.models.RecommendedChannels
+import org.hau.project.ui.appTwo.ui.theme.AppTheme
+import org.hau.project.ui.appTwo.ui.theme.SocialTheme
 import org.hau.project.ui.appTwo.viewModels.ChatViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -690,12 +146,28 @@ fun MemoriesScreen(
                     }
 
                     item {
-                        Text(
-                            "Recent updates",
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(
+                                "Channels",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(top = 8.dp)
+                            )
+                            TextButton(
+                                onClick = {},
+                            ){
+                                Text(
+                                    "Explore",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
+                            }
+                        }
                     }
 
                     items(uiChannelState.channels.filter { !it.isRead }) { channel ->
@@ -704,15 +176,17 @@ fun MemoriesScreen(
 
                     item {
                         Text(
-                            "Viewed updates",
+                            "More Channels to Follow",
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(top = 8.dp)
                         )
                     }
-
-                    items(uiChannelState.channels.filter { it.isRead }) { channel ->
+                    /*items(uiChannelState.channels.filter { it.isRead }) { channel ->
                         ChannelItem(channel = channel, onClick = {onChannelClick}, isViewed = true)
+                    }*/
+                    items(uiRecommendedChannels.recommendedChannels) { channel ->
+                        RecommendedChannelsItem(recommended = channel, onFollowClick = {onChannelClick})
                     }
 
                     item {
@@ -733,11 +207,25 @@ fun MemoriesBanner(onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .background(
+                Brush.horizontalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                        Color.Transparent
+                    )
+                ),RoundedCornerShape(16.dp))
+            .padding(start = 8.dp,top = 8.dp,bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Box(contentAlignment = Alignment.BottomEnd) {
+        Box(
+            contentAlignment = Alignment.BottomEnd
+        ) {
             Image(
                 painter = painterResource(Res.drawable.story_3),
                 contentDescription = "My Status",
@@ -777,6 +265,7 @@ fun MemoriesBanner(onClick: () -> Unit) {
         }
     }
 }
+
 
 @Composable
 fun ChannelItem(channel: Channels, onClick: () -> Unit, isViewed: Boolean = false) {
@@ -853,7 +342,7 @@ fun RecommendedChannelsItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(),
         verticalAlignment = Alignment.CenterVertically
     ){
         Image(
@@ -887,9 +376,8 @@ fun RecommendedChannelsItem(
             Row {
                 Text(
                     text = "${formatCount(recommended.followerCount)} followers",
-                    color = Color.Black.copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.titleMedium
-
                 )
             }
         }
@@ -988,19 +476,141 @@ private fun RecommendedChannelsItemPreview(){
     // }
 }
 
-// Main screen preview remains the same
-@Preview(name = "Full Updates Screen")
+@Preview(name = "Green Light")
 @Composable
 fun MemoriesScreenPreview() {
     val fakeRepository = ChatRepository()
     val previewViewModel = ChatViewModel(fakeRepository)
 
-    // AppTheme {
-    MemoriesScreen(
-        viewModel = previewViewModel,
-        onChannelClick = {},
-        onAddMemoryClick = {}
-    )
-    // }
+    AppTheme(
+        useDarkTheme = false
+    ){
+        MemoriesScreen(
+            viewModel = previewViewModel,
+            onChannelClick = {},
+            onAddMemoryClick = {}
+        )
+    }
+}
+@Preview(name = "Blue Light")
+@Composable
+fun MemoriesLightBlueScreenPreview() {
+    val fakeRepository = ChatRepository()
+    val previewViewModel = ChatViewModel(fakeRepository)
+
+    AppTheme(
+        useDarkTheme = false,
+        theme = SocialTheme.Twitter
+    ) {
+        MemoriesScreen(
+            viewModel = previewViewModel,
+            onChannelClick = {},
+            onAddMemoryClick = {}
+        )
+    }
+}
+
+@Preview(name = "Snap Light")
+@Composable
+fun MemoriesLightSnapScreenPreview() {
+    val fakeRepository = ChatRepository()
+    val previewViewModel = ChatViewModel(fakeRepository)
+
+    AppTheme(
+        useDarkTheme = false,
+        theme = SocialTheme.Snapchat
+    ) {
+        MemoriesScreen(
+            viewModel = previewViewModel,
+            onChannelClick = {},
+            onAddMemoryClick = {}
+        )
+    }
+}
+@Preview(name = "Inst Light")
+@Composable
+fun MemoriesLightInstScreenPreview() {
+    val fakeRepository = ChatRepository()
+    val previewViewModel = ChatViewModel(fakeRepository)
+
+    AppTheme(
+        useDarkTheme = false,
+        theme = SocialTheme.Instagram
+    ) {
+        MemoriesScreen(
+            viewModel = previewViewModel,
+            onChannelClick = {},
+            onAddMemoryClick = {}
+        )
+    }
+}
+
+@Preview(name = "Green Dark")
+@Composable
+fun MemoriesDarkGreenScreenPreview() {
+    val fakeRepository = ChatRepository()
+    val previewViewModel = ChatViewModel(fakeRepository)
+
+    AppTheme(
+        useDarkTheme = true
+    ) {
+        MemoriesScreen(
+            viewModel = previewViewModel,
+            onChannelClick = {},
+            onAddMemoryClick = {}
+        )
+    }
+}
+@Preview(name = "Blue Dark")
+@Composable
+fun MemoriesDarkBlueScreenPreview() {
+    val fakeRepository = ChatRepository()
+    val previewViewModel = ChatViewModel(fakeRepository)
+
+    AppTheme(
+        useDarkTheme = true,
+        theme = SocialTheme.Twitter
+    ) {
+        MemoriesScreen(
+            viewModel = previewViewModel,
+            onChannelClick = {},
+            onAddMemoryClick = {}
+        )
+    }
+}
+@Preview(name = "Snap Dark")
+@Composable
+fun MemoriesDarkSnapScreenPreview() {
+    val fakeRepository = ChatRepository()
+    val previewViewModel = ChatViewModel(fakeRepository)
+
+    AppTheme(
+        useDarkTheme = true,
+        theme = SocialTheme.Snapchat
+    ) {
+        MemoriesScreen(
+            viewModel = previewViewModel,
+            onChannelClick = {},
+            onAddMemoryClick = {}
+        )
+    }
+}
+
+@Preview(name = "Inst Dark")
+@Composable
+fun MemoriesDarkInstScreenPreview() {
+    val fakeRepository = ChatRepository()
+    val previewViewModel = ChatViewModel(fakeRepository)
+
+    AppTheme(
+        useDarkTheme = true,
+        theme = SocialTheme.Instagram
+    ) {
+        MemoriesScreen(
+            viewModel = previewViewModel,
+            onChannelClick = {},
+            onAddMemoryClick = {}
+        )
+    }
 }
 

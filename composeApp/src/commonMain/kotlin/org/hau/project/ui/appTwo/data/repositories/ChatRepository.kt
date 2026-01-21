@@ -6,16 +6,19 @@ import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.KeyboardCommandKey
 import hau.composeapp.generated.resources.Res
+import hau.composeapp.generated.resources.alidon
 import hau.composeapp.generated.resources.grattitude
 import hau.composeapp.generated.resources.image_last
 import hau.composeapp.generated.resources.image_now
 import hau.composeapp.generated.resources.image_three
 import hau.composeapp.generated.resources.image_two
+import hau.composeapp.generated.resources.mentalhealth
 import hau.composeapp.generated.resources.story_1
 import hau.composeapp.generated.resources.story_2
 import hau.composeapp.generated.resources.story_3
 import hau.composeapp.generated.resources.story_4
 import hau.composeapp.generated.resources.story_5
+import hau.composeapp.generated.resources.stronghope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import org.hau.project.ui.appTwo.domain.models.AttachmentType
@@ -143,8 +146,8 @@ open class ChatRepository {
         return flowOf(
             listOf(
                 Channels(
-                    channelName = "Mugumya Ali",
-                    channelRes = Res.drawable.story_3,
+                    channelName = "Alidon",
+                    channelRes = Res.drawable.alidon,
                     timestamp = "Just now",
                     message = "Today the United States of America started its operation in Yemen",
                     attachmentType = null,
@@ -165,9 +168,9 @@ open class ChatRepository {
     fun getRecommended() : Flow<List<RecommendedChannels>>{
         return flowOf(
             listOf(
-                RecommendedChannels(channelName = "Mugumya Ali", channelRes = Res.drawable.story_3, isVerified = false, followerCount = 145087),
-                RecommendedChannels(channelName = "Really Rinah", channelRes = Res.drawable.story_2, isVerified = true, followerCount = 100000),
-                RecommendedChannels(channelName = "Sebastian Rudiger", channelRes = Res.drawable.story_1, isVerified = false, followerCount = 150489),
+                RecommendedChannels(channelName = "Gratitude", channelRes = Res.drawable.grattitude, isVerified = false, followerCount = 145087),
+                RecommendedChannels(channelName = "Mental Health", channelRes = Res.drawable.mentalhealth, isVerified = true, followerCount = 100000),
+                RecommendedChannels(channelName = "Strong Hope", channelRes = Res.drawable.stronghope, isVerified = false, followerCount = 150489),
                 RecommendedChannels(channelName = "Caroline Varsaha", channelRes = Res.drawable.story_4, isVerified = true, followerCount = 12000),
             )
         )
