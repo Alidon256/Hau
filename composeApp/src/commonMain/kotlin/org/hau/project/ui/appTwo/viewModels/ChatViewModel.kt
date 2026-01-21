@@ -31,6 +31,7 @@ data class ChatListUiState(
 // UI State for the Chat Detail Screen
 data class ChatDetailUiState(
     val messages: List<Message> = emptyList(),
+    val messagesNewContacts: List<Message> = emptyList(),
     val isLoading: Boolean = true,
     val error: String? = null,
     val callActions: List<CallActions> = emptyList(),
@@ -97,6 +98,26 @@ class ChatViewModel(
     }
 
     fun loadMessages(chatId: String) {
+        viewModelScope.launch {
+            _chatDetailState.value = _chatDetailState.value.copy(isLoading = true)
+
+            if (_chatDetailState.value.currentChat?.id != chatId) {
+                val chat = _chatListState.value.chats.find { it.id == chatId }
+                _chatDetailState.value = _chatDetailState.value.copy(currentChat = chat)
+            }
+            //val chat = _chatListState.value.chats.find { it.id == chatId }
+            //_chatDetailState.value = _chatDetailState.value.copy(currentChat = chat)
+
+            chatRepository.getMessagesForChat(chatId)
+                .catch { e ->
+                    _chatDetailState.value = _chatDetailState.value.copy(isLoading = false, error = e.message)
+                }
+                .collect { messages ->
+                    _chatDetailState.value = _chatDetailState.value.copy(isLoading = false, messages = messages)
+                }
+        }
+    }
+    fun loadNewContactMessages(chatId: String) {
         viewModelScope.launch {
             _chatDetailState.value = _chatDetailState.value.copy(isLoading = true)
 

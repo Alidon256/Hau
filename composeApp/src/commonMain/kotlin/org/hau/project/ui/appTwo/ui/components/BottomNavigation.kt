@@ -42,8 +42,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import hau.composeapp.generated.resources.Res
+import hau.composeapp.generated.resources.grattitude
 import kotlinx.serialization.Serializable
 import org.hau.project.ui.appTwo.data.repositories.ChatRepository
+import org.hau.project.ui.appTwo.domain.models.RecommendedChannels
 import org.hau.project.ui.appTwo.ui.screens.settings.AccountScreen
 import org.hau.project.ui.appTwo.ui.screens.calls.AudioCallScreen
 import org.hau.project.ui.appTwo.ui.screens.calls.CallsScreen
@@ -53,10 +56,12 @@ import org.hau.project.ui.appTwo.ui.screens.chats.ChatScreen
 import org.hau.project.ui.appTwo.ui.screens.memories.MemoriesScreen
 import org.hau.project.ui.appTwo.ui.screens.chats.NewContactScreen
 import org.hau.project.ui.appTwo.ui.screens.chats.NewGroupScreen
-import org.hau.project.ui.appTwo.ui.screens.memories.ProfileScreenCompact
 import org.hau.project.ui.appTwo.ui.screens.memories.ScheduleCallScreen
 import org.hau.project.ui.appTwo.ui.screens.settings.SettingsScreen
 import org.hau.project.ui.appTwo.ui.screens.calls.VideoCallScreen
+import org.hau.project.ui.appTwo.ui.screens.memories.ChannelProfileScreen
+import org.hau.project.ui.appTwo.ui.screens.memories.ProfileAction
+import org.hau.project.ui.appTwo.ui.screens.memories.ProfileUiState
 import org.hau.project.ui.appTwo.ui.screens.settings.AvatarScreen
 import org.hau.project.ui.appTwo.ui.screens.settings.ChatSettingsScreen
 import org.hau.project.ui.appTwo.ui.screens.settings.DeleteAccountScreen
@@ -69,6 +74,8 @@ import org.hau.project.ui.appTwo.ui.screens.settings.PrivacySettingsScreen
 import org.hau.project.ui.appTwo.ui.screens.settings.RequestAccountInfoScreen
 import org.hau.project.ui.appTwo.ui.screens.settings.SecurityNotificationsScreen
 import org.hau.project.ui.appTwo.ui.screens.settings.StorageSettingsScreen
+import org.hau.project.ui.appTwo.ui.theme.AppTheme
+import org.hau.project.ui.appTwo.ui.theme.SocialTheme
 import org.hau.project.ui.appTwo.viewModels.ChatViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -85,6 +92,7 @@ object Routes{
     @Serializable data object SETTINGS: NavDestinaton{ override val routePattern: String = "SETTINGS" }
     @Serializable data class CHANNEL_DETAIL(val channelId: String): NavDestinaton{ override val routePattern: String = "CHANNEL_DETAIL" }
     @Serializable data class DETAIL(val chatId: String): NavDestinaton{ override val routePattern: String = "DETAIL" }
+    @Serializable data object PROFILE_INFO: NavDestinaton{ override val routePattern: String = "PROFILE_INFO" }
     @Serializable data object NEW_CONTACTS: NavDestinaton{ override val routePattern: String = "NEW_CONTACTS" }
     @Serializable data object NEW_GROUPS: NavDestinaton{ override val routePattern: String = "NEW_GROUPS" }
     @Serializable data object SECURITY_NOTIFICATION: NavDestinaton{ override val routePattern: String = "SECURITY_NOTIFICATION" }
@@ -215,8 +223,50 @@ fun BottomNavigation(){
                 }
                 composable<Routes.CHANNEL_DETAIL> { backStackEntry ->
                     val route: Routes.CHANNEL_DETAIL = backStackEntry.toRoute()
-                    ChannelDetailScreen(channelId = route.channelId, onBack = { navController.popBackStack() }, viewModel = chatViewModel)
+                    ChannelDetailScreen(
+                        channelId = route.channelId,
+                        onBack = { navController.popBackStack() },
+                        viewModel = chatViewModel,
+                        onChannelInfoClick = {navController.navigate(Routes.PROFILE_INFO)}
+                    )
                 }
+                composable<Routes.PROFILE_INFO> {
+                    // 1. Create a placeholder UI state. In a real app, this would come from a ViewModel.
+                    val uiState = ProfileUiState(
+                        isLoading = false,
+                        channel = RecommendedChannels(
+                            channelRes = Res.drawable.grattitude,
+                            channelName = "Mindful Moments",
+                            followerCount = 1_234_567,
+                            isVerified = true
+                        ),
+                        mediaCount = 3567,
+                        isMuted = false
+                    )
+
+                    // 2. Handle actions from the profile screen.
+                    ChannelProfileScreen(
+                        uiState = uiState,
+                        onAction = { action ->
+                            when (action) {
+                                is ProfileAction.NavigateBack -> navController.popBackStack()
+                                is ProfileAction.ToggleMute -> {
+                                    // Handle mute logic, e.g., call a ViewModel
+                                }
+                                is ProfileAction.Unfollow -> {
+                                    // Handle unfollow logic
+                                }
+                                is ProfileAction.Report -> {
+                                    // Handle report logic
+                                }
+                                is ProfileAction.ViewMedia -> {
+                                    // Navigate to a media screen if it exists
+                                }
+                            }
+                        }
+                    )
+                }
+
                 composable<Routes.NEW_CONTACTS> {
                     NewContactScreen(
                         onBack = navController::popBackStack,
@@ -256,5 +306,20 @@ fun BottomNavigation(){
 @Composable
 @Preview(showBackground = true)
 fun BottomNavigationPreview(){
-    BottomNavigation()
+    AppTheme(
+        useDarkTheme = true,
+        theme = SocialTheme.WhatsApp
+    ){
+        BottomNavigation()
+    }
+}
+@Composable
+@Preview(showBackground = true)
+fun BottomNavigationLightPreview(){
+    AppTheme(
+        useDarkTheme = false,
+        theme = SocialTheme.WhatsApp
+    ){
+        BottomNavigation()
+    }
 }

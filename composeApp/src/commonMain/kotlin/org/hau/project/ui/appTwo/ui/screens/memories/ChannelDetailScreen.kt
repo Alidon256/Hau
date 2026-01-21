@@ -1,5 +1,6 @@
 package org.hau.project.ui.appTwo.ui.screens.memories
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -29,6 +30,7 @@ import coil3.compose.AsyncImage
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.grattitude
 import org.hau.project.ui.appTwo.data.repositories.ChatRepository
+import org.hau.project.ui.appTwo.data.repositories.formatCount
 import org.hau.project.ui.appTwo.domain.models.Channels
 import org.hau.project.ui.appTwo.domain.models.MessageItem
 import org.hau.project.ui.appTwo.domain.models.Poll
@@ -44,7 +46,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun ChannelDetailScreen(
     onBack: () -> Unit,
     viewModel: ChatViewModel,
-    channelId: String
+    channelId: String,
+    onChannelInfoClick: () -> Unit
 ) {
     LaunchedEffect(channelId) {
         viewModel.loadChannelDetails(channelId)
@@ -52,15 +55,14 @@ fun ChannelDetailScreen(
 
     val uiState by viewModel.channelDetailState.collectAsState()
 
-    // This local state holds the list of messages and allows us to update it.
-    // It's initialized with the data from the ViewModel's state.
     var messages by remember(uiState.channelMessages) { mutableStateOf(uiState.channelMessages) }
 
     Scaffold(
         topBar = {
             ChannelTopBar(
                 channelInfo = uiState.channelInfo,
-                onBack = onBack
+                onBack = onBack,
+                onChannelInfoClick = onChannelInfoClick
             )
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -128,7 +130,8 @@ fun ChannelDetailScreen(
 @Composable
 private fun ChannelTopBar(
     channelInfo: Channels?,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onChannelInfoClick: () -> Unit
 ) {
     TopAppBar(
         navigationIcon = {
@@ -138,9 +141,8 @@ private fun ChannelTopBar(
         },
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                AsyncImage(
-                    model = channelInfo?.channelRes,
-                    error = painterResource(Res.drawable.grattitude),
+                Image(
+                    painter = painterResource(channelInfo?.channelRes ?: Res.drawable.grattitude),
                     contentDescription = "Channel Avatar",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(40.dp).clip(CircleShape)
@@ -163,7 +165,7 @@ private fun ChannelTopBar(
                         )
                     }
                     Text(
-                        "${channelInfo?.followerCount ?: "..."} followers",
+                        "${formatCount(channelInfo?.followerCount ?: 0)} followers",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -298,20 +300,67 @@ private fun PollOptionItem(option: PollOption, totalVotes: Int, onVote: () -> Un
 private fun ImageMessageBubble(message: MessageItem) {
     Box(modifier = Modifier.fillMaxWidth().padding(start = 32.dp)) {
         Column(horizontalAlignment = Alignment.End) {
-            AsyncImage(
-                model = message.image,
-                contentDescription = "Channel Image",
-                error = painterResource(Res.drawable.grattitude),
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+            ) {
+                Column {
+                    // Display the image if one exists
+                    if (message.image != null) {
+                        AsyncImage(
+                            model = message.image,
+                            contentDescription = "Channel Image",
+                            error = painterResource(Res.drawable.grattitude),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 240.dp) // Use heightIn for flexible height
+                                .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    // Display text and time, but only if text is not null
+                    if (message.text != null) {
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.End)
+                                .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 4.dp),
+                            verticalAlignment = Alignment.Bottom,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = message.text,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.weight(1f, fill = false) // Prevents text from pushing time
+                            )
+                            Text(
+                                text = message.time,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    } else {
+                        // If there's no text, just show the time over the image
+                        Text(
+                            text = message.time,
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier
+                                .align(Alignment.End)
+                                .padding(8.dp)
+                                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        )
+                    }
+                }
+            }
             Reactions(message.reactions)
         }
     }
 }
+
 
 @Composable
 private fun Reactions(reactions: Map<String, Int>) {
@@ -355,7 +404,10 @@ private fun ChannelDetailScreenDarkPreview() {
     val fakeRepository = ChatRepository()
     val previewViewModel = ChatViewModel(fakeRepository)
     AppTheme(useDarkTheme = true) {
-        ChannelDetailScreen(onBack = {}, viewModel = previewViewModel, channelId = "1")
+        ChannelDetailScreen(
+            onBack = {}, viewModel = previewViewModel, channelId = "1",
+            onChannelInfoClick = {},
+        )
     }
 }
 
@@ -365,6 +417,9 @@ private fun ChannelDetailScreenLightPreview() {
     val fakeRepository = ChatRepository()
     val previewViewModel = ChatViewModel(fakeRepository)
     AppTheme(useDarkTheme = false) {
-        ChannelDetailScreen(onBack = {}, viewModel = previewViewModel, channelId = "1")
+        ChannelDetailScreen(
+            onBack = {}, viewModel = previewViewModel, channelId = "1",
+            onChannelInfoClick = {}
+        )
     }
 }

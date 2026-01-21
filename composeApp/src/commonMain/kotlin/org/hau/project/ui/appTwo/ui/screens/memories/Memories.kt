@@ -170,8 +170,8 @@ fun MemoriesScreen(
                         }
                     }
 
-                    items(uiChannelState.channels.filter { !it.isRead }) { channel ->
-                        ChannelItem(channel = channel, onClick = {onChannelClick})
+                    items(uiChannelState.channels) { channel ->
+                        ChannelItem(channel = channel, onClick = {onChannelClick(channel.id)})
                     }
 
                     item {

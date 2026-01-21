@@ -150,7 +150,7 @@ fun NewContactScreen(
                     ContactActionItem(
                         icon = Icons.Outlined.PersonAdd,
                         title = "New contact",
-                        onClick = {navController?.navigate(Routes.NEW_GROUPS)},
+                        onClick = { navController.navigate(Routes.NEW_GROUPS) },
                         trailingContent = {
                             Icon(
                                 Icons.Outlined.QrCode,

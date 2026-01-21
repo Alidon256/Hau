@@ -153,13 +153,13 @@ open class ChatRepository {
                     attachmentType = null,
                     unreadMessages = 234,
                     isRead = false,
-                    followerCount = 0L,
+                    followerCount = 123000L,
                     id = "aa",
                 ),
-                Channels(channelName = "Really Rinah", channelRes = Res.drawable.story_2,  timestamp = "01/22/2026", attachmentType = null, message = "Today the World remembers the ocassion that happened when the people rejected the Presidents decision", unreadMessages = 10,isRead = false,followerCount = 0L,id = "ab"),
-                Channels(channelName = "Sebastian Rudiger", channelRes = Res.drawable.story_1,  timestamp = "01/21/2026", attachmentType = AttachmentType.AUDIO, unreadMessages = 167, message = "Announcing the new Update of Mindset Pulse💕",isRead = false,followerCount = 0L,id = "ac"),
-                Channels(channelName = "Caroline Varsaha", channelRes = Res.drawable.story_4,  timestamp = "01/21/2026",attachmentType = null, unreadMessages = 0, message = "A new Report by the world health organisation says that people who ovr smile always have there life time lifted",isRead = true,followerCount = 0L,id = "all"),
-                Channels(channelName = "Darshan Patelchi", channelRes = Res.drawable.story_5,  timestamp = "01/20/2026",attachmentType = AttachmentType.IMAGE, unreadMessages = 234, message = "The Stake Holders of Tesla today had a general meeting and decided that they were gonna give elon a new pack of $1T",isRead = false,followerCount = 0L,id = "ag"),
+                Channels(channelName = "Really Rinah", channelRes = Res.drawable.story_2,  timestamp = "01/22/2026", attachmentType = null, message = "Today the World remembers the ocassion that happened when the people rejected the Presidents decision", unreadMessages = 10,isRead = false,followerCount = 323000L,id = "ab"),
+                Channels(channelName = "Sebastian Rudiger", channelRes = Res.drawable.story_1,  timestamp = "01/21/2026", attachmentType = AttachmentType.AUDIO, unreadMessages = 167, message = "Announcing the new Update of Mindset Pulse💕",isRead = false,followerCount = 723000L,id = "ac"),
+                Channels(channelName = "Caroline Varsaha", channelRes = Res.drawable.story_4,  timestamp = "01/21/2026",attachmentType = null, unreadMessages = 0, message = "A new Report by the world health organisation says that people who ovr smile always have there life time lifted",isRead = true,followerCount = 193000L,id = "all"),
+                Channels(channelName = "Darshan Patelchi", channelRes = Res.drawable.story_5,  timestamp = "01/20/2026",attachmentType = AttachmentType.IMAGE, unreadMessages = 234, message = "The Stake Holders of Tesla today had a general meeting and decided that they were gonna give elon a new pack of $1T",isRead = false,followerCount = 183000,id = "ag"),
                 Channels(channelName = "Mohammed Arnold", channelRes = Res.drawable.image_two, timestamp = "01/19/2026",attachmentType = AttachmentType.VIDEO, unreadMessages = 0, message = "You will have to truely believ me on some facts in a way that attaining success in most cases it always have to come with had work." ,isRead = true,followerCount = 0L,id = "ax"),
             )
         )
@@ -257,7 +257,34 @@ open class ChatRepository {
                 image = "https://picsum.photos/seed/picsum2/800/600", // Placeholder image
                 time = "12:30",
                 reactions = mapOf("😮" to 77)
+            ),
+            MessageItem(
+                id = "msg2",
+                text = "Our latest quarterly report is now available for review. Please find the summary of key findings attached.",
+                time = "12:31",
+                reactions = mapOf("👍" to 15, "🚀" to 8)
+            ),
+            MessageItem(
+                id = "msg3",
+                text = "Following up on the report, this image outlines our projected growth for the next fiscal year. We welcome your feedback.",
+                image = "https://picsum.photos/seed/growth/800/600",
+                time = "12:32",
+                reactions = mapOf("📈" to 25, "😮" to 7)
+            ),
+            MessageItem(
+                id = "msg4",
+                text = "Reminder: The all-hands meeting is scheduled for 3:00 PM today. Please ensure you have reviewed the agenda beforehand.",
+                time = "12:33",
+                reactions = mapOf("🙏" to 12)
+            ),
+            MessageItem(
+                id = "msg5",
+                text = "Sharing a snapshot from our recent successful team-building event. Great to see everyone collaborating effectively!",
+                image = "https://picsum.photos/seed/teamevent/800/600",
+                time = "12:34",
+                reactions = mapOf("❤️" to 34, "👏" to 19)
             )
+
         )
         return flowOf(messages)
     }
