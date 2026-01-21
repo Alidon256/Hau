@@ -7,8 +7,10 @@ It demonstrates how to architect cross‑platform UIs using Compose Multiplatfor
 
 ## 📸 Preview
 
-![Hau Screenshot](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2Fmore%2FScreenshot%20(1422).png?alt=media&token=e4c4ca08-37f0-4dd3-8a9b-ea9f91cbd734)
-(https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2Fmore%2FScreenshot%20(1435).png?alt=media&token=5c226a5f-af93-4533-bb81-62aa3723c6f3)
+![Hau Screens](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2Fmore%2FScreenshot%20(1422).png?alt=media&token=e4c4ca08-37f0-4dd3-8a9b-ea9f91cbd734)
+
+![Hau Themes](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2Fmore%2FScreenshot%20(1435).png?alt=media&token=5c226a5f-af93-4533-bb81-62aa3723c6f3)
+
 ---
 
 ## ✨ Features
