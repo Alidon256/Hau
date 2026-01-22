@@ -58,6 +58,7 @@ import org.hau.project.ui.appTwo.ui.screens.chats.NewGroupScreen
 import org.hau.project.ui.appTwo.ui.screens.memories.ScheduleCallScreen
 import org.hau.project.ui.appTwo.ui.screens.settings.SettingsScreen
 import org.hau.project.ui.appTwo.ui.screens.calls.VideoCallScreen
+import org.hau.project.ui.appTwo.ui.screens.chats.UserProfileScreen
 import org.hau.project.ui.appTwo.ui.screens.memories.ChannelProfileScreen
 import org.hau.project.ui.appTwo.ui.screens.memories.ProfileAction
 import org.hau.project.ui.appTwo.ui.screens.settings.AvatarScreen
@@ -91,7 +92,8 @@ object Routes{
     @Serializable data object SETTINGS: NavDestinaton{ override val routePattern: String = "SETTINGS" }
     @Serializable data class CHANNEL_DETAIL(val channelId: String): NavDestinaton{ override val routePattern: String = "CHANNEL_DETAIL" }
     @Serializable data class DETAIL(val chatId: String): NavDestinaton{ override val routePattern: String = "DETAIL" }
-    @Serializable data class PROFILE_INFO(val channelId: String): NavDestinaton{ override val routePattern: String = "PROFILE_INFO" }
+    @Serializable data class CHANNEL_PROFILE(val channelId: String): NavDestinaton{ override val routePattern: String = "CHANNEL_PROFILE" }
+    @Serializable data class USER_PROFILE(val userId: String): NavDestinaton{ override val routePattern: String = "USER_PROFILE" }
     @Serializable data object NEW_CONTACTS: NavDestinaton{ override val routePattern: String = "NEW_CONTACTS" }
     @Serializable data object NEW_GROUPS: NavDestinaton{ override val routePattern: String = "NEW_GROUPS" }
     @Serializable data object SECURITY_NOTIFICATION: NavDestinaton{ override val routePattern: String = "SECURITY_NOTIFICATION" }
@@ -217,26 +219,57 @@ fun BottomNavigation(){
                 composable<Routes.CALLS>{ CallsScreen(viewModel = chatViewModel) }
                 composable<Routes.DETAIL> { navBackStackEntry ->
                     val route: Routes.DETAIL = navBackStackEntry.toRoute()
-                    DetailScreen(chatId = route.chatId,onBack = { navController.popBackStack() },viewModel = chatViewModel,navController = navController)
+                    DetailScreen(
+                        chatId = route.chatId,
+                        onBack = { navController.popBackStack() },
+                        viewModel = chatViewModel,
+                        navController = navController,
+                        onUserInfoClick = { userId ->
+                            navController.navigate(Routes.USER_PROFILE(userId = userId))
+                        }
+                    )
                 }
-                composable<Routes.CHANNEL_DETAIL> { backStackEntry ->
+
+            composable<Routes.USER_PROFILE> { backStackEntry ->
+                val args: Routes.USER_PROFILE= backStackEntry.toRoute()
+                val uiState by profileViewModel.userProfileUiState.collectAsState()
+
+                LaunchedEffect(args.userId) {
+                    profileViewModel.loadUserProfile(args.userId)
+                }
+
+                // You would have a UserProfileScreen composable here
+                UserProfileScreen(
+                    uiState = uiState,
+                    onAction = { action ->
+                        when (action) {
+                            is ProfileAction.NavigateBack -> navController.popBackStack()
+                            // Handle other actions like ToggleMute, Unfollow, etc. by calling viewModel methods
+                            is ProfileAction.ToggleMute -> profileViewModel.toggleMute()
+                            else -> {}
+                        }
+                    }
+                )
+            }
+
+            composable<Routes.CHANNEL_DETAIL> { backStackEntry ->
                     val route: Routes.CHANNEL_DETAIL = backStackEntry.toRoute()
                     ChannelDetailScreen(
                         channelId = route.channelId,
                         onBack = { navController.popBackStack() },
                         viewModel = chatViewModel,
                         onChannelInfoClick = {
-                            navController.navigate(Routes.PROFILE_INFO(channelId = route.channelId))
+                            navController.navigate(Routes.CHANNEL_PROFILE(channelId = route.channelId))
                         }
                     )
                 }
-                composable<Routes.PROFILE_INFO> { backStackEntry ->
-                    val args = backStackEntry.toRoute<Routes.PROFILE_INFO>()
+                composable<Routes.CHANNEL_PROFILE> { backStackEntry ->
+                    val args = backStackEntry.toRoute<Routes.CHANNEL_PROFILE>()
                     val uiState by profileViewModel.profileUiState.collectAsState()
 
                     // Use a LaunchedEffect to load data when the composable enters the screen
                     LaunchedEffect(args.channelId) {
-                        profileViewModel.loadProfile(args.channelId)
+                        profileViewModel.loadChannelProfile(args.channelId)
                     }
 
                     ChannelProfileScreen(

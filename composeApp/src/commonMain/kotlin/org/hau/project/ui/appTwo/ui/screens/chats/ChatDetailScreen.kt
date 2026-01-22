@@ -63,6 +63,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil3.compose.rememberAsyncImagePainter
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.grattitude
@@ -86,7 +87,8 @@ fun DetailScreen(
     viewModel: ChatViewModel,
     chatId: String? = null,
     onBack: () -> Unit = {},
-    navController: NavController? = null
+    navController: NavController? = null,
+    onUserInfoClick: (String)-> Unit
 ) {
     var showActions by remember { mutableStateOf(false) }
     var showAttachmentSheet by remember { mutableStateOf(false) }
@@ -126,11 +128,13 @@ fun DetailScreen(
                     containerColor = MaterialTheme.colorScheme.background
                 ),
                 title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.clickable{chat?.id?.let { userId -> onUserInfoClick(userId) }},
+                        verticalAlignment = Alignment.CenterVertically) {
                         Avatar(
                             name = chat?.userName ?: "...",
                             size = 40.dp,
-                            avatarUrl = chat?.profileRes // You can get this from the 'chat' object if available
+                            avatarUrl = chat?.profileRes
                         )
                         Spacer(Modifier.width(8.dp))
                         Column {
@@ -356,7 +360,9 @@ fun ChatDetailScreenPreview() {
     DetailScreen(
         viewModel = previewViewModel,
         chatId = "1", // Use "1" for Mugumya Ali's conversation
-        onBack = {}
+        onBack = {},
+        navController = rememberNavController(),
+        onUserInfoClick = {}
     )
 }
 

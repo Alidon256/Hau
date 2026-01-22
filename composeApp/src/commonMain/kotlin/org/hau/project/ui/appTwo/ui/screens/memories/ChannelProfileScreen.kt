@@ -177,7 +177,7 @@ fun ChannelProfileScreen(
 
 
 @Composable
-fun SettingsSection(
+private fun SettingsSection(
     mediaCount: Int,
     isMuted: Boolean,
     onAction: (ProfileAction) -> Unit,

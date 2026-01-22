@@ -23,12 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.hau.project.ui.appTwo.data.repositories.formatCount
-import org.hau.project.ui.appTwo.domain.models.Channels
+import org.hau.project.ui.appTwo.domain.models.User
 
 
 @Composable
 fun UserInfoSection(
-    channel: Channels,
+    user: User,
     onShowVerified: () -> Unit
 ) {
     Column(
@@ -45,11 +45,11 @@ fun UserInfoSection(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = channel.channelName,
+                text = user.name,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            if (channel.isVerified) {
+            if (user.isVerified) {
                 Spacer(Modifier.width(6.dp))
                 Icon(
                     imageVector = Icons.Default.Verified,
@@ -61,7 +61,7 @@ fun UserInfoSection(
         }
         Spacer(Modifier.height(4.dp))
         Text(
-            text = "Channel ∙ ${formatCount(channel.followerCount)} followers",
+            text = "User ∙ ${formatCount(user.followerCount)} followers",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
