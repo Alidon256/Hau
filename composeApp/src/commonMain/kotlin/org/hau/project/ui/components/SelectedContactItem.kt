@@ -24,14 +24,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.story_3
-import org.hau.project.ui.screens.chats.NewContactInGroup
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
+data class NewContactInGroup(
+    val contactName: String?,
+    val contactRes: DrawableResource,
+    val contactId: String,
+    val contactDesc: String,
+    val contact: String,
+    val isChecked: Boolean
+)
 @Composable
 fun SelectedContactItem(
-    selectedContact: org.hau.project.ui.screens.chats.NewContactInGroup
+    selectedContact: NewContactInGroup
 ){
     Column(
         verticalArrangement = Arrangement.Center,
@@ -79,8 +86,8 @@ fun SelectedContactItem(
 @Composable
 @Preview(showBackground = true)
 fun SelectedContactItemPreview(){
-    _root_ide_package_.org.hau.project.ui.components.SelectedContactItem(
-        _root_ide_package_.org.hau.project.ui.screens.chats.NewContactInGroup(
+    SelectedContactItem(
+        NewContactInGroup(
             contactName = "Mugumya Ali",
             contactRes = Res.drawable.story_3,
             contactId = "hdfddhdf",

@@ -1,4 +1,4 @@
-package org.hau.project.ui.appTwo.ui.theme
+package org.hau.project.ui.theme
 
 import androidx.compose.runtime.Composable
 

@@ -45,6 +45,31 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
+import org.hau.project.data.repositories.ChatRepository
+import org.hau.project.ui.screens.calls.AudioCallScreen
+import org.hau.project.ui.screens.calls.VideoCallScreen
+import org.hau.project.ui.screens.chats.DetailScreen
+import org.hau.project.ui.screens.chats.NewContactScreen
+import org.hau.project.ui.screens.chats.NewGroupScreen
+import org.hau.project.ui.screens.chats.UserProfileScreen
+import org.hau.project.ui.screens.memories.ChannelDetailScreen
+import org.hau.project.ui.screens.memories.ProfileAction
+import org.hau.project.ui.screens.memories.ScheduleCallScreen
+import org.hau.project.ui.screens.settings.AccountScreen
+import org.hau.project.ui.screens.settings.AvatarScreen
+import org.hau.project.ui.screens.settings.ChatSettingsScreen
+import org.hau.project.ui.screens.settings.DeleteAccountScreen
+import org.hau.project.ui.screens.settings.EmailAddressScreen
+import org.hau.project.ui.screens.settings.HelpSettingsScreen
+import org.hau.project.ui.screens.settings.InviteFriendScreen
+import org.hau.project.ui.screens.settings.LanguageSettingsScreen
+import org.hau.project.ui.screens.settings.PasskeysScreen
+import org.hau.project.ui.screens.settings.PrivacySettingsScreen
+import org.hau.project.ui.screens.settings.RequestAccountInfoScreen
+import org.hau.project.ui.screens.settings.SecurityNotificationsScreen
+import org.hau.project.ui.screens.settings.StorageSettingsScreen
+import org.hau.project.viewModels.ChatViewModel
+import org.hau.project.viewModels.ProfileViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Serializable
@@ -54,56 +79,52 @@ sealed interface NavDestinaton{
 
 @Serializable
 object Routes{
-    @Serializable data object HOME: org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "HOME" }
-    @Serializable data object MEMORIES: org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "MEMORIES" }
-    @Serializable data object CALLS: org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "CALLS" }
-    @Serializable data object SETTINGS: org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "SETTINGS" }
-    @Serializable data class CHANNEL_DETAIL(val channelId: String):
-        org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "CHANNEL_DETAIL" }
-    @Serializable data class DETAIL(val chatId: String):
-        org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "DETAIL" }
-    @Serializable data class CHANNEL_PROFILE(val channelId: String):
-        org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "CHANNEL_PROFILE" }
-    @Serializable data class USER_PROFILE(val userId: String):
-        org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "USER_PROFILE" }
-    @Serializable data object NEW_CONTACTS: org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "NEW_CONTACTS" }
-    @Serializable data object NEW_GROUPS: org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "NEW_GROUPS" }
-    @Serializable data object SECURITY_NOTIFICATION: org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "SECURITY_NOTIFICATION" }
-    @Serializable data object VIDEO_CALL: org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "VIDEO_CALL" }
-    @Serializable data object AUDIO_CALL: org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "AUDIO_CALL" }
-    @Serializable data object SCHEDULE_CALL: org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "SCHEDULE_CALL" }
-    @Serializable data object PRIVACY : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "PRIVACY" }
-    @Serializable data object MESSAGING : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "MESSAGING" }
-    @Serializable data object NOTIFICATIONS : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "NOTIFICATIONS" }
-    @Serializable data object STORAGE : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "STORAGE" }
-    @Serializable data object LANGUAGE : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "LANGUAGE" }
-    @Serializable data object HELP : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "HELP" }
-    @Serializable data object INVITE : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "INVITE" }
-    @Serializable data object PASSKEYS : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "PASSKEYS" }
-    @Serializable data object EMAIL_ADDRESS : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "EMAIL_ADDRESS" }
-    @Serializable data object DELETE_ACCOUNT : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "DELETE_ACCOUNT" }
-    @Serializable data object REQUEST_INFO : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "REQUEST_INFO" }
-    @Serializable data object AVATAR : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "AVATAR" }
-    @Serializable data object ACCOUNT : org.hau.project.ui.components.NavDestinaton { override val routePattern: String = "ACCOUNT" }
+    @Serializable data object HOME: NavDestinaton { override val routePattern: String = "HOME" }
+    @Serializable data object MEMORIES: NavDestinaton { override val routePattern: String = "MEMORIES" }
+    @Serializable data object CALLS: NavDestinaton { override val routePattern: String = "CALLS" }
+    @Serializable data object SETTINGS: NavDestinaton { override val routePattern: String = "SETTINGS" }
+    @Serializable data class CHANNEL_DETAIL(val channelId: String): NavDestinaton { override val routePattern: String = "CHANNEL_DETAIL" }
+    @Serializable data class DETAIL(val chatId: String): NavDestinaton { override val routePattern: String = "DETAIL" }
+    @Serializable data class CHANNEL_PROFILE(val channelId: String): NavDestinaton { override val routePattern: String = "CHANNEL_PROFILE" }
+    @Serializable data class USER_PROFILE(val userId: String): NavDestinaton { override val routePattern: String = "USER_PROFILE" }
+    @Serializable data object NEW_CONTACTS: NavDestinaton { override val routePattern: String = "NEW_CONTACTS" }
+    @Serializable data object NEW_GROUPS: NavDestinaton { override val routePattern: String = "NEW_GROUPS" }
+    @Serializable data object SECURITY_NOTIFICATION: NavDestinaton { override val routePattern: String = "SECURITY_NOTIFICATION" }
+    @Serializable data object VIDEO_CALL: NavDestinaton { override val routePattern: String = "VIDEO_CALL" }
+    @Serializable data object AUDIO_CALL: NavDestinaton { override val routePattern: String = "AUDIO_CALL" }
+    @Serializable data object SCHEDULE_CALL: NavDestinaton { override val routePattern: String = "SCHEDULE_CALL" }
+    @Serializable data object PRIVACY : NavDestinaton { override val routePattern: String = "PRIVACY" }
+    @Serializable data object MESSAGING : NavDestinaton { override val routePattern: String = "MESSAGING" }
+    @Serializable data object NOTIFICATIONS : NavDestinaton { override val routePattern: String = "NOTIFICATIONS" }
+    @Serializable data object STORAGE : NavDestinaton { override val routePattern: String = "STORAGE" }
+    @Serializable data object LANGUAGE : NavDestinaton { override val routePattern: String = "LANGUAGE" }
+    @Serializable data object HELP : NavDestinaton { override val routePattern: String = "HELP" }
+    @Serializable data object INVITE : NavDestinaton { override val routePattern: String = "INVITE" }
+    @Serializable data object PASSKEYS : NavDestinaton { override val routePattern: String = "PASSKEYS" }
+    @Serializable data object EMAIL_ADDRESS : NavDestinaton { override val routePattern: String = "EMAIL_ADDRESS" }
+    @Serializable data object DELETE_ACCOUNT : NavDestinaton { override val routePattern: String = "DELETE_ACCOUNT" }
+    @Serializable data object REQUEST_INFO : NavDestinaton { override val routePattern: String = "REQUEST_INFO" }
+    @Serializable data object AVATAR : NavDestinaton { override val routePattern: String = "AVATAR" }
+    @Serializable data object ACCOUNT : NavDestinaton { override val routePattern: String = "ACCOUNT" }
 }
 
 
 data class BottomNavItem(
     val unselectedIcon: ImageVector,
     val selectedIcon: ImageVector,
-    val destination: org.hau.project.ui.components.NavDestinaton
+    val destination: NavDestinaton
 )
 
 @Composable
 fun BottomNavigation(){
-    val chatRepository = remember { _root_ide_package_.org.hau.project.data.repositories.ChatRepository() }
-    val chatViewModel: org.hau.project.viewModels.ChatViewModel = viewModel {
-        _root_ide_package_.org.hau.project.viewModels.ChatViewModel(
+    val chatRepository = remember { ChatRepository() }
+    val chatViewModel: ChatViewModel = viewModel {
+       ChatViewModel(
             chatRepository
         )
     }
-    val profileViewModel: org.hau.project.viewModels.ProfileViewModel = viewModel {
-        _root_ide_package_.org.hau.project.viewModels.ProfileViewModel(
+    val profileViewModel: ProfileViewModel = viewModel {
+        ProfileViewModel(
             chatRepository
         )
     }
@@ -111,25 +132,25 @@ fun BottomNavigation(){
     val startDestination: org.hau.project.ui.components.NavDestinaton = _root_ide_package_.org.hau.project.ui.components.Routes.HOME
 
     val bottomNavItems = listOf(
-        _root_ide_package_.org.hau.project.ui.components.BottomNavItem(
+        BottomNavItem(
             Icons.Outlined.Forum,
             Icons.Default.Forum,
-            _root_ide_package_.org.hau.project.ui.components.Routes.HOME
+            Routes.HOME
         ),
-        _root_ide_package_.org.hau.project.ui.components.BottomNavItem(
+        BottomNavItem(
             Icons.Outlined.Stream,
             Icons.Filled.Stream,
-            _root_ide_package_.org.hau.project.ui.components.Routes.MEMORIES
+            Routes.MEMORIES
         ),
-        _root_ide_package_.org.hau.project.ui.components.BottomNavItem(
+        BottomNavItem(
             Icons.Outlined.Call,
             Icons.Filled.Call,
-            _root_ide_package_.org.hau.project.ui.components.Routes.CALLS
+            Routes.CALLS
         ),
-        _root_ide_package_.org.hau.project.ui.components.BottomNavItem(
+        BottomNavItem(
             Icons.Outlined.Settings,
             Icons.Filled.Settings,
-            _root_ide_package_.org.hau.project.ui.components.Routes.SETTINGS
+            Routes.SETTINGS
         )
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -209,50 +230,50 @@ fun BottomNavigation(){
                 modifier = Modifier.fillMaxSize().padding(paddingValues)
                     .consumeWindowInsets(paddingValues)
             ){
-                composable<org.hau.project.ui.components.Routes.HOME> {
+                composable<Routes.HOME> {
                     _root_ide_package_.org.hau.project.ui.screens.chats.ChatScreen(
                         viewModel = chatViewModel,
                         onChatClick = { selectedChatId ->
                             navController.navigate(
-                                _root_ide_package_.org.hau.project.ui.components.Routes.DETAIL(
+                                Routes.DETAIL(
                                     chatId = selectedChatId
                                 )
                             )
                         },
-                        onNewContactClick = { navController.navigate(_root_ide_package_.org.hau.project.ui.components.Routes.NEW_CONTACTS) })
+                        onNewContactClick = { navController.navigate(Routes.NEW_CONTACTS) })
                 }
-                composable<org.hau.project.ui.components.Routes.SETTINGS>{
+                composable<Routes.SETTINGS>{
                     _root_ide_package_.org.hau.project.ui.screens.settings.SettingsScreen(
                         navController
                     )
                 }
-                composable<org.hau.project.ui.components.Routes.MEMORIES> {
+                composable<Routes.MEMORIES> {
                     _root_ide_package_.org.hau.project.ui.screens.memories.MemoriesScreen(
                         viewModel = chatViewModel,
                         onChannelClick = { selectedChannelId ->
                             navController.navigate(
-                                _root_ide_package_.org.hau.project.ui.components.Routes.CHANNEL_DETAIL(
+                                Routes.CHANNEL_DETAIL(
                                     channelId = selectedChannelId
                                 )
                             )
                         },
                         onAddMemoryClick = {})
                 }
-                composable<org.hau.project.ui.components.Routes.CALLS>{
+                composable<Routes.CALLS>{
                     _root_ide_package_.org.hau.project.ui.screens.calls.CallsScreen(
                         viewModel = chatViewModel
                     )
                 }
-                composable<org.hau.project.ui.components.Routes.DETAIL> { navBackStackEntry ->
-                    val route: org.hau.project.ui.components.Routes.DETAIL = navBackStackEntry.toRoute()
-                    _root_ide_package_.org.hau.project.ui.screens.chats.DetailScreen(
+                composable<Routes.DETAIL> { navBackStackEntry ->
+                    val route: Routes.DETAIL = navBackStackEntry.toRoute()
+                    DetailScreen(
                         chatId = route.chatId,
                         onBack = { navController.popBackStack() },
                         viewModel = chatViewModel,
                         navController = navController,
                         onUserInfoClick = { userId ->
                             navController.navigate(
-                                _root_ide_package_.org.hau.project.ui.components.Routes.USER_PROFILE(
+                                Routes.USER_PROFILE(
                                     userId = userId
                                 )
                             )
@@ -260,8 +281,8 @@ fun BottomNavigation(){
                     )
                 }
 
-            composable<org.hau.project.ui.components.Routes.USER_PROFILE> { backStackEntry ->
-                val args: org.hau.project.ui.components.Routes.USER_PROFILE= backStackEntry.toRoute()
+            composable<Routes.USER_PROFILE> { backStackEntry ->
+                val args: Routes.USER_PROFILE= backStackEntry.toRoute()
                 val uiState by profileViewModel.userProfileUiState.collectAsState()
 
                 LaunchedEffect(args.userId) {
@@ -269,36 +290,36 @@ fun BottomNavigation(){
                 }
 
                 // You would have a UserProfileScreen composable here
-                _root_ide_package_.org.hau.project.ui.screens.chats.UserProfileScreen(
+                UserProfileScreen(
                     uiState = uiState,
                     onAction = { action ->
                         when (action) {
-                            is org.hau.project.ui.screens.memories.ProfileAction.NavigateBack -> navController.popBackStack()
+                            is ProfileAction.NavigateBack -> navController.popBackStack()
                             // Handle other actions like ToggleMute, Unfollow, etc. by calling viewModel methods
-                            is org.hau.project.ui.screens.memories.ProfileAction.ToggleMute -> profileViewModel.toggleMute()
+                            is ProfileAction.ToggleMute -> profileViewModel.toggleMute()
                             else -> {}
                         }
                     }
                 )
             }
 
-            composable<org.hau.project.ui.components.Routes.CHANNEL_DETAIL> { backStackEntry ->
-                    val route: org.hau.project.ui.components.Routes.CHANNEL_DETAIL = backStackEntry.toRoute()
-                _root_ide_package_.org.hau.project.ui.screens.memories.ChannelDetailScreen(
+            composable<Routes.CHANNEL_DETAIL> { backStackEntry ->
+                    val route: Routes.CHANNEL_DETAIL = backStackEntry.toRoute()
+                ChannelDetailScreen(
                     channelId = route.channelId,
                     onBack = { navController.popBackStack() },
                     viewModel = chatViewModel,
                     onChannelInfoClick = {
                         navController.navigate(
-                            _root_ide_package_.org.hau.project.ui.components.Routes.CHANNEL_PROFILE(
+                            Routes.CHANNEL_PROFILE(
                                 channelId = route.channelId
                             )
                         )
                     }
                 )
                 }
-                composable<org.hau.project.ui.components.Routes.CHANNEL_PROFILE> { backStackEntry ->
-                    val args = backStackEntry.toRoute<org.hau.project.ui.components.Routes.CHANNEL_PROFILE>()
+                composable<Routes.CHANNEL_PROFILE> { backStackEntry ->
+                    val args = backStackEntry.toRoute<Routes.CHANNEL_PROFILE>()
                     val uiState by profileViewModel.profileUiState.collectAsState()
 
                     // Use a LaunchedEffect to load data when the composable enters the screen
@@ -310,23 +331,23 @@ fun BottomNavigation(){
                         uiState = uiState,
                         onAction = { action ->
                             when (action) {
-                                is org.hau.project.ui.screens.memories.ProfileAction.NavigateBack -> navController.popBackStack()
+                                is ProfileAction.NavigateBack -> navController.popBackStack()
                                 // Handle other actions like ToggleMute, Unfollow, etc. by calling viewModel methods
-                                is org.hau.project.ui.screens.memories.ProfileAction.ToggleMute -> profileViewModel.toggleMute()
+                                is ProfileAction.ToggleMute -> profileViewModel.toggleMute()
                                 else -> {}
                             }
                         }
                     )
                 }
 
-                composable<org.hau.project.ui.components.Routes.NEW_CONTACTS> {
-                    _root_ide_package_.org.hau.project.ui.screens.chats.NewContactScreen(
+                composable<Routes.NEW_CONTACTS> {
+                    NewContactScreen(
                         onBack = navController::popBackStack,
                         viewModel = chatViewModel,
                         onContactClick = { selectedContactId ->
                             chatViewModel.startChatWithNewContact(selectedContactId)
                             navController.navigate(
-                                _root_ide_package_.org.hau.project.ui.components.Routes.DETAIL(
+                                Routes.DETAIL(
                                     chatId = selectedContactId
                                 )
                             )
@@ -334,76 +355,76 @@ fun BottomNavigation(){
                         navController = navController
                     )
                 }
-                composable<org.hau.project.ui.components.Routes.NEW_GROUPS>{ _root_ide_package_.org.hau.project.ui.screens.chats.NewGroupScreen() }
-                composable<org.hau.project.ui.components.Routes.SECURITY_NOTIFICATION>{
-                    _root_ide_package_.org.hau.project.ui.screens.settings.SecurityNotificationsScreen(
+                composable<Routes.NEW_GROUPS>{ NewGroupScreen(onBack = navController::popBackStack) }
+                composable<Routes.SECURITY_NOTIFICATION>{
+                    SecurityNotificationsScreen(
                         onBack = navController::popBackStack
                     )
                 }
-                composable<org.hau.project.ui.components.Routes.VIDEO_CALL> {
-                    _root_ide_package_.org.hau.project.ui.screens.calls.VideoCallScreen(
+                composable<Routes.VIDEO_CALL> {
+                    VideoCallScreen(
                         onBack = navController::popBackStack
                     )
                 }
-                composable<org.hau.project.ui.components.Routes.AUDIO_CALL> {
-                    _root_ide_package_.org.hau.project.ui.screens.calls.AudioCallScreen(
+                composable<Routes.AUDIO_CALL> {
+                    AudioCallScreen(
                         onBack = navController::popBackStack
                     )
                 }
-                composable<org.hau.project.ui.components.Routes.SCHEDULE_CALL> {
-                    _root_ide_package_.org.hau.project.ui.screens.memories.ScheduleCallScreen(
+                composable<Routes.SCHEDULE_CALL> {
+                    ScheduleCallScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.PRIVACY> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.PrivacySettingsScreen(
+                composable<Routes.PRIVACY> {
+                    PrivacySettingsScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.MESSAGING> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.ChatSettingsScreen(
+                composable<Routes.MESSAGING> {
+                    ChatSettingsScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.NOTIFICATIONS> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.SecurityNotificationsScreen(
+                composable<Routes.NOTIFICATIONS> {
+                    SecurityNotificationsScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.STORAGE> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.StorageSettingsScreen(
+                composable<Routes.STORAGE> {
+                    StorageSettingsScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.LANGUAGE> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.LanguageSettingsScreen(
+                composable<Routes.LANGUAGE> {
+                    LanguageSettingsScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.HELP> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.HelpSettingsScreen(
+                composable<Routes.HELP> {
+                    HelpSettingsScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.INVITE> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.InviteFriendScreen(
+                composable<Routes.INVITE> {
+                    InviteFriendScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.PASSKEYS> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.PasskeysScreen(
+                composable<Routes.PASSKEYS> {
+                    PasskeysScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.EMAIL_ADDRESS> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.EmailAddressScreen(
+                composable<Routes.EMAIL_ADDRESS> {
+                    EmailAddressScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.DELETE_ACCOUNT> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.DeleteAccountScreen(
+                composable<Routes.DELETE_ACCOUNT> {
+                    DeleteAccountScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.REQUEST_INFO> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.RequestAccountInfoScreen(
+                composable<Routes.REQUEST_INFO> {
+                    RequestAccountInfoScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.AVATAR> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.AvatarScreen(
+                composable<Routes.AVATAR> {
+                    AvatarScreen(
                         onBack = { navController.popBackStack() })
                 }
-                composable<org.hau.project.ui.components.Routes.ACCOUNT> {
-                    _root_ide_package_.org.hau.project.ui.screens.settings.AccountScreen(
+                composable<Routes.ACCOUNT> {
+                    AccountScreen(
                         navController = navController,
                         onBack = { navController.popBackStack() })
                 }

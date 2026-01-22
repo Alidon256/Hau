@@ -1,4 +1,4 @@
-package org.hau.project.ui.appTwo.viewModels
+package org.hau.project.viewModels
 
 
 import androidx.lifecycle.ViewModel

@@ -49,9 +49,9 @@ import org.hau.project.ui.components.VerifiedInfoBottomSheet
 import org.hau.project.ui.screens.memories.BottomSheetType
 import org.hau.project.ui.screens.memories.DangerChannelZoneSection
 import org.hau.project.ui.screens.memories.ProfileAction
-import org.hau.project.viewModels.UserProfileUiState
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.hau.project.models.User
+import org.hau.project.viewModels.UserProfileUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
