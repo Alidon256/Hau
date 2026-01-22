@@ -50,7 +50,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.hau.project.ui.appTwo.data.repositories.ChatRepository
 import org.hau.project.ui.appTwo.domain.models.NewContacts
+import org.hau.project.ui.appTwo.ui.components.ContactActionItem
+import org.hau.project.ui.appTwo.ui.components.NewContactsItem
 import org.hau.project.ui.appTwo.ui.components.Routes
+import org.hau.project.ui.appTwo.ui.theme.AppTheme
+import org.hau.project.ui.appTwo.ui.theme.SocialTheme
 import org.hau.project.ui.appTwo.viewModels.ChatViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -193,105 +197,19 @@ fun NewContactScreen(
 }
 
 @Composable
-private fun ContactActionItem(
-    icon: ImageVector,
-    title: String,
-    onClick: () -> Unit,
-    trailingContent: @Composable (() -> Unit)? = null
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primary, CircleShape)
-                .size(50.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.SemiBold
-        )
-        if (trailingContent != null) {
-            Spacer(modifier = Modifier.weight(1f))
-            trailingContent()
-        }
-    }
-}
-
-@Composable
-fun NewContactsItem(contacts: NewContacts) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {}
-            .padding(vertical = 8.dp, horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = painterResource(contacts.contactRes),
-            contentDescription = contacts.contactName,
-            modifier = Modifier.clip(CircleShape).size(50.dp),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(
-                    text = if (contacts.contactName.isNullOrEmpty()) contacts.contact else contacts.contactName,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                if (contacts.isOwner) {
-                    Text(
-                        text = "(You)",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-            Text(
-                text = contacts.contactDesc,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-}
-
-@Composable
 @Preview
 fun NewContactScreenPreview() {
     val fakeRepository = ChatRepository()
     val previewViewModel = ChatViewModel(fakeRepository)
-    // AppTheme {
+   AppTheme(
+       useDarkTheme = false,
+       theme = SocialTheme.WhatsApp
+   ){
     NewContactScreen(
         onBack = {},
         viewModel = previewViewModel,
         onContactClick = {},
         navController = rememberNavController()
     )
-    // }
+   }
 }

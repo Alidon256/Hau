@@ -84,31 +84,24 @@ fun ChannelDetailScreen(
                     when {
                         message.isPoll -> PollMessageBubble(
                             poll = message.poll,
-                            // The state update logic now lives here, at a higher level
                             onVote = { optionId ->
                                 messages = messages.map { currentMessage ->
                                     if (currentMessage.id == message.id) {
-                                        // Found the message with the poll that was voted on
                                         val newOptions = currentMessage.poll?.options?.map { option ->
                                             if (option.id == optionId) {
-                                                // --- THE DEFINITIVE, FOOLPROOF FIX ---
-                                                // Manually create a new PollOption object.
-                                                // This completely avoids the problematic .copy() method.
                                                 PollOption(
                                                     id = option.id,
                                                     text = option.text,
                                                     icon = option.icon,
                                                     votes = option.votes,
-                                                    isSelected = !option.isSelected // The only value that changes
+                                                    isSelected = !option.isSelected
                                                 )
                                             } else {
                                                 option
                                             }
                                         }
-                                        // Create a new message with the updated poll
                                         currentMessage.copy(poll = currentMessage.poll?.copy(options = newOptions ?: emptyList()))
                                     } else {
-                                        // This is not the message that was interacted with, return it as is
                                         currentMessage
                                     }
                                 }
@@ -124,8 +117,6 @@ fun ChannelDetailScreen(
     }
 }
 
-// --- UI COMPONENTS ---
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChannelTopBar(
@@ -140,7 +131,11 @@ private fun ChannelTopBar(
             }
         },
         title = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier
+                    .clickable(onClick = onChannelInfoClick)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     painter = painterResource(channelInfo?.channelRes ?: Res.drawable.grattitude),
                     contentDescription = "Channel Avatar",

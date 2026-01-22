@@ -155,12 +155,13 @@ open class ChatRepository {
                     isRead = false,
                     followerCount = 123000L,
                     id = "aa",
+                    isVerified = true,
                 ),
-                Channels(channelName = "Really Rinah", channelRes = Res.drawable.story_2,  timestamp = "01/22/2026", attachmentType = null, message = "Today the World remembers the ocassion that happened when the people rejected the Presidents decision", unreadMessages = 10,isRead = false,followerCount = 323000L,id = "ab"),
-                Channels(channelName = "Sebastian Rudiger", channelRes = Res.drawable.story_1,  timestamp = "01/21/2026", attachmentType = AttachmentType.AUDIO, unreadMessages = 167, message = "Announcing the new Update of Mindset Pulse💕",isRead = false,followerCount = 723000L,id = "ac"),
-                Channels(channelName = "Caroline Varsaha", channelRes = Res.drawable.story_4,  timestamp = "01/21/2026",attachmentType = null, unreadMessages = 0, message = "A new Report by the world health organisation says that people who ovr smile always have there life time lifted",isRead = true,followerCount = 193000L,id = "all"),
-                Channels(channelName = "Darshan Patelchi", channelRes = Res.drawable.story_5,  timestamp = "01/20/2026",attachmentType = AttachmentType.IMAGE, unreadMessages = 234, message = "The Stake Holders of Tesla today had a general meeting and decided that they were gonna give elon a new pack of $1T",isRead = false,followerCount = 183000,id = "ag"),
-                Channels(channelName = "Mohammed Arnold", channelRes = Res.drawable.image_two, timestamp = "01/19/2026",attachmentType = AttachmentType.VIDEO, unreadMessages = 0, message = "You will have to truely believ me on some facts in a way that attaining success in most cases it always have to come with had work." ,isRead = true,followerCount = 0L,id = "ax"),
+                Channels(channelName = "Really Rinah", channelRes = Res.drawable.story_2,  timestamp = "01/22/2026", attachmentType = null, message = "Today the World remembers the ocassion that happened when the people rejected the Presidents decision", unreadMessages = 10,isRead = false,followerCount = 323000L,id = "ab",isVerified = false,),
+                Channels(channelName = "Sebastian Rudiger", channelRes = Res.drawable.story_1,  timestamp = "01/21/2026", attachmentType = AttachmentType.AUDIO, unreadMessages = 167, message = "Announcing the new Update of Mindset Pulse💕",isRead = false,followerCount = 723000L,id = "ac",isVerified = true,),
+                Channels(channelName = "Caroline Varsaha", channelRes = Res.drawable.story_4,  timestamp = "01/21/2026",attachmentType = null, unreadMessages = 0, message = "A new Report by the world health organisation says that people who ovr smile always have there life time lifted",isRead = true,followerCount = 193000L,id = "all",isVerified = false,),
+                Channels(channelName = "Darshan Patelchi", channelRes = Res.drawable.story_5,  timestamp = "01/20/2026",attachmentType = AttachmentType.IMAGE, unreadMessages = 234, message = "The Stake Holders of Tesla today had a general meeting and decided that they were gonna give elon a new pack of $1T",isRead = false,followerCount = 183000,id = "ag",isVerified = true,),
+                Channels(channelName = "Mohammed Arnold", channelRes = Res.drawable.image_two, timestamp = "01/19/2026",attachmentType = AttachmentType.VIDEO, unreadMessages = 0, message = "You will have to truely believ me on some facts in a way that attaining success in most cases it always have to come with had work." ,isRead = true,followerCount = 0L,id = "ax",isVerified = false,),
             )
         )
 
@@ -168,10 +169,10 @@ open class ChatRepository {
     fun getRecommended() : Flow<List<RecommendedChannels>>{
         return flowOf(
             listOf(
-                RecommendedChannels(channelName = "Gratitude", channelRes = Res.drawable.grattitude, isVerified = false, followerCount = 145087),
-                RecommendedChannels(channelName = "Mental Health", channelRes = Res.drawable.mentalhealth, isVerified = true, followerCount = 100000),
-                RecommendedChannels(channelName = "Strong Hope", channelRes = Res.drawable.stronghope, isVerified = false, followerCount = 150489),
-                RecommendedChannels(channelName = "Caroline Varsaha", channelRes = Res.drawable.story_4, isVerified = true, followerCount = 12000),
+                RecommendedChannels(channelName = "Gratitude", channelRes = Res.drawable.grattitude, isVerified = false, followerCount = 145087, id = "1"),
+                RecommendedChannels(channelName = "Mental Health", channelRes = Res.drawable.mentalhealth, isVerified = true, followerCount = 100000,id = "2"),
+                RecommendedChannels(channelName = "Strong Hope", channelRes = Res.drawable.stronghope, isVerified = false, followerCount = 150489,id = "3"),
+                RecommendedChannels(channelName = "Caroline Varsaha", channelRes = Res.drawable.story_4, isVerified = true, followerCount = 12000,id = "4"),
             )
         )
     }

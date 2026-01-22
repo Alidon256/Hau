@@ -24,6 +24,7 @@ enum class MessageSender {
 
 
 data class RecommendedChannels(
+    val id: String,
     val channelRes: DrawableResource,
     val channelName: String,
     val followerCount: Long,
@@ -40,6 +41,7 @@ data class Channels(
     val channelName:String,
     val isRead:Boolean,
     val followerCount: Long,
+    val isVerified: Boolean
 )
 
 enum class AttachmentType{

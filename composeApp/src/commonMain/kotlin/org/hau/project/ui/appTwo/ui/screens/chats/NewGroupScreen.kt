@@ -43,6 +43,7 @@ import hau.composeapp.generated.resources.story_1
 import hau.composeapp.generated.resources.story_2
 import hau.composeapp.generated.resources.story_3
 import hau.composeapp.generated.resources.story_4
+import org.hau.project.ui.appTwo.ui.components.NewContactsGroupItem
 import org.hau.project.ui.appTwo.ui.components.SearchBar
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -115,128 +116,6 @@ fun NewGroupScreen(){
     }
 }
 
-@Composable
-fun NewContactsGroupItem(
-    contacts: NewContactInGroup
-){
-    var checked by remember{ mutableStateOf(false)}
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        Image(
-            painter = painterResource(contacts.contactRes),
-            contentDescription = contacts.contactName,
-            modifier = Modifier.clip(CircleShape).size(60.dp),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .weight(1f),
-            verticalArrangement = Arrangement.SpaceEvenly
-        ){
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ){
-                Text(
-                    text = if (contacts.contactName.isNullOrEmpty()) contacts.contact else contacts.contactName,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-            }
-            Row {
-                Text(
-                    text = contacts.contactDesc,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    color = Color.Black.copy(alpha = 0.6f),
-                    style = MaterialTheme.typography.titleMedium
-
-                )
-            }
-        }
-        if (contacts.isChecked){
-            Checkbox(
-                checked = true,
-                onCheckedChange = {checked = it},
-                modifier = Modifier
-                    .clip(CircleShape),
-                colors = CheckboxDefaults.colors(
-                    checkedColor = MaterialTheme.colorScheme.primary
-                )
-            )
-        }else{
-            Checkbox(
-                checked = checked,
-                onCheckedChange = {checked = it},
-                modifier = Modifier
-                    .clip(CircleShape),
-                colors = CheckboxDefaults.colors(
-                    checkedColor = MaterialTheme.colorScheme.primary
-                )
-            )
-        }
-
-    }
-}
-
-@Composable
-fun SelectedContactItem(
-    selectedContact: NewContactInGroup
-){
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Box(
-            modifier = Modifier
-                .size(64.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = .4f),CircleShape),
-            contentAlignment = Alignment.BottomEnd
-        ){
-            Image(
-                painter = painterResource(selectedContact.contactRes),
-                contentDescription = "Selected Contact Image",
-                modifier = Modifier.clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            Box(
-                modifier = Modifier
-                    .background(Color.Gray,CircleShape)
-                    .border(1.dp,Color.White,CircleShape)
-                    .size(30.dp),
-                contentAlignment = Alignment.Center
-            ){
-                Icon(
-                    Icons.Outlined.Clear,
-                    contentDescription = "Clear",
-                    tint = Color.White
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = if(selectedContact.contactName.isNullOrEmpty())
-                selectedContact.contact
-            else
-                selectedContact.contactName,
-            style = MaterialTheme.typography.titleMedium.copy(
-                Color.Black.copy(alpha = 0.6f)
-            ),
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-    }
-}
-@Composable
-@Preview(showBackground = true)
-fun SelectedContactItemPreview(){
-    SelectedContactItem(
-        NewContactInGroup(contactName = "Mugumya Ali", contactRes = Res.drawable.story_3, contactId = "hdfddhdf", contactDesc = "Message yourself", contact = "+256 785330244",isChecked = true)
-    )
-}
 
 @Composable
 @Preview(showBackground = true)

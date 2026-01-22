@@ -25,6 +25,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,11 +44,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import hau.composeapp.generated.resources.Res
-import hau.composeapp.generated.resources.grattitude
 import kotlinx.serialization.Serializable
 import org.hau.project.ui.appTwo.data.repositories.ChatRepository
-import org.hau.project.ui.appTwo.domain.models.RecommendedChannels
 import org.hau.project.ui.appTwo.ui.screens.settings.AccountScreen
 import org.hau.project.ui.appTwo.ui.screens.calls.AudioCallScreen
 import org.hau.project.ui.appTwo.ui.screens.calls.CallsScreen
@@ -61,7 +60,6 @@ import org.hau.project.ui.appTwo.ui.screens.settings.SettingsScreen
 import org.hau.project.ui.appTwo.ui.screens.calls.VideoCallScreen
 import org.hau.project.ui.appTwo.ui.screens.memories.ChannelProfileScreen
 import org.hau.project.ui.appTwo.ui.screens.memories.ProfileAction
-import org.hau.project.ui.appTwo.ui.screens.memories.ProfileUiState
 import org.hau.project.ui.appTwo.ui.screens.settings.AvatarScreen
 import org.hau.project.ui.appTwo.ui.screens.settings.ChatSettingsScreen
 import org.hau.project.ui.appTwo.ui.screens.settings.DeleteAccountScreen
@@ -77,6 +75,7 @@ import org.hau.project.ui.appTwo.ui.screens.settings.StorageSettingsScreen
 import org.hau.project.ui.appTwo.ui.theme.AppTheme
 import org.hau.project.ui.appTwo.ui.theme.SocialTheme
 import org.hau.project.ui.appTwo.viewModels.ChatViewModel
+import org.hau.project.ui.appTwo.viewModels.ProfileViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Serializable
@@ -86,13 +85,13 @@ sealed interface NavDestinaton{
 
 @Serializable
 object Routes{
-    @Serializable data object CHAT: NavDestinaton{ override val routePattern: String = "CHAT" }
+    @Serializable data object HOME: NavDestinaton{ override val routePattern: String = "HOME" }
     @Serializable data object MEMORIES: NavDestinaton{ override val routePattern: String = "MEMORIES" }
     @Serializable data object CALLS: NavDestinaton{ override val routePattern: String = "CALLS" }
     @Serializable data object SETTINGS: NavDestinaton{ override val routePattern: String = "SETTINGS" }
     @Serializable data class CHANNEL_DETAIL(val channelId: String): NavDestinaton{ override val routePattern: String = "CHANNEL_DETAIL" }
     @Serializable data class DETAIL(val chatId: String): NavDestinaton{ override val routePattern: String = "DETAIL" }
-    @Serializable data object PROFILE_INFO: NavDestinaton{ override val routePattern: String = "PROFILE_INFO" }
+    @Serializable data class PROFILE_INFO(val channelId: String): NavDestinaton{ override val routePattern: String = "PROFILE_INFO" }
     @Serializable data object NEW_CONTACTS: NavDestinaton{ override val routePattern: String = "NEW_CONTACTS" }
     @Serializable data object NEW_GROUPS: NavDestinaton{ override val routePattern: String = "NEW_GROUPS" }
     @Serializable data object SECURITY_NOTIFICATION: NavDestinaton{ override val routePattern: String = "SECURITY_NOTIFICATION" }
@@ -125,12 +124,12 @@ data class BottomNavItem(
 fun BottomNavigation(){
     val chatRepository = remember { ChatRepository() }
     val chatViewModel: ChatViewModel = viewModel { ChatViewModel(chatRepository) }
-
+    val profileViewModel: ProfileViewModel = viewModel { ProfileViewModel(chatRepository) }
     val navController: NavHostController = rememberNavController()
-    val startDestination: NavDestinaton = Routes.CHAT
+    val startDestination: NavDestinaton = Routes.HOME
 
     val bottomNavItems = listOf(
-        BottomNavItem(Icons.Outlined.Forum, Icons.Default.Forum, Routes.CHAT),
+        BottomNavItem(Icons.Outlined.Forum, Icons.Default.Forum, Routes.HOME),
         BottomNavItem(Icons.Outlined.Stream, Icons.Filled.Stream, Routes.MEMORIES),
         BottomNavItem(Icons.Outlined.Call, Icons.Filled.Call, Routes.CALLS),
         BottomNavItem(Icons.Outlined.Settings, Icons.Filled.Settings, Routes.SETTINGS)
@@ -212,11 +211,10 @@ fun BottomNavigation(){
                 modifier = Modifier.fillMaxSize().padding(paddingValues)
                     .consumeWindowInsets(paddingValues)
             ){
-                composable<Routes.CHAT> { ChatScreen(viewModel = chatViewModel, onChatClick = { selectedChatId -> navController.navigate(Routes.DETAIL(chatId = selectedChatId)) }, onNewContactClick = { navController.navigate(Routes.NEW_CONTACTS) }) }
+                composable<Routes.HOME> { ChatScreen(viewModel = chatViewModel, onChatClick = { selectedChatId -> navController.navigate(Routes.DETAIL(chatId = selectedChatId)) }, onNewContactClick = { navController.navigate(Routes.NEW_CONTACTS) }) }
                 composable<Routes.SETTINGS>{ SettingsScreen(navController) }
                 composable<Routes.MEMORIES> { MemoriesScreen(viewModel = chatViewModel, onChannelClick = { selectedChannelId -> navController.navigate(Routes.CHANNEL_DETAIL(channelId = selectedChannelId)) }, onAddMemoryClick = {}) }
                 composable<Routes.CALLS>{ CallsScreen(viewModel = chatViewModel) }
-                //composable<Routes.CHANNEL_DETAIL>{ ProfileScreenCompact(onSignOut = {}, onNavigateBack = {navController.popBackStack()}, onCheckedChange = {}, checked = true) }
                 composable<Routes.DETAIL> { navBackStackEntry ->
                     val route: Routes.DETAIL = navBackStackEntry.toRoute()
                     DetailScreen(chatId = route.chatId,onBack = { navController.popBackStack() },viewModel = chatViewModel,navController = navController)
@@ -227,41 +225,28 @@ fun BottomNavigation(){
                         channelId = route.channelId,
                         onBack = { navController.popBackStack() },
                         viewModel = chatViewModel,
-                        onChannelInfoClick = {navController.navigate(Routes.PROFILE_INFO)}
+                        onChannelInfoClick = {
+                            navController.navigate(Routes.PROFILE_INFO(channelId = route.channelId))
+                        }
                     )
                 }
-                composable<Routes.PROFILE_INFO> {
-                    // 1. Create a placeholder UI state. In a real app, this would come from a ViewModel.
-                    val uiState = ProfileUiState(
-                        isLoading = false,
-                        channel = RecommendedChannels(
-                            channelRes = Res.drawable.grattitude,
-                            channelName = "Mindful Moments",
-                            followerCount = 1_234_567,
-                            isVerified = true
-                        ),
-                        mediaCount = 3567,
-                        isMuted = false
-                    )
+                composable<Routes.PROFILE_INFO> { backStackEntry ->
+                    val args = backStackEntry.toRoute<Routes.PROFILE_INFO>()
+                    val uiState by profileViewModel.profileUiState.collectAsState()
 
-                    // 2. Handle actions from the profile screen.
+                    // Use a LaunchedEffect to load data when the composable enters the screen
+                    LaunchedEffect(args.channelId) {
+                        profileViewModel.loadProfile(args.channelId)
+                    }
+
                     ChannelProfileScreen(
                         uiState = uiState,
                         onAction = { action ->
                             when (action) {
                                 is ProfileAction.NavigateBack -> navController.popBackStack()
-                                is ProfileAction.ToggleMute -> {
-                                    // Handle mute logic, e.g., call a ViewModel
-                                }
-                                is ProfileAction.Unfollow -> {
-                                    // Handle unfollow logic
-                                }
-                                is ProfileAction.Report -> {
-                                    // Handle report logic
-                                }
-                                is ProfileAction.ViewMedia -> {
-                                    // Navigate to a media screen if it exists
-                                }
+                                // Handle other actions like ToggleMute, Unfollow, etc. by calling viewModel methods
+                                is ProfileAction.ToggleMute -> profileViewModel.toggleMute()
+                                else -> {}
                             }
                         }
                     )

@@ -426,7 +426,8 @@ private fun ChannelItemUnreadPreview(){
                 unreadMessages = 0,
                 isRead = false,
                 followerCount = 34L, // Key for preview
-                id = "aa"
+                id = "aa",
+                isVerified = false
             ),
             onClick = {}
         )
@@ -449,7 +450,8 @@ private fun ChannelItemViewedPreview(){
                 unreadMessages = 0,
                 isRead = true,
                 followerCount = 0L, // Key for preview
-                id = "aa"
+                id = "aa",
+                isVerified = false
             ),
             onClick = {},
             isViewed = true // Key for preview
@@ -468,7 +470,8 @@ private fun RecommendedChannelsItemPreview(){
                 channelName = "Netflix",
                 channelRes = Res.drawable.story_4, // Replace with a valid resource
                 isVerified = true,
-                followerCount = 291_000_000
+                followerCount = 291_000_000,
+                id = "1",
             ),
             onFollowClick = {}
         )

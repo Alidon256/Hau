@@ -164,7 +164,8 @@ private fun CallerInfoBar() {
             contentDescription = "Doctor Avatar",
             modifier = Modifier
                 .size(40.dp)
-                .clip(CircleShape)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {

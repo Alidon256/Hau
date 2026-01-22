@@ -1,62 +1,50 @@
-package org.hau.project.ui.appTwo.ui.screens.memories
+package org.hau.project.ui.appTwo.ui.screens.chats
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import hau.composeapp.generated.resources.Res
-import hau.composeapp.generated.resources.grattitude
 import kotlinx.coroutines.launch
-import org.hau.project.ui.appTwo.data.repositories.formatCount
-import org.hau.project.ui.appTwo.domain.models.AttachmentType
-import org.hau.project.ui.appTwo.domain.models.Channels
-import org.hau.project.ui.appTwo.ui.components.ActionButtonsRow
-import org.hau.project.ui.appTwo.ui.components.ChannelInfoSection
-import org.hau.project.ui.appTwo.ui.components.ChannelProfileTopBar
-import org.hau.project.ui.appTwo.ui.components.DangerSettingsRow
-import org.hau.project.ui.appTwo.ui.components.PrivacyInfoBottomSheet
-import org.hau.project.ui.appTwo.ui.components.ProfileHeader
-import org.hau.project.ui.appTwo.ui.components.SettingsRow
-import org.hau.project.ui.appTwo.ui.components.VerifiedInfoBottomSheet
-import org.hau.project.ui.appTwo.ui.theme.AppTheme
-import org.hau.project.ui.appTwo.ui.theme.SocialTheme
+import org.hau.project.ui.appTwo.ui.screens.memories.ActionButtonsRow
+import org.hau.project.ui.appTwo.ui.screens.memories.BottomSheetType
+import org.hau.project.ui.appTwo.ui.screens.memories.ChannelInfoSection
+import org.hau.project.ui.appTwo.ui.screens.memories.DangerChannelZoneSection
+import org.hau.project.ui.appTwo.ui.screens.memories.PrivacyInfoBottomSheet
+import org.hau.project.ui.appTwo.ui.screens.memories.ProfileAction
+import org.hau.project.ui.appTwo.ui.screens.memories.ProfileHeader
+import org.hau.project.ui.appTwo.ui.screens.memories.ProfileTopAppBar
+import org.hau.project.ui.appTwo.ui.screens.memories.SettingsSection
+import org.hau.project.ui.appTwo.ui.screens.memories.VerifiedInfoBottomSheet
 import org.hau.project.ui.appTwo.viewModels.ProfileUiState
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
-// --- STATE & DATA CLASSES ---
-
-/**
- * Represents all possible actions from the UI, decoupling the UI from business logic.
- */
-sealed interface ProfileAction {
-    data object NavigateBack : ProfileAction
-    data object ToggleMute : ProfileAction
-    data object ViewMedia : ProfileAction
-    data object Unfollow : ProfileAction
-    data object Report : ProfileAction
-}
-
-/**
- * Represents the types of bottom sheets that can be shown.
- */
-enum class BottomSheetType {
-    PRIVACY, VERIFIED
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChannelProfileScreen(
+fun UserProfileScreen(
     uiState: ProfileUiState,
     onAction: (ProfileAction) -> Unit,
 ) {
@@ -84,7 +72,7 @@ fun ChannelProfileScreen(
 
     Scaffold(
         topBar = {
-            ChannelProfileTopBar(
+            ProfileTopAppBar(
                 channelName = uiState.channel?.channelName ?: "",
                 avatarUrl = uiState.channel?.channelRes,
                 isCollapsed = isHeaderCollapsed,
@@ -171,124 +159,6 @@ fun ChannelProfileScreen(
                     null -> {}
                 }
             }
-        }
-    }
-}
-
-
-@Composable
-fun SettingsSection(
-    mediaCount: Int,
-    isMuted: Boolean,
-    onAction: (ProfileAction) -> Unit,
-    onShowPrivacy: () -> Unit
-) {
-    Column {
-        SettingsRow(
-            icon = Icons.Outlined.PermMedia,
-            text = "Media, Links, and Docs",
-            trailingText = formatCount(mediaCount.toLong()),
-            onClick = { onAction(ProfileAction.ViewMedia) }
-        )
-        SettingsRow(
-            icon = Icons.Outlined.Notifications,
-            text = "Mute Notifications",
-            isToggle = true,
-            checked = isMuted,
-            onCheckedChange = { onAction(ProfileAction.ToggleMute) }
-        )
-        SettingsRow(
-            icon = Icons.Outlined.Public,
-            text = "Public Channel",
-            description = "Anyone can find this channel and see what's been shared.",
-            onClick = {} // Non-interactive for now
-        )
-        SettingsRow(
-            icon = Icons.Outlined.Dialpad,
-            text = "Profile Privacy",
-            description = "This channel has added privacy for your profile and phone number.",
-            onClick = onShowPrivacy
-        )
-    }
-}
-
-@Composable
-fun DangerChannelZoneSection(onAction: (ProfileAction) -> Unit) {
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        DangerSettingsRow(
-            icon = Icons.AutoMirrored.Filled.Logout,
-            text = "Unfollow Channel",
-            onClick = { onAction(ProfileAction.Unfollow) }
-        )
-        DangerSettingsRow(
-            icon = Icons.Outlined.ThumbDown,
-            text = "Report Channel",
-            onClick = { onAction(ProfileAction.Report) }
-        )
-    }
-}
-
-
-// Dummy data for previews
-private val previewChannel = Channels(
-    id = "preview_id",
-    channelRes = Res.drawable.grattitude,
-    channelName = "Mindful Moments",
-    followerCount = 1234567,
-    isVerified = true,
-    message = "",
-    attachmentType = AttachmentType.AUDIO,
-    timestamp = "",
-    unreadMessages = 3,
-    isRead = false
-)
-
-private val previewState = ProfileUiState(
-    isLoading = false,
-    channel = previewChannel,
-    mediaCount = 3567,
-    isMuted = false
-)
-
-@Preview(name = "Light Mode (WhatsApp Theme)")
-@Composable
-private fun ChannelProfileScreenPreviewLight() {
-    AppTheme(theme = SocialTheme.WhatsApp, useDarkTheme = false) {
-        Surface {
-            ChannelProfileScreen(uiState = previewState, onAction = {})
-        }
-    }
-}
-
-@Preview(name = "Dark Mode (Twitter Theme)")
-@Composable
-private fun ChannelProfileScreenPreviewDark() {
-    AppTheme(theme = SocialTheme.Twitter, useDarkTheme = true) {
-        Surface {
-            ChannelProfileScreen(uiState = previewState.copy(isMuted = true), onAction = {})
-        }
-    }
-}
-
-@Preview(name = "Loading State")
-@Composable
-private fun ChannelProfileScreenLoadingPreview() {
-    AppTheme {
-        Surface {
-            ChannelProfileScreen(uiState = ProfileUiState(isLoading = true), onAction = {})
-        }
-    }
-}
-
-@Preview(name = "Error State")
-@Composable
-private fun ChannelProfileScreenErrorPreview() {
-    AppTheme(useDarkTheme = true) {
-        Surface {
-            ChannelProfileScreen(
-                uiState = ProfileUiState(error = "Could not load channel details. Please check your connection."),
-                onAction = {}
-            )
         }
     }
 }

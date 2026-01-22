@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.hau.project.ui.appTwo.data.repositories.ChatRepository
 import org.hau.project.ui.appTwo.domain.models.Chat
+import org.hau.project.ui.appTwo.ui.components.ChatItem
 import org.hau.project.ui.appTwo.ui.components.SearchBar
 import org.hau.project.ui.appTwo.ui.theme.AppTheme
 import org.hau.project.ui.appTwo.viewModels.ChatViewModel
@@ -182,95 +183,6 @@ fun ChatScreen(
     }
 }
 
-@Composable
-fun ChatItem(chat: Chat) {
-    Card(
-        modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background // Use surface color for cards
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Box(
-                modifier = Modifier.size(56.dp)
-            ) {
-                Image(
-                    painter = painterResource(chat.profileRes),
-                    contentDescription = "Profile Image",
-                    modifier = Modifier.clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-                Box(
-                    modifier = Modifier
-                        .size(13.dp)
-                        .background(
-                            if (chat.isOnline) Color(0xFF4CAF50) else MaterialTheme.colorScheme.surfaceVariant, // Green for online, subtle color for offline
-                            CircleShape
-                        )
-                        .border(BorderStroke(2.dp, MaterialTheme.colorScheme.surface), CircleShape) // Add border for contrast
-                        .align(Alignment.BottomEnd)
-                )
-            }
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(3.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = chat.userName,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = chat.timestamp,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = chat.lastMessage,
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    if (chat.unreadCount > 0) {
-                        Box(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .background(MaterialTheme.colorScheme.primary, CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = chat.unreadCount.toString(),
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 /**
  * Completed Preview for ChatScreen.
