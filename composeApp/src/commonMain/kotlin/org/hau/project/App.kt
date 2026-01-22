@@ -5,16 +5,16 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.hau.project.ui.appTwo.ui.components.BottomNavigation
-import org.hau.project.ui.appTwo.ui.theme.AppTheme
-import org.hau.project.ui.appTwo.ui.theme.SocialTheme
+import org.hau.project.ui.components.BottomNavigation
+import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 
 @Composable
 @Preview
 fun App() {
     // State to hold the currently selected theme. Default to WhatsApp.
     // In a real app, you might save this to user preferences.
-    var currentTheme by remember { mutableStateOf(SocialTheme.Twitter) }
+    var currentTheme by remember { mutableStateOf(org.hau.project.ui.theme.SocialTheme.Twitter) }
 
     // Use our custom AppTheme
     AppTheme(theme = currentTheme) {
