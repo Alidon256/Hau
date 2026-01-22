@@ -45,38 +45,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
-import org.hau.project.data.repositories.ChatRepository
-import org.hau.project.ui.screens.settings.AccountScreen
-import org.hau.project.ui.screens.calls.AudioCallScreen
-import org.hau.project.ui.screens.calls.CallsScreen
-import org.hau.project.ui.screens.memories.ChannelDetailScreen
-import org.hau.project.ui.screens.chats.DetailScreen
-import org.hau.project.ui.screens.chats.ChatScreen
-import org.hau.project.ui.screens.memories.MemoriesScreen
-import org.hau.project.ui.screens.chats.NewContactScreen
-import org.hau.project.ui.screens.chats.NewGroupScreen
-import org.hau.project.ui.screens.memories.ScheduleCallScreen
-import org.hau.project.ui.screens.settings.SettingsScreen
-import org.hau.project.ui.screens.calls.VideoCallScreen
-import org.hau.project.ui.screens.chats.UserProfileScreen
-import org.hau.project.ui.screens.memories.ChannelProfileScreen
-import org.hau.project.ui.screens.memories.ProfileAction
-import org.hau.project.ui.screens.settings.AvatarScreen
-import org.hau.project.ui.screens.settings.ChatSettingsScreen
-import org.hau.project.ui.screens.settings.DeleteAccountScreen
-import org.hau.project.ui.screens.settings.EmailAddressScreen
-import org.hau.project.ui.screens.settings.HelpSettingsScreen
-import org.hau.project.ui.screens.settings.InviteFriendScreen
-import org.hau.project.ui.screens.settings.LanguageSettingsScreen
-import org.hau.project.ui.screens.settings.PasskeysScreen
-import org.hau.project.ui.screens.settings.PrivacySettingsScreen
-import org.hau.project.ui.screens.settings.RequestAccountInfoScreen
-import org.hau.project.ui.screens.settings.SecurityNotificationsScreen
-import org.hau.project.ui.screens.settings.StorageSettingsScreen
-import org.hau.project.ui.theme.AppTheme
-import org.hau.project.ui.theme.SocialTheme
-import org.hau.project.viewModels.ChatViewModel
-import org.hau.project.viewModels.ProfileViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Serializable
@@ -449,7 +417,7 @@ fun BottomNavigation(){
 fun BottomNavigationPreview(){
     _root_ide_package_.org.hau.project.ui.theme.AppTheme(
         useDarkTheme = true,
-        theme = _root_ide_package_.org.hau.project.ui.theme.SocialTheme.WhatsApp
+        theme = _root_ide_package_.org.hau.project.ui.theme.SocialTheme.Verdant
     ) {
         _root_ide_package_.org.hau.project.ui.components.BottomNavigation()
     }
@@ -459,7 +427,7 @@ fun BottomNavigationPreview(){
 fun BottomNavigationLightPreview(){
     _root_ide_package_.org.hau.project.ui.theme.AppTheme(
         useDarkTheme = false,
-        theme = _root_ide_package_.org.hau.project.ui.theme.SocialTheme.WhatsApp
+        theme = _root_ide_package_.org.hau.project.ui.theme.SocialTheme.Verdant
     ) {
         _root_ide_package_.org.hau.project.ui.components.BottomNavigation()
     }

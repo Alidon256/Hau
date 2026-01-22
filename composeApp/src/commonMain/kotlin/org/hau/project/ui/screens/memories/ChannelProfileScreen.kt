@@ -18,17 +18,9 @@ import androidx.compose.ui.unit.dp
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.grattitude
 import kotlinx.coroutines.launch
-import org.hau.project.data.repositories.formatCount
 import org.hau.project.models.AttachmentType
 import org.hau.project.models.Channels
-import org.hau.project.ui.components.ActionButtonsRow
-import org.hau.project.ui.components.ChannelInfoSection
-import org.hau.project.ui.components.ChannelProfileTopBar
 import org.hau.project.ui.components.DangerSettingsRow
-import org.hau.project.ui.components.PrivacyInfoBottomSheet
-import org.hau.project.ui.components.ProfileHeader
-import org.hau.project.ui.components.SettingsRow
-import org.hau.project.ui.components.VerifiedInfoBottomSheet
 import org.hau.project.ui.theme.AppTheme
 import org.hau.project.ui.theme.SocialTheme
 import org.hau.project.viewModels.ProfileUiState
@@ -264,11 +256,11 @@ private val previewState = ProfileUiState(
     isMuted = false
 )
 
-@Preview(name = "Light Mode (WhatsApp Theme)")
+@Preview(name = "Light Mode (Verdant Theme)")
 @Composable
 private fun ChannelProfileScreenPreviewLight() {
     AppTheme(
-        theme = SocialTheme.WhatsApp,
+        theme = SocialTheme.Verdant,
         useDarkTheme = false
     ) {
         Surface {
@@ -279,11 +271,11 @@ private fun ChannelProfileScreenPreviewLight() {
     }
 }
 
-@Preview(name = "Dark Mode (Twitter Theme)")
+@Preview(name = "Dark Mode (Sky Theme)")
 @Composable
 private fun ChannelProfileScreenPreviewDark() {
     AppTheme(
-        theme = SocialTheme.Twitter,
+        theme = SocialTheme.Sky,
         useDarkTheme = true
     ) {
         Surface {

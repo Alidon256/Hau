@@ -74,7 +74,7 @@ fun PasskeysScreen(onBack: () -> Unit) {
             )
             PasskeyBenefitItem(
                 Icons.Default.Fingerprint,
-                "Log into WhatsApp with your face, fingerprint or screen lock."
+                "Log into Verdant with your face, fingerprint or screen lock."
             )
             PasskeyBenefitItem(
                 Icons.Default.Key,

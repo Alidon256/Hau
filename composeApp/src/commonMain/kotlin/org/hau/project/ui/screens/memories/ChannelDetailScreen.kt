@@ -166,7 +166,7 @@ private fun ChannelTopBar(
                         Spacer(Modifier.width(4.dp))
                         Icon(
                             Icons.Default.Verified, "Verified",
-                            tint = Color(0xFF00A884), // WhatsApp's specific green check
+                            tint = Color(0xFF00A884), // Verdant's specific green check
                             modifier = Modifier.size(16.dp)
                         )
                     }

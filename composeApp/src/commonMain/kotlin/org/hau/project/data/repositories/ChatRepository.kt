@@ -37,14 +37,30 @@ import org.hau.project.models.RecentCalls
 import org.hau.project.models.RecommendedChannels
 import kotlin.math.round
 
-// In a real app, this would be injected using a dependency injection framework like Koin or Hilt.
+/**
+ * A repository responsible for providing chat-related data from a simulated data source.
+ *
+ * In a real-world application, this class would be responsible for fetching data from a remote server,
+ * a local database, or a combination of both. It abstracts the data source from the ViewModel,
+ * allowing for easier testing and maintenance.
+ *
+ * This repository uses `Flow` to expose data, enabling reactive updates in the UI when the
+ * underlying data changes.
+ */
 open class ChatRepository {
 
-    // Simulates fetching a list of all chats from a data source.
-    open fun getChats(): Flow<List<org.hau.project.models.Chat>> {
+    /**
+     * Retrieves a flow of all chat conversations.
+     *
+     * This method simulates fetching a list of [Chat] objects from a data source and wrapping it
+     * in a [Flow]. In a real application, this would likely query a database or an API endpoint.
+     *
+     * @return A [Flow] emitting a list of [Chat]s.
+     */
+    open fun getChats(): Flow<List<Chat>> {
         return flowOf(
             listOf(
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "1",
                     "Mugumya Ali",
                     Res.drawable.story_3,
@@ -55,7 +71,7 @@ open class ChatRepository {
                     true,
                     false
                 ),
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "2",
                     "Jane Doe",
                     Res.drawable.image_two,
@@ -66,7 +82,7 @@ open class ChatRepository {
                     true,
                     true
                 ),
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "3",
                     "John Smith",
                     Res.drawable.image_three,
@@ -77,7 +93,7 @@ open class ChatRepository {
                     true,
                     false
                 ),
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "4",
                     "Caroline Varsaha",
                     Res.drawable.story_4,
@@ -88,7 +104,7 @@ open class ChatRepository {
                     true,
                     true
                 ),
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "5",
                     "Sebastian Rudiger",
                     Res.drawable.story_1,
@@ -99,7 +115,7 @@ open class ChatRepository {
                     true,
                     false
                 ),
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "6",
                     "Really Rinah",
                     Res.drawable.story_2,
@@ -110,7 +126,7 @@ open class ChatRepository {
                     true,
                     true
                 ),
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "7",
                     "Darshan Patelchi",
                     Res.drawable.grattitude,
@@ -121,7 +137,7 @@ open class ChatRepository {
                     true,
                     true
                 ),
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "8",
                     "Mohammed Arnold",
                     Res.drawable.image_two,
@@ -132,7 +148,7 @@ open class ChatRepository {
                     true,
                     true
                 ),
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "9",
                     "Tamara Schipchinskaya",
                     Res.drawable.grattitude,
@@ -143,7 +159,7 @@ open class ChatRepository {
                     false,
                     false
                 ),
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "10",
                     "Ariana Amberline",
                     Res.drawable.image_last,
@@ -154,7 +170,7 @@ open class ChatRepository {
                     true,
                     false
                 ),
-                _root_ide_package_.org.hau.project.models.Chat(
+                Chat(
                     "11",
                     "Jerry Johnson",
                     Res.drawable.story_5,
@@ -169,171 +185,179 @@ open class ChatRepository {
         )
     }
 
-    // Simulates fetching messages for a specific chat ID.
-    fun getMessagesForChat(chatId: String): Flow<List<org.hau.project.models.Message>> {
+    /**
+     * Fetches the messages for a specific chat conversation.
+     *
+     * This function simulates a lookup in a message database based on the provided `chatId`.
+     * If the chat ID is not found, it returns a default or empty list of messages.
+     *
+     * @param chatId The unique identifier of the chat to retrieve messages for.
+     * @return A [Flow] emitting a list of [Message]s for the specified chat.
+     */
+    fun getMessagesForChat(chatId: String): Flow<List<Message>> {
         // Here you would have logic to return messages based on the chatId
         val messagesDatabase = mapOf(
             "1" to listOf( // Conversation with Mugumya Ali
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m1_1",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "Hey, are we still on for lunch tomorrow?",
                     time = "10:05 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m1_2",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Me,
+                    sender = MessageSender.Me,
                     text = "Absolutely! Where are we meeting?",
                     time = "10:06 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m1_3",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "Let's go to that new Italian place downtown. I've heard great things.",
                     time = "10:07 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m1_4",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "I'll send you the location.",
                     time = "10:07 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m1_5",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Me,
+                    sender = MessageSender.Me,
                     text = "Perfect! What time works for you?",
                     time = "10:08 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m1_6",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "How about 12:30 PM?",
                     time = "10:09 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m1_7",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Me,
+                    sender = MessageSender.Me,
                     text = "Sounds great. I'll put it in my calendar.",
                     time = "10:10 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.DELIVERED
+                    status = MessageStatus.DELIVERED
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m1_8",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Me,
+                    sender = MessageSender.Me,
                     text = "See you tomorrow!",
                     time = "11:30 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.SENT
+                    status = MessageStatus.SENT
                 )
             ),
             "2" to listOf( // Conversation with Jane Doe
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m2_1",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "Did you get the project update I sent?",
                     time = "9:30 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m2_2",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Me,
+                    sender = MessageSender.Me,
                     text = "Yes, I just saw it. Looks good, thanks for the hard work!",
                     time = "9:45 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m2_3",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "Great! Let me know if you have any feedback.",
                     time = "9:46 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m2_4",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Me,
+                    sender = MessageSender.Me,
                     text = "Will do. I'll review it in detail this afternoon.",
                     time = "9:50 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m2_5",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "Okay, sounds good.",
                     time = "10:15 AM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 )
             ),
             "3" to listOf(
                 // Conversation with John Smith
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m3_1",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "Hey, quick question.",
                     time = "Yesterday",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m3_2",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Me,
+                    sender = MessageSender.Me,
                     text = "Sure, what's up?",
                     time = "Yesterday",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m3_3",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "I'm having trouble with the login API. It keeps giving me a 401 error.",
                     time = "Yesterday",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m3_4",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Me,
+                    sender = MessageSender.Me,
                     text = "Ah, did you remember to include the new auth token in the header?",
                     time = "Yesterday",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m3_5",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Me,
+                    sender = MessageSender.Me,
                     text = "We updated the security protocol last week.",
                     time = "Yesterday",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m3_6",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "Oh, that's probably it! I completely forgot.",
                     time = "Yesterday",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "m3_7",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "Can you send me the file with the new token details?",
                     time = "Yesterday",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
             ),
             "default" to listOf(
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "def_1",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Them,
+                    sender = MessageSender.Them,
                     text = "Hello!",
                     time = "1:00 PM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.READ
+                    status = MessageStatus.READ
                 ),
-                _root_ide_package_.org.hau.project.models.Message(
+                Message(
                     "def_2",
-                    sender = _root_ide_package_.org.hau.project.models.MessageSender.Me,
+                    sender = MessageSender.Me,
                     text = "Hi there! How can I help you?",
                     time = "1:01 PM",
-                    status = _root_ide_package_.org.hau.project.models.MessageStatus.SENT
+                    status = MessageStatus.SENT
                 )
             )
         )
@@ -342,10 +366,15 @@ open class ChatRepository {
 
     }
 
-    fun getChannels() : Flow<List<org.hau.project.models.Channels>>{
+    /**
+     * Retrieves a list of all available channels.
+     *
+     * @return A [Flow] emitting a list of [Channels].
+     */
+    fun getChannels() : Flow<List<Channels>>{
         return flowOf(
             listOf(
-                _root_ide_package_.org.hau.project.models.Channels(
+                Channels(
                     channelName = "Alidon",
                     channelRes = Res.drawable.alidon,
                     timestamp = "Just now",
@@ -357,7 +386,7 @@ open class ChatRepository {
                     id = "aa",
                     isVerified = true,
                 ),
-                _root_ide_package_.org.hau.project.models.Channels(
+                Channels(
                     channelName = "Really Rinah",
                     channelRes = Res.drawable.story_2,
                     timestamp = "01/22/2026",
@@ -369,11 +398,11 @@ open class ChatRepository {
                     id = "ab",
                     isVerified = false,
                 ),
-                _root_ide_package_.org.hau.project.models.Channels(
+                Channels(
                     channelName = "Sebastian Rudiger",
                     channelRes = Res.drawable.story_1,
                     timestamp = "01/21/2026",
-                    attachmentType = _root_ide_package_.org.hau.project.models.AttachmentType.AUDIO,
+                    attachmentType = AttachmentType.AUDIO,
                     unreadMessages = 167,
                     message = "Announcing the new Update of Mindset Pulse💕",
                     isRead = false,
@@ -381,7 +410,7 @@ open class ChatRepository {
                     id = "ac",
                     isVerified = true,
                 ),
-                _root_ide_package_.org.hau.project.models.Channels(
+                Channels(
                     channelName = "Caroline Varsaha",
                     channelRes = Res.drawable.story_4,
                     timestamp = "01/21/2026",
@@ -393,11 +422,11 @@ open class ChatRepository {
                     id = "all",
                     isVerified = false,
                 ),
-                _root_ide_package_.org.hau.project.models.Channels(
+                Channels(
                     channelName = "Darshan Patelchi",
                     channelRes = Res.drawable.story_5,
                     timestamp = "01/20/2026",
-                    attachmentType = _root_ide_package_.org.hau.project.models.AttachmentType.IMAGE,
+                    attachmentType = AttachmentType.IMAGE,
                     unreadMessages = 234,
                     message = "The Stake Holders of Tesla today had a general meeting and decided that they were gonna give elon a new pack of $1T",
                     isRead = false,
@@ -405,11 +434,11 @@ open class ChatRepository {
                     id = "ag",
                     isVerified = true,
                 ),
-                _root_ide_package_.org.hau.project.models.Channels(
+                Channels(
                     channelName = "Mohammed Arnold",
                     channelRes = Res.drawable.image_two,
                     timestamp = "01/19/2026",
-                    attachmentType = _root_ide_package_.org.hau.project.models.AttachmentType.VIDEO,
+                    attachmentType = AttachmentType.VIDEO,
                     unreadMessages = 0,
                     message = "You will have to truely believ me on some facts in a way that attaining success in most cases it always have to come with had work.",
                     isRead = true,
@@ -421,31 +450,37 @@ open class ChatRepository {
         )
 
     }
-    fun getRecommended() : Flow<List<org.hau.project.models.RecommendedChannels>>{
+
+    /**
+     * Retrieves a list of recommended channels for the user to join.
+     *
+     * @return A [Flow] emitting a list of [RecommendedChannels].
+     */
+    fun getRecommended() : Flow<List<RecommendedChannels>>{
         return flowOf(
             listOf(
-                _root_ide_package_.org.hau.project.models.RecommendedChannels(
+                RecommendedChannels(
                     channelName = "Gratitude",
                     channelRes = Res.drawable.grattitude,
                     isVerified = false,
                     followerCount = 145087,
                     id = "1"
                 ),
-                _root_ide_package_.org.hau.project.models.RecommendedChannels(
+                RecommendedChannels(
                     channelName = "Mental Health",
                     channelRes = Res.drawable.mentalhealth,
                     isVerified = true,
                     followerCount = 100000,
                     id = "2"
                 ),
-                _root_ide_package_.org.hau.project.models.RecommendedChannels(
+                RecommendedChannels(
                     channelName = "Strong Hope",
                     channelRes = Res.drawable.stronghope,
                     isVerified = false,
                     followerCount = 150489,
                     id = "3"
                 ),
-                _root_ide_package_.org.hau.project.models.RecommendedChannels(
+                RecommendedChannels(
                     channelName = "Caroline Varsaha",
                     channelRes = Res.drawable.story_4,
                     isVerified = true,
@@ -455,30 +490,36 @@ open class ChatRepository {
             )
         )
     }
-    fun getCallActions() : Flow<List<org.hau.project.models.CallActions>>{
+
+    /**
+     * Retrieves a list of actions that can be performed related to calls.
+     *
+     * @return A [Flow] emitting a list of [CallActions].
+     */
+    fun getCallActions() : Flow<List<CallActions>>{
         return flowOf(
             listOf(
-                _root_ide_package_.org.hau.project.models.CallActions(
+                CallActions(
                     Icons.Outlined.Call,
                     "Call",
                     isCommunity = false
                 ),
-                _root_ide_package_.org.hau.project.models.CallActions(
+                CallActions(
                     Icons.Outlined.CalendarMonth,
                     "Schedule",
                     isCommunity = false
                 ),
-                _root_ide_package_.org.hau.project.models.CallActions(
+                CallActions(
                     Icons.Outlined.KeyboardCommandKey,
                     "Keypad",
                     isCommunity = false
                 ),
-                _root_ide_package_.org.hau.project.models.CallActions(
+                CallActions(
                     Icons.Outlined.KeyboardCommandKey,
                     "Gratitude",
                     isCommunity = true
                 ),
-                _root_ide_package_.org.hau.project.models.CallActions(
+                CallActions(
                     Icons.Outlined.FavoriteBorder,
                     "Favourites",
                     isCommunity = false
@@ -486,96 +527,108 @@ open class ChatRepository {
             )
         )
     }
-    fun getRecentCalls() : Flow<List<org.hau.project.models.RecentCalls>>{
+
+    /**
+     * Retrieves a list of recent calls made or received by the user.
+     *
+     * @return A [Flow] emitting a list of [RecentCalls].
+     */
+    fun getRecentCalls() : Flow<List<RecentCalls>>{
         return flowOf(
             listOf(
-                _root_ide_package_.org.hau.project.models.RecentCalls(
+                RecentCalls(
                     callerName = "Mugumya Ali",
                     callerImageRes = Res.drawable.story_3,
                     callTimes = 2,
                     timestamp = "Just now",
                     isSender = true,
-                    callType = _root_ide_package_.org.hau.project.models.CallType.VIDEO
+                    callType = CallType.VIDEO
                 ),
-                _root_ide_package_.org.hau.project.models.RecentCalls(
+                RecentCalls(
                     callerName = "Really Rinah",
                     callerImageRes = Res.drawable.story_2,
                     callTimes = 0,
                     timestamp = "7rd, January, 02:11",
                     isSender = false,
-                    callType = _root_ide_package_.org.hau.project.models.CallType.AUDIO
+                    callType = CallType.AUDIO
                 ),
-                _root_ide_package_.org.hau.project.models.RecentCalls(
+                RecentCalls(
                     callerName = "Sebastian Rudiger",
                     callerImageRes = Res.drawable.story_1,
                     callTimes = 5,
                     timestamp = "6rd January, 01:54",
                     isSender = true,
-                    callType = _root_ide_package_.org.hau.project.models.CallType.AUDIO
+                    callType = CallType.AUDIO
                 ),
-                _root_ide_package_.org.hau.project.models.RecentCalls(
+                RecentCalls(
                     callerName = "Caroline Varsaha",
                     callerImageRes = Res.drawable.story_4,
                     callTimes = 2,
                     timestamp = "6rd January, 03:08",
                     isSender = false,
-                    callType = _root_ide_package_.org.hau.project.models.CallType.VIDEO
+                    callType = CallType.VIDEO
                 ),
-                _root_ide_package_.org.hau.project.models.RecentCalls(
+                RecentCalls(
                     callerName = "Darshan Patelchi",
                     callerImageRes = Res.drawable.story_5,
                     callTimes = 0,
                     timestamp = "5rd January, 04:00",
                     isSender = false,
-                    callType = _root_ide_package_.org.hau.project.models.CallType.AUDIO
+                    callType = CallType.AUDIO
                 ),
-                _root_ide_package_.org.hau.project.models.RecentCalls(
+                RecentCalls(
                     callerName = "Mohammed Arnold",
                     callerImageRes = Res.drawable.image_two,
                     callTimes = 0,
                     timestamp = "4rd January, 05:45",
                     isSender = true,
-                    callType = _root_ide_package_.org.hau.project.models.CallType.VIDEO
+                    callType = CallType.VIDEO
                 ),
-                _root_ide_package_.org.hau.project.models.RecentCalls(
+                RecentCalls(
                     callerName = "Tamara Schipchinskaya",
                     callerImageRes = Res.drawable.image_three,
                     callTimes = 2,
                     timestamp = "4rd January, 06:04",
                     isSender = false,
-                    callType = _root_ide_package_.org.hau.project.models.CallType.AUDIO
+                    callType = CallType.AUDIO
                 ),
-                _root_ide_package_.org.hau.project.models.RecentCalls(
+                RecentCalls(
                     callerName = "Ariana Amberline",
                     callerImageRes = Res.drawable.image_last,
                     callTimes = 3,
                     timestamp = "3rd January, 05:36",
                     isSender = true,
-                    callType = _root_ide_package_.org.hau.project.models.CallType.VIDEO
+                    callType = CallType.VIDEO
                 ),
-                _root_ide_package_.org.hau.project.models.RecentCalls(
+                RecentCalls(
                     callerName = "Ali Stack",
                     callerImageRes = Res.drawable.story_3,
                     callTimes = 1,
                     timestamp = "2rd January, 01:47",
                     isSender = false,
-                    callType = _root_ide_package_.org.hau.project.models.CallType.AUDIO
+                    callType = CallType.AUDIO
                 ),
-                _root_ide_package_.org.hau.project.models.RecentCalls(
+                RecentCalls(
                     callerName = "Jerry Johnson",
                     callerImageRes = Res.drawable.story_5,
                     callTimes = 2,
                     timestamp = "1rd January, 01:09",
                     isSender = true,
-                    callType = _root_ide_package_.org.hau.project.models.CallType.VIDEO
+                    callType = CallType.VIDEO
                 )
             )
         )
     }
-    fun getNewContacts() : Flow<List<org.hau.project.models.NewContacts>> {
+
+    /**
+     * Retrieves a list of new contacts that the user can start a conversation with.
+     *
+     * @return A [Flow] emitting a list of [NewContacts].
+     */
+    fun getNewContacts() : Flow<List<NewContacts>> {
         return flowOf(
             listOf(
-                _root_ide_package_.org.hau.project.models.NewContacts(
+                NewContacts(
                     contactName = "Mugumya Ali",
                     contactRes = Res.drawable.story_3,
                     isOwner = true,
@@ -583,7 +636,7 @@ open class ChatRepository {
                     contact = "+256 785330244",
                     id = "1"
                 ),
-                _root_ide_package_.org.hau.project.models.NewContacts(
+                NewContacts(
                     contactName = "Really Rinah",
                     contactRes = Res.drawable.story_2,
                     isOwner = false,
@@ -591,7 +644,7 @@ open class ChatRepository {
                     contact = "+256 755935663",
                     id = "2"
                 ),
-                _root_ide_package_.org.hau.project.models.NewContacts(
+                NewContacts(
                     contactName = null,
                     contactRes = Res.drawable.story_1,
                     isOwner = false,
@@ -599,7 +652,7 @@ open class ChatRepository {
                     contact = "+256 784337244",
                     id = "3"
                 ),
-                _root_ide_package_.org.hau.project.models.NewContacts(
+                NewContacts(
                     contactName = "Caroline Varsaha",
                     contactRes = Res.drawable.story_4,
                     isOwner = false,
@@ -607,7 +660,7 @@ open class ChatRepository {
                     contact = "+253 785000244",
                     id = "4"
                 ),
-                _root_ide_package_.org.hau.project.models.NewContacts(
+                NewContacts(
                     contactName = null,
                     contactRes = Res.drawable.image_now,
                     isOwner = false,
@@ -615,7 +668,7 @@ open class ChatRepository {
                     contact = "+111 744430244",
                     id = "5"
                 ),
-                _root_ide_package_.org.hau.project.models.NewContacts(
+                NewContacts(
                     contactName = "Caroline Varsaha",
                     contactRes = Res.drawable.image_two,
                     isOwner = false,
@@ -626,77 +679,85 @@ open class ChatRepository {
             )
         )
     }
-    // In ChatRepository.kt
 
-    fun getChannelMessages(channelId: String): Flow<List<org.hau.project.models.MessageItem>> {
+    /**
+     * Fetches the messages for a specific channel.
+     *
+     * This is a mock implementation that returns a static list of [MessageItem]s, including text,
+     * images, and a poll. In a real app, this would query a data source for the channel's content.
+     *
+     * @param channelId The ID of the channel to fetch messages for.
+     * @return A [Flow] emitting a list of [MessageItem]s.
+     */
+    fun getChannelMessages(channelId: String): Flow<List<MessageItem>> {
         // Mock data - in a real app, this would be a specific query
         val pollOptions = listOf(
-            _root_ide_package_.org.hau.project.models.PollOption(
+            PollOption(
                 1,
                 "Emissions reduction",
                 "⚡️",
                 401
             ),
-            _root_ide_package_.org.hau.project.models.PollOption(2, "Carbon removal", "🌱", 262),
-            _root_ide_package_.org.hau.project.models.PollOption(
+            PollOption(2, "Carbon removal", "🌱", 262),
+            PollOption(
                 3,
                 "Tech investment",
                 "🏢",
                 656,
                 isSelected = true
             ),
-            _root_ide_package_.org.hau.project.models.PollOption(4, "Government policy", "🏛️", 360)
+            PollOption(4, "Government policy", "🏛️", 360)
         )
         val messages = listOf(
-            _root_ide_package_.org.hau.project.models.MessageItem(
+            MessageItem(
                 id = "msg1",
                 text = "Both steep emissions reductions and large-scale carbon removal. Which approach is most critical to keeping AI growth compatible with climate targets?",
                 link = "https://weforum.org/stories/2025/10/ai-carbon-debt-carbon-removal/...",
                 time = "19:40",
                 reactions = mapOf("👍" to 38, "❤️" to 12, "🙏" to 5)
             ),
-            _root_ide_package_.org.hau.project.models.MessageItem(
+            MessageItem(
                 id = "poll1",
                 isPoll = true,
-                poll = _root_ide_package_.org.hau.project.models.Poll(
+                poll = Poll(
                     "What is the key to scaling AI sustainably?",
                     pollOptions
                 ),
                 time = "19:40",
                 reactions = mapOf("❤️" to 101, "👍" to 23, "😂" to 4)
             ),
-            _root_ide_package_.org.hau.project.models.MessageItem(
+            MessageItem(
                 id = "date_divider",
                 text = "8 December 2025",
                 time = "19:40",
                 reactions = mapOf("👍" to 38, "❤️" to 12, "🙏" to 5)
             ),
-            _root_ide_package_.org.hau.project.models.MessageItem(
+            MessageItem(
                 id = "img1",
                 image = "https://picsum.photos/seed/picsum2/800/600", // Placeholder image
                 time = "12:30",
                 reactions = mapOf("😮" to 77)
             ),
-            _root_ide_package_.org.hau.project.models.MessageItem(
+            MessageItem(
                 id = "msg2",
                 text = "Our latest quarterly report is now available for review. Please find the summary of key findings attached.",
                 time = "12:31",
                 reactions = mapOf("👍" to 15, "🚀" to 8)
             ),
-            _root_ide_package_.org.hau.project.models.MessageItem(
+            MessageItem(
                 id = "msg3",
                 text = "Following up on the report, this image outlines our projected growth for the next fiscal year. We welcome your feedback.",
                 image = "https://picsum.photos/seed/growth/800/600",
                 time = "12:32",
                 reactions = mapOf("📈" to 25, "😮" to 7)
             ),
-            _root_ide_package_.org.hau.project.models.MessageItem(
+            MessageItem(
                 id = "msg4",
                 text = "Reminder: The all-hands meeting is scheduled for 3:00 PM today. Please ensure you have reviewed the agenda beforehand.",
                 time = "12:33",
                 reactions = mapOf("🙏" to 12)
             ),
-            _root_ide_package_.org.hau.project.models.MessageItem(
+            MessageItem(
                 id = "msg5",
                 text = "Sharing a snapshot from our recent successful team-building event. Great to see everyone collaborating effectively!",
                 image = "https://picsum.photos/seed/teamevent/800/600",
@@ -709,6 +770,16 @@ open class ChatRepository {
     }
 
 }
+
+/**
+ * Formats a given number into a more readable string representation.
+ *
+ * This function converts large numbers into a shortened format with a suffix (K for thousands,
+ * M for millions). For numbers less than 1,000, it returns the number as a string.
+ *
+ * @param count The numeric value to be formatted.
+ * @return A formatted string (e.g., "1.2K", "5.8M") or the original number as a string.
+ */
 fun formatCount(count: Long): String {
     fun oneDecimal(value: Float): String {
         val rounded = round(value * 10f) / 10f

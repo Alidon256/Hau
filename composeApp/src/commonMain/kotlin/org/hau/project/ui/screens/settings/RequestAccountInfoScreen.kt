@@ -42,7 +42,7 @@ fun RequestAccountInfoScreen(onBack: () -> Unit) {
                 SettingsHeader("Account information")
                 SettingsInfoItem(
                     title = "Request account report",
-                    subtitle = "Create a report of your WhatsApp account information and settings, which you can access or port to another app. This report does not include your messages."
+                    subtitle = "Create a report of your Verdant account information and settings, which you can access or port to another app. This report does not include your messages."
                 ) {}
                SettingsSwitchItem(
                     title = "Create reports automatically",

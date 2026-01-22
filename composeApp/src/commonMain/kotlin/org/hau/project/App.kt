@@ -1,6 +1,5 @@
 package org.hau.project
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -12,9 +11,9 @@ import org.hau.project.ui.theme.SocialTheme
 @Composable
 @Preview
 fun App() {
-    // State to hold the currently selected theme. Default to WhatsApp.
+    // State to hold the currently selected theme. Default to Verdant.
     // In a real app, you might save this to user preferences.
-    var currentTheme by remember { mutableStateOf(org.hau.project.ui.theme.SocialTheme.Twitter) }
+    var currentTheme by remember { mutableStateOf(SocialTheme.Sky) }
 
     // Use our custom AppTheme
     AppTheme(theme = currentTheme) {

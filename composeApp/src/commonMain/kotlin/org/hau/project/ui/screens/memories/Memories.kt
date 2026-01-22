@@ -82,7 +82,7 @@ fun MemoriesScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Memories", // Renamed from "Memories" to match WhatsApp
+                        "Memories", // Renamed from "Memories" to match Verdant
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleLarge,
                     )
@@ -428,7 +428,7 @@ private fun ChannelItemUnreadPreview(){
         .background(MaterialTheme.colorScheme.background).padding(16.dp)) {
         ChannelItem(
             channel = Channels(
-                channelName = "WhatsApp",
+                channelName = "Verdant",
                 channelRes = Res.drawable.story_3, // Replace with a valid resource
                 timestamp = "11:38 AM",
                 attachmentType = AttachmentType.VIDEO,
@@ -515,7 +515,7 @@ fun MemoriesLightBlueScreenPreview() {
 
     _root_ide_package_.org.hau.project.ui.theme.AppTheme(
         useDarkTheme = false,
-        theme = _root_ide_package_.org.hau.project.ui.theme.SocialTheme.Twitter
+        theme = _root_ide_package_.org.hau.project.ui.theme.SocialTheme.Sky
     ) {
         _root_ide_package_.org.hau.project.ui.screens.memories.MemoriesScreen(
             viewModel = previewViewModel,
@@ -534,7 +534,7 @@ fun MemoriesLightSnapScreenPreview() {
 
     AppTheme(
         useDarkTheme = false,
-        theme = SocialTheme.Snapchat
+        theme = SocialTheme.Electric
     ) {
         MemoriesScreen(
             viewModel = previewViewModel,
@@ -552,7 +552,7 @@ fun MemoriesLightInstScreenPreview() {
 
     AppTheme(
         useDarkTheme = false,
-        theme = SocialTheme.Instagram
+        theme = SocialTheme.Twilight
     ) {
         MemoriesScreen(
             viewModel = previewViewModel,
@@ -588,7 +588,7 @@ fun MemoriesDarkBlueScreenPreview() {
 
     AppTheme(
         useDarkTheme = true,
-        theme = SocialTheme.Twitter
+        theme = SocialTheme.Sky
     ) {
         MemoriesScreen(
             viewModel = previewViewModel,
@@ -606,7 +606,7 @@ fun MemoriesDarkSnapScreenPreview() {
 
     AppTheme(
         useDarkTheme = true,
-        theme = SocialTheme.Snapchat
+        theme = SocialTheme.Electric
     ) {
         MemoriesScreen(
             viewModel = previewViewModel,
@@ -625,7 +625,7 @@ fun MemoriesDarkInstScreenPreview() {
 
     AppTheme(
         useDarkTheme = true,
-        theme = SocialTheme.Instagram
+        theme = SocialTheme.Twilight
     ) {
         MemoriesScreen(
             viewModel = previewViewModel,

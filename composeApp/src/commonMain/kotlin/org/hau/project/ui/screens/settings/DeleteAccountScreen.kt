@@ -60,9 +60,9 @@ fun DeleteAccountScreen(onBack: () -> Unit) {
             }
             Spacer(Modifier.height(16.dp))
             Column(modifier = Modifier.padding(start = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("• The account will be deleted from WhatsApp and all your devices", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("• The account will be deleted from Verdant and all your devices", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text("• Your message history will be erased", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text("• You will be removed from all your WhatsApp groups", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("• You will be removed from all your Verdant groups", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text("• Your Google storage backup will be deleted", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Text("• Any channels you created will be deleted", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }

@@ -190,7 +190,7 @@ fun NewContactScreenPreview() {
         ChatViewModel(fakeRepository)
     AppTheme(
         useDarkTheme = false,
-        theme = SocialTheme.WhatsApp
+        theme = SocialTheme.Verdant
     ) {
         NewContactScreen(
             onBack = {},

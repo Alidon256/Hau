@@ -54,7 +54,7 @@ fun AvatarScreen(onBack: () -> Unit) {
             )
             Spacer(Modifier.height(24.dp))
             Text(
-                "Say more with Avatars now on WhatsApp",
+                "Say more with Avatars now on Verdant",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
