@@ -17,9 +17,15 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
-    jvm()
-    
+
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17) // or JVM_21
+        }
+    }
+
+
+
     js {
         browser()
         binaries.executable()
@@ -36,6 +42,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.accompanist.systemuicontroller)
+            implementation("androidx.compose.material3:material3-window-size-class:1.4.0")
         }
         commonMain.dependencies {
             implementation(compose.runtime)

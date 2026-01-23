@@ -47,7 +47,7 @@ fun ChannelDetailScreen(
     onBack: () -> Unit,
     viewModel: org.hau.project.viewModels.ChatViewModel,
     channelId: String,
-    onChannelInfoClick: () -> Unit
+    onChannelInfoClick: (channelId: String) -> Unit
 ) {
     LaunchedEffect(channelId) {
         viewModel.loadChannelDetails(channelId)
@@ -62,7 +62,11 @@ fun ChannelDetailScreen(
             ChannelTopBar(
                 channelInfo = uiState.channelInfo,
                 onBack = onBack,
-                onChannelInfoClick = onChannelInfoClick
+                onChannelInfoClick = {
+                    uiState.channelInfo?.id?.let { id ->
+                        onChannelInfoClick(id)
+                    }
+                }
             )
         },
         containerColor = MaterialTheme.colorScheme.background

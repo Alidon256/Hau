@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.hau.project.data.repositories.ChatRepository
 import org.hau.project.models.CallActions
@@ -19,6 +22,8 @@ import org.hau.project.models.MessageItem
 import org.hau.project.models.NewContacts
 import org.hau.project.models.RecentCalls
 import org.hau.project.models.RecommendedChannels
+import kotlin.text.contains
+import kotlin.text.filter
 
 /**
  * Represents the UI state for the main chat list screen.
@@ -129,6 +134,24 @@ class ChatViewModel(
      */
     val channelDetailState: StateFlow<ChatDetailUiState> = _channelDetailState.asStateFlow()
 
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
+
+     // It automatically emits a new list whenever either the chats or the query change.
+    val filteredChats: StateFlow<List<Chat>> =
+        searchQuery.combine(_chatListState) { query, chatState ->
+            if (query.isBlank()) {
+                chatState.chats
+            } else {
+                chatState.chats.filter { chat ->
+                    chat.userName.contains(query, ignoreCase = true)
+                }
+            }
+        }.stateIn( // Convert the resulting Flow into a StateFlow
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000), // Start collecting when the UI is visible
+            initialValue = emptyList()
+        )
 
     init {
         // Load all initial data when the ViewModel is created
@@ -140,6 +163,9 @@ class ChatViewModel(
         loadNewContacts()
     }
 
+    fun onSearchQueryChange(query: String) {
+        _searchQuery.value = query
+    }
     /**
      * Asynchronously loads the list of chats from the repository and updates the UI state.
      */

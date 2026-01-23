@@ -47,12 +47,15 @@ import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 import org.hau.project.data.repositories.ChatRepository
 import org.hau.project.ui.screens.calls.AudioCallScreen
+import org.hau.project.ui.screens.calls.CallsScreen
 import org.hau.project.ui.screens.calls.VideoCallScreen
+import org.hau.project.ui.screens.chats.ChatScreen
 import org.hau.project.ui.screens.chats.DetailScreen
 import org.hau.project.ui.screens.chats.NewContactScreen
 import org.hau.project.ui.screens.chats.NewGroupScreen
 import org.hau.project.ui.screens.chats.UserProfileScreen
 import org.hau.project.ui.screens.memories.ChannelDetailScreen
+import org.hau.project.ui.screens.memories.MemoriesScreen
 import org.hau.project.ui.screens.memories.ProfileAction
 import org.hau.project.ui.screens.memories.ScheduleCallScreen
 import org.hau.project.ui.screens.settings.AccountScreen
@@ -67,6 +70,7 @@ import org.hau.project.ui.screens.settings.PasskeysScreen
 import org.hau.project.ui.screens.settings.PrivacySettingsScreen
 import org.hau.project.ui.screens.settings.RequestAccountInfoScreen
 import org.hau.project.ui.screens.settings.SecurityNotificationsScreen
+import org.hau.project.ui.screens.settings.SettingsScreen
 import org.hau.project.ui.screens.settings.StorageSettingsScreen
 import org.hau.project.viewModels.ChatViewModel
 import org.hau.project.viewModels.ProfileViewModel
@@ -231,7 +235,7 @@ fun BottomNavigation(){
                     .consumeWindowInsets(paddingValues)
             ){
                 composable<Routes.HOME> {
-                    _root_ide_package_.org.hau.project.ui.screens.chats.ChatScreen(
+                    ChatScreen(
                         viewModel = chatViewModel,
                         onChatClick = { selectedChatId ->
                             navController.navigate(
@@ -243,12 +247,12 @@ fun BottomNavigation(){
                         onNewContactClick = { navController.navigate(Routes.NEW_CONTACTS) })
                 }
                 composable<Routes.SETTINGS>{
-                    _root_ide_package_.org.hau.project.ui.screens.settings.SettingsScreen(
+                    SettingsScreen(
                         navController
                     )
                 }
                 composable<Routes.MEMORIES> {
-                    _root_ide_package_.org.hau.project.ui.screens.memories.MemoriesScreen(
+                    MemoriesScreen(
                         viewModel = chatViewModel,
                         onChannelClick = { selectedChannelId ->
                             navController.navigate(
@@ -260,7 +264,7 @@ fun BottomNavigation(){
                         onAddMemoryClick = {})
                 }
                 composable<Routes.CALLS>{
-                    _root_ide_package_.org.hau.project.ui.screens.calls.CallsScreen(
+                    CallsScreen(
                         viewModel = chatViewModel
                     )
                 }
