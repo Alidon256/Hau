@@ -24,6 +24,7 @@ dependencyResolutionManagement {
                 includeGroupAndSubgroups("com.google")
             }
         }
+        maven("https://jitpack.io")
         mavenCentral()
     }
 }

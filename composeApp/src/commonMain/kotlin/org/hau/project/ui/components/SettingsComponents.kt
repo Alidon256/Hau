@@ -4,16 +4,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.hau.project.utils.WindowSize
+import org.hau.project.utils.rememberWindowSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsTopAppBar(title: String, onBack: () -> Unit) {
+    val windowSize = rememberWindowSize()
+    val isLargeScreen = windowSize >= WindowSize.Expanded
+
     TopAppBar(
         title = {
             Text(
@@ -23,9 +29,16 @@ fun SettingsTopAppBar(title: String, onBack: () -> Unit) {
             )
         },
         navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            if(!isLargeScreen){
+                IconButton(onClick = onBack) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                }
+            }else{
+                IconButton(onClick = onBack) {
+                    Icon(Icons.Default.Close, contentDescription = "Close")
+                }
             }
+
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,

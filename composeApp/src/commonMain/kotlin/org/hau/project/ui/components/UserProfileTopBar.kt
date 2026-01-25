@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.grattitude
+import org.hau.project.utils.WindowSize
+import org.hau.project.utils.rememberWindowSize
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -44,6 +46,9 @@ fun UserProfileTopAppBar(
     isCollapsed: Boolean,
     onNavigateBack: () -> Unit
 ) {
+    val windowSize = rememberWindowSize()
+    val isLargeScreen = windowSize >= WindowSize.Expanded
+
     // A separate surface handles the background color transition for a cleaner effect
     Surface(
         color = if (isCollapsed) MaterialTheme.colorScheme.background else Color.Transparent,
@@ -75,15 +80,20 @@ fun UserProfileTopAppBar(
                     }
                 }
             },
+
             navigationIcon = {
-                IconButton(onClick = onNavigateBack) {
-                    // Use a scrim for better visibility on the banner
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = Color.White)
+                if(!isLargeScreen){
+                    IconButton(onClick = onNavigateBack) {
+                        // Use a scrim for better visibility on the banner
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = Color.White)
+                    }
                 }
             },
             actions = {
-                IconButton(onClick = { /* More options */ }) {
-                    Icon(Icons.Default.MoreVert, "More Options", tint = Color.White)
+                if(!isLargeScreen){
+                    IconButton(onClick = { /* More options */ }) {
+                        Icon(Icons.Default.MoreVert, "More Options", tint = Color.White)
+                    }
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)

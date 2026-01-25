@@ -42,7 +42,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.accompanist.systemuicontroller)
-            implementation("androidx.compose.material3:material3-window-size-class:1.4.0")
+            implementation(libs.androidx.material3.window.size.class1)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -58,7 +58,7 @@ kotlin {
             implementation(libs.coil.network.ktor)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.core)
-
+            implementation(libs.multiplatform.settings)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -66,6 +66,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.client.java)
         }
     }
 }
@@ -107,8 +108,18 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.hau.project"
+            //packageName = "org.hau.project"
+            packageName = "Hau"
             packageVersion = "1.0.0"
+
+            windows {
+                menu = true              // Adds app to Start Menu/Search
+                shortcut = true          // Adds icon to Desktop
+                menuGroup = "Hau App"    // Optional: Folders name in Start Menu
+                upgradeUuid = "7f7669b3-8a3d-4c54-9366-261f3856461a"
+
+                iconFile.set(project.file("src/jvmMain/resources/icon.ico"))
+            }
         }
     }
 }

@@ -689,86 +689,91 @@ open class ChatRepository {
      * @param channelId The ID of the channel to fetch messages for.
      * @return A [Flow] emitting a list of [MessageItem]s.
      */
+    /**
+     * Fetches the messages for a specific channel.
+     * High-quality "Top Notch" implementation with rich media and detailed engagement.
+     */
     fun getChannelMessages(channelId: String): Flow<List<MessageItem>> {
-        // Mock data - in a real app, this would be a specific query
         val pollOptions = listOf(
-            PollOption(
-                1,
-                "Emissions reduction",
-                "⚡️",
-                401
-            ),
-            PollOption(2, "Carbon removal", "🌱", 262),
-            PollOption(
-                3,
-                "Tech investment",
-                "🏢",
-                656,
-                isSelected = true
-            ),
-            PollOption(4, "Government policy", "🏛️", 360)
+            PollOption(1, "Emissions reduction", "⚡️", 1204),
+            PollOption(2, "Carbon removal", "🌱", 842),
+            PollOption(3, "Tech investment", "🏢", 2156, isSelected = true),
+            PollOption(4, "Policy reform", "🏛️", 940)
         )
+
         val messages = listOf(
             MessageItem(
-                id = "msg1",
-                text = "Both steep emissions reductions and large-scale carbon removal. Which approach is most critical to keeping AI growth compatible with climate targets?",
-                link = "https://weforum.org/stories/2025/10/ai-carbon-debt-carbon-removal/...",
-                time = "19:40",
-                reactions = mapOf("👍" to 38, "❤️" to 12, "🙏" to 5)
+                id = "msg_high_tech",
+                text = "The convergence of Quantum Computing and Generative AI is expected to redefine cybersecurity by 2026. Here is a look at the projected hardware infrastructure.",
+                image = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1200",
+                time = "14:20",
+                reactions = mapOf("🚀" to 142, "🧠" to 89, "🔥" to 45)
             ),
             MessageItem(
-                id = "poll1",
+                id = "msg_community",
+                text = "Community check-in: How are we feeling about the new 'Hau' interface design? Cast your vote below! 👇",
+                time = "14:15",
+                reactions = mapOf("✨" to 56)
+            ),
+            MessageItem(
+                id = "poll_sustainability",
                 isPoll = true,
                 poll = Poll(
-                    "What is the key to scaling AI sustainably?",
+                    "Which area should our dev team prioritize for the Q1 2026 Sustainability Roadmap?",
                     pollOptions
                 ),
-                time = "19:40",
-                reactions = mapOf("❤️" to 101, "👍" to 23, "😂" to 4)
+                time = "14:10",
+                reactions = mapOf("❤️" to 312, "🙌" to 44)
             ),
-            MessageItem(
-                id = "date_divider",
-                text = "8 December 2025",
-                time = "19:40",
-                reactions = mapOf("👍" to 38, "❤️" to 12, "🙏" to 5)
-            ),
-            MessageItem(
-                id = "img1",
-                image = "https://picsum.photos/seed/picsum2/800/600", // Placeholder image
-                time = "12:30",
-                reactions = mapOf("😮" to 77)
-            ),
-            MessageItem(
-                id = "msg2",
-                text = "Our latest quarterly report is now available for review. Please find the summary of key findings attached.",
-                time = "12:31",
-                reactions = mapOf("👍" to 15, "🚀" to 8)
-            ),
-            MessageItem(
-                id = "msg3",
-                text = "Following up on the report, this image outlines our projected growth for the next fiscal year. We welcome your feedback.",
-                image = "https://picsum.photos/seed/growth/800/600",
-                time = "12:32",
-                reactions = mapOf("📈" to 25, "😮" to 7)
-            ),
-            MessageItem(
-                id = "msg4",
-                text = "Reminder: The all-hands meeting is scheduled for 3:00 PM today. Please ensure you have reviewed the agenda beforehand.",
-                time = "12:33",
-                reactions = mapOf("🙏" to 12)
-            ),
-            MessageItem(
-                id = "msg5",
-                text = "Sharing a snapshot from our recent successful team-building event. Great to see everyone collaborating effectively!",
-                image = "https://picsum.photos/seed/teamevent/800/600",
-                time = "12:34",
-                reactions = mapOf("❤️" to 34, "👏" to 19)
-            )
 
+            MessageItem(
+                id = "divider_today",
+                text = "Today",
+                time = "12:00"
+            ),
+            MessageItem(
+                id = "msg_architecture",
+                text = "Visualizing the new HQ expansion. We are aiming for a carbon-neutral footprint using modular timber construction.",
+                image = "https://images.unsplash.com/photo-1518005020251-6fb201b287dd?auto=format&fit=crop&q=80&w=1000",
+                time = "11:45",
+                reactions = mapOf("🏗️" to 92, "🌿" to 120, "😍" to 34)
+            ),
+            MessageItem(
+                id = "msg_team",
+                text = "A quick snapshot from the global engineering summit in Tokyo. The energy here is incredible! 🇯🇵",
+                image = "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=1000",
+                time = "09:30",
+                reactions = mapOf("🤝" to 215, "🍱" to 12)
+            ),
+
+            MessageItem(
+                id = "divider_yesterday",
+                text = "Yesterday",
+                time = "23:59"
+            ),
+            MessageItem(
+                id = "msg_report_link",
+                text = "Our 'Future of Work 2026' whitepaper is officially live. Download the PDF to see how remote-first cultures are evolving.",
+                link = "https://hau.project.io/reports/future-of-work-2026",
+                time = "18:20",
+                reactions = mapOf("📄" to 45, "📈" to 33)
+            ),
+            MessageItem(
+                id = "msg_workspace_inspo",
+                text = "Deep work setup of the week. Minimalist, ergonomic, and highly functional.",
+                image = "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1000",
+                time = "16:45",
+                reactions = mapOf("💻" to 188, "☕" to 67, "👏" to 22)
+            ),
+            MessageItem(
+                id = "msg_motivational",
+                text = "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+                time = "08:15",
+                reactions = mapOf("💯" to 540, "🙏" to 120)
+            )
         )
         return flowOf(messages)
     }
-
 }
 
 /**

@@ -6,14 +6,17 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import org.hau.project.di.SettingsFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        val settingsFactory = SettingsFactory(applicationContext)
+
         setContent {
-            App()
+            App(settingsFactory)
         }
     }
 }
@@ -21,5 +24,6 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App()
+    // Note: Previews might need a mock SettingsFactory or won't work easily with actual platform code
+    // App(MockSettingsFactory())
 }

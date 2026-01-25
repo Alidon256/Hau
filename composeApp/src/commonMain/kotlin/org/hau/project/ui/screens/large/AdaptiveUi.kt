@@ -2,20 +2,11 @@ package org.hau.project.ui.screens.large
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Forum
+import androidx.compose.material.icons.outlined.PersonPinCircle
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,21 +38,7 @@ import org.hau.project.ui.screens.chats.UserProfileScreen
 import org.hau.project.ui.screens.memories.ChannelDetailScreen
 import org.hau.project.ui.screens.memories.ChannelProfileScreen
 import org.hau.project.ui.screens.memories.MemoriesScreen
-import org.hau.project.ui.screens.settings.AccountScreen
-import org.hau.project.ui.screens.settings.AvatarScreen
-import org.hau.project.ui.screens.settings.ChatSettingsScreen
-import org.hau.project.ui.screens.settings.DeleteAccountScreen
-import org.hau.project.ui.screens.settings.EmailAddressScreen
-import org.hau.project.ui.screens.settings.HelpSettingsScreen
-import org.hau.project.ui.screens.settings.InviteFriendScreen
-import org.hau.project.ui.screens.settings.LanguageSettingsScreen
-import org.hau.project.ui.screens.settings.NotificationsSettingsScreen
-import org.hau.project.ui.screens.settings.PasskeysScreen
-import org.hau.project.ui.screens.settings.PrivacySettingsScreen
-import org.hau.project.ui.screens.settings.RequestAccountInfoScreen
-import org.hau.project.ui.screens.settings.SecurityNotificationsScreen
-import org.hau.project.ui.screens.settings.SettingsScreen
-import org.hau.project.ui.screens.settings.StorageSettingsScreen
+import org.hau.project.ui.screens.settings.*
 import org.hau.project.utils.WindowSize
 import org.hau.project.utils.rememberWindowSize
 import org.hau.project.viewModels.AdaptiveUiState
@@ -101,7 +78,7 @@ fun AdaptiveUi() {
                     adaptiveUiState.clearSelections()
                 }
             },
-            modifier = Modifier.width(80.dp).fillMaxHeight()
+            modifier = Modifier.width(64.dp).fillMaxHeight()
         )
 
         // --- Pane 2: List Pane ---
@@ -128,8 +105,11 @@ fun AdaptiveUi() {
             composable<Routes.SETTINGS> { SettingsScreen(navController = settingsNavController) }
         }
 
-        // --- Pane 3: Detail Pane (Conditional) ---
+        // --- Pane 3: Detail Pane ---
         if (windowSize >= WindowSize.Expanded) {
+            // Divider between List and Detail
+            VerticalPaneDivider()
+
             Box(modifier = Modifier.weight(1.8f).fillMaxHeight()) {
                 val currentRoute = navBackStackEntry?.destination?.route ?: ""
                 if (currentRoute.contains(Routes.SETTINGS.routePattern, ignoreCase = true)) {
@@ -177,8 +157,11 @@ fun AdaptiveUi() {
         }
 
 
-        // --- Pane 4: Info Pane (Conditional) ---
+        // --- Pane 4: Info Pane ---
         if (windowSize >= WindowSize.Large && selectedProfileId != null) {
+            // Divider between Detail and Info
+            VerticalPaneDivider()
+
             Box(modifier = Modifier.weight(1f).fillMaxHeight()) {
                 LaunchedEffect(selectedProfileId, isChannelSelected) {
                     if (isChannelSelected) {
@@ -203,12 +186,23 @@ fun AdaptiveUi() {
                 }
             }
         } else if (windowSize >= WindowSize.Large) {
-            // Show placeholder only on the largest screens if nothing is selected
+            // Divider for placeholder pane
+            VerticalPaneDivider()
             Box(modifier = Modifier.weight(1f).fillMaxHeight()) {
                 ProfilePlaceholder()
             }
         }
     }
+}
+
+@Composable
+fun VerticalPaneDivider() {
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .width(1.dp)
+            .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
+    )
 }
 
 /**
@@ -256,25 +250,26 @@ private fun ProfilePlaceholder() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
         Icon(
-            imageVector = Icons.Outlined.Forum,
+            imageVector = Icons.Outlined.PersonPinCircle,
             contentDescription = "No Profile Selected",
             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-            modifier = Modifier.size(80.dp)
+            modifier = Modifier.size(150.dp)
         )
         Spacer(Modifier.height(16.dp))
         Text(
             "Contact Info",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(8.dp))
         Text(
             "Click on a user's avatar or profile in a chat to see their details here.",
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
-            modifier = Modifier.widthIn(max = 200.dp)
+            modifier = Modifier.widthIn(max = 300.dp)
         )
     }
 }
@@ -290,24 +285,24 @@ private fun SettingsDetailPlaceholder() {
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            imageVector = Icons.Outlined.Forum, // Replace with appropriate icon
+            imageVector = Icons.Outlined.Settings, // Replace with appropriate icon
             contentDescription = "Settings",
             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-            modifier = Modifier.size(80.dp)
+            modifier = Modifier.size(150.dp)
         )
         Spacer(Modifier.height(16.dp))
         Text(
             "Settings",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(8.dp))
         Text(
             "Select a category to view its settings.",
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
-            modifier = Modifier.widthIn(max = 200.dp)
+            modifier = Modifier.widthIn(max = 300.dp)
         )
     }
 }

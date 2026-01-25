@@ -79,52 +79,59 @@ fun SettingsScreen(
 
     val settingItems = listOf(
         SettingItemData(
-            Icons.Outlined.Key,
-            "Account",
-            "Security notifications, change number"
+            icon = Icons.Outlined.Key,
+            title = "Account & Security",
+            subtitle = "Passkeys, security alerts, and number migration"
         ) { navController?.navigate(Routes.ACCOUNT) },
+
         SettingItemData(
-            Icons.Outlined.Lock,
-            "Privacy",
-            "Block contacts, disappearing messages"
+            icon = Icons.Outlined.Lock,
+            title = "Privacy Control",
+            subtitle = "Blocked users, disappearing messages, and visibility"
         ) { navController?.navigate(Routes.PRIVACY) },
+
         SettingItemData(
-            Icons.Outlined.Person,
-            "Avatar",
-            "Create, edit, profile photo"
+            icon = Icons.Outlined.Person,
+            title = "Digital Identity",
+            subtitle = "Avatar customization and profile visibility"
         ) { navController?.navigate(Routes.AVATAR) },
+
         SettingItemData(
-            Icons.Outlined.Forum,
-            "Chats",
-            "Theme, wallpapers, chat history"
+            icon = Icons.Outlined.Forum,
+            title = "Messaging & Chats",
+            subtitle = "Themes, rich wallpapers, and conversation backup"
         ) { navController?.navigate(Routes.MESSAGING) },
+
         SettingItemData(
             icon = Icons.Outlined.Notifications,
-            title = "Notifications",
-            subtitle = "Message, group & call tones"
+            title = "Alerts & Sounds",
+            subtitle = "Manage message, group, and priority call tones"
         ) { navController?.navigate(Routes.NOTIFICATIONS) },
+
         SettingItemData(
             icon = Icons.Outlined.Storage,
-            title = "Storage and data",
-            subtitle = "Network usage, auto-download"
+            title = "Data & Connectivity",
+            subtitle = "Network usage monitoring and media auto-download"
         ) { navController?.navigate(Routes.STORAGE) },
+
         SettingItemData(
             icon = Icons.Outlined.Language,
-            title = "App language",
-            subtitle = "English (device's language)"
+            title = "Regional & Language",
+            subtitle = "Switch app language (System Default: English)"
         ) { navController?.navigate(Routes.LANGUAGE) },
+
         SettingItemData(
             icon = Icons.Outlined.Help,
-            title = "Help",
-            subtitle = "Help center, contact us, privacy policy"
+            title = "Support & Legal",
+            subtitle = "Help center, privacy policy, and live support"
         ) { navController?.navigate(Routes.HELP) },
+
         SettingItemData(
             icon = Icons.Outlined.Group,
-            title = "Invite a friend",
-            subtitle = "Invite your friends and family"
+            title = "Spread the Word",
+            subtitle = "Invite your network to join the Hau community"
         ) { navController?.navigate(Routes.INVITE) }
     )
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

@@ -1,9 +1,11 @@
 package org.hau.project
 
-import android.os.Build
+import android.content.Context
+import org.hau.project.di.SettingsFactory
 
-class AndroidPlatform : Platform {
-    override val name: String = "Android ${Build.VERSION.SDK_INT}"
+class AndroidPlatform(private val context: Context) : Platform {
+    override val name: String = "Android ${android.os.Build.VERSION.SDK_INT}"
+    override val settingsFactory: SettingsFactory = SettingsFactory(context)
 }
 
-actual fun getPlatform(): Platform = AndroidPlatform()
+actual fun getPlatform(): Platform = error("Provide context via Platform initialization")

@@ -1,8 +1,10 @@
 package org.hau.project.ui.screens.memories
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,12 +14,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.NotificationsOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -29,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.grattitude
+import hau.composeapp.generated.resources.image_large
 import org.hau.project.data.repositories.ChatRepository
 import org.hau.project.data.repositories.formatCount
 import org.hau.project.models.Channels
@@ -36,97 +43,193 @@ import org.hau.project.models.MessageItem
 import org.hau.project.models.Poll
 import org.hau.project.models.PollOption
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.utils.WindowSize
+import org.hau.project.utils.rememberWindowSize
 import org.hau.project.viewModels.ChatViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-// Main Screen Composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelDetailScreen(
     onBack: () -> Unit,
-    viewModel: org.hau.project.viewModels.ChatViewModel,
+    viewModel: ChatViewModel,
     channelId: String,
     onChannelInfoClick: (channelId: String) -> Unit
 ) {
+    val windowSize = rememberWindowSize()
+    val isLargeScreen = windowSize >= WindowSize.Expanded
+
     LaunchedEffect(channelId) {
         viewModel.loadChannelDetails(channelId)
     }
 
     val uiState by viewModel.channelDetailState.collectAsState()
-
     var messages by remember(uiState.channelMessages) { mutableStateOf(uiState.channelMessages) }
+    
+    // --- FULLSCREEN IMAGE STATE ---
+    var fullscreenImageUrl by remember { mutableStateOf<String?>(null) }
 
-    Scaffold(
-        topBar = {
-            ChannelTopBar(
-                channelInfo = uiState.channelInfo,
-                onBack = onBack,
-                onChannelInfoClick = {
-                    uiState.channelInfo?.id?.let { id ->
-                        onChannelInfoClick(id)
+    Box(Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                ChannelTopBar(
+                    channelInfo = uiState.channelInfo,
+                    onBack = onBack,
+                    isLargeScreen = isLargeScreen,
+                    onChannelInfoClick = {
+                        uiState.channelInfo?.id?.let { id -> onChannelInfoClick(id) }
+                    }
+                )
+            },
+            containerColor = MaterialTheme.colorScheme.background,
+            bottomBar = {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    tonalElevation = 2.dp,
+                    color = MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp)
+                ) {
+                    Box(
+                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            "You're following this channel",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
-            )
-        },
-        containerColor = MaterialTheme.colorScheme.background
-    ) { paddingValues ->
-        if (uiState.isLoading) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                reverseLayout = true
-            ) {
-                items(messages.reversed(), key = { it.id }) { message ->
-                    when {
-                        message.isPoll -> PollMessageBubble(
-                            poll = message.poll,
-                            onVote = { optionId ->
-                                messages = messages.map { currentMessage ->
-                                    if (currentMessage.id == message.id) {
-                                        val newOptions =
-                                            currentMessage.poll?.options?.map { option ->
-                                                if (option.id == optionId) {
-                                                    PollOption(
-                                                        id = option.id,
-                                                        text = option.text,
-                                                        icon = option.icon,
-                                                        votes = option.votes,
-                                                        isSelected = !option.isSelected
-                                                    )
-                                                } else {
-                                                    option
+        ) { paddingValues ->
+            if (uiState.isLoading) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+                    reverseLayout = true
+                ) {
+                    items(messages.reversed(), key = { it.id }) { message ->
+                        ChannelMessageWrapper(message) {
+                            when {
+                                message.isPoll -> PollMessageBubble(
+                                    poll = message.poll,
+                                    onVote = { optionId ->
+                                        messages = messages.map { currentMessage ->
+                                            if (currentMessage.id == message.id) {
+                                                val newOptions = currentMessage.poll?.options?.map { option ->
+                                                    if (option.id == optionId) {
+                                                        PollOption(option.id, option.text, option.icon, option.votes, !option.isSelected)
+                                                    } else option
                                                 }
-                                            }
-                                        currentMessage.copy(
-                                            poll = currentMessage.poll?.copy(
-                                                options = newOptions ?: emptyList()
-                                            )
-                                        )
-                                    } else {
-                                        currentMessage
+                                                currentMessage.copy(poll = currentMessage.poll?.copy(options = newOptions ?: emptyList()))
+                                            } else currentMessage
+                                        }
                                     }
-                                }
+                                )
+                                message.text?.contains("December") == true -> DateDivider(message.text!!)
+                                message.image != null -> ImageMessageBubble(
+                                    message,
+                                    onImageClick = { fullscreenImageUrl = it }
+                                )
+                                else -> TextMessageBubble(message)
                             }
-                        )
-                        message.text?.contains("December") == true -> DateDivider(
-                            message.text!!
-                        )
-                        message.image != null -> ImageMessageBubble(
-                            message
-                        )
-                        else -> TextMessageBubble(
-                            message
-                        )
+                        }
                     }
                 }
+            }
+        }
+
+        // --- MODERN FULLSCREEN IMAGE VIEWER ---
+        AnimatedVisibility(
+            visible = fullscreenImageUrl != null,
+            enter = fadeIn() + scaleIn(initialScale = 0.9f),
+            exit = fadeOut() + scaleOut(targetScale = 0.9f)
+        ) {
+            fullscreenImageUrl?.let { url ->
+                FullscreenImageViewer(
+                    imageUrl = url,
+                    onClose = { fullscreenImageUrl = null }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun FullscreenImageViewer(imageUrl: String, onClose: () -> Unit) {
+    var scale by remember { mutableStateOf(1f) }
+    var offset by remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .pointerInput(Unit) {
+                detectTransformGestures { _, pan, zoom, _ ->
+                    scale = (scale * zoom).coerceIn(1f, 5f)
+                    offset += pan
+                }
+            }
+    ) {
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale,
+                    translationX = offset.x,
+                    translationY = offset.y
+                ),
+            contentScale = ContentScale.Fit
+        )
+
+        // Close Button
+        IconButton(
+            onClick = onClose,
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(16.dp)
+                .align(Alignment.TopStart)
+                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+        ) {
+            Icon(Icons.Default.Close, contentDescription = "Close", tint = Color.White)
+        }
+        
+        // Bottom Actions (Modern touch)
+        Row(
+            modifier = Modifier
+                .navigationBarsPadding()
+                .padding(bottom = 24.dp)
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = {}) { Icon(Icons.Default.Share, null, tint = Color.White) }
+            Spacer(Modifier.width(32.dp))
+            IconButton(onClick = {}) { Icon(Icons.Default.Download, null, tint = Color.White) }
+        }
+    }
+}
+
+@Composable
+private fun ChannelMessageWrapper(message: MessageItem, content: @Composable () -> Unit) {
+    if (message.text?.contains("December") == true) {
+        content()
+    } else {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Box(modifier = Modifier.widthIn(max = 400.dp)) {
+                content()
             }
         }
     }
@@ -137,23 +240,25 @@ fun ChannelDetailScreen(
 private fun ChannelTopBar(
     channelInfo: Channels?,
     onBack: () -> Unit,
+    isLargeScreen: Boolean,
     onChannelInfoClick: () -> Unit
 ) {
     TopAppBar(
         navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onSurface)
+            if (!isLargeScreen) {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = MaterialTheme.colorScheme.onSurface)
+                }
             }
         },
         title = {
             Row(
-                modifier = Modifier
-                    .clickable(onClick = onChannelInfoClick)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically) {
+                modifier = Modifier.clickable(onClick = onChannelInfoClick),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Image(
                     painter = painterResource(channelInfo?.channelRes ?: Res.drawable.grattitude),
-                    contentDescription = "Channel Avatar",
+                    contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(40.dp).clip(CircleShape)
                 )
@@ -163,23 +268,13 @@ private fun ChannelTopBar(
                         Text(
                             channelInfo?.channelName ?: "Loading...",
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1
+                            style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(Modifier.width(4.dp))
-                        Icon(
-                            Icons.Default.Verified, "Verified",
-                            tint = Color(0xFF00A884), // Verdant's specific green check
-                            modifier = Modifier.size(16.dp)
-                        )
+                        Icon(Icons.Default.Verified, null, tint = Color(0xFF00A884), modifier = Modifier.size(16.dp))
                     }
                     Text(
-                        "${
-                            formatCount(
-                                channelInfo?.followerCount ?: 0
-                            )
-                        } followers",
+                        "${formatCount(channelInfo?.followerCount ?: 0)} followers",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -187,76 +282,69 @@ private fun ChannelTopBar(
             }
         },
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(Icons.Default.NotificationsOff, "Muted", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            IconButton(onClick = {}) {
+                Icon(Icons.Outlined.NotificationsOff, "Muted", tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {}) {
                 Icon(Icons.Default.MoreVert, "More", tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
     )
 }
 
 @Composable
 private fun TextMessageBubble(message: MessageItem) {
-    Box(modifier = Modifier.fillMaxWidth().padding(start = 32.dp)) {
-        Column(horizontalAlignment = Alignment.End) {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .padding(8.dp)
-            ) {
-                Column(horizontalAlignment = Alignment.End) {
-                    val annotatedString = buildAnnotatedString {
-                        message.text?.let { append(it) }
-                        if (message.link != null) {
-                            append("\n\n")
-                            withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                                append(message.link)
-                            }
+    Column(horizontalAlignment = Alignment.Start) {
+        Box(
+            modifier = Modifier
+                .shadow(0.5.dp, RoundedCornerShape(topStart = 4.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp))
+                .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 16.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .padding(12.dp)
+        ) {
+            Column {
+                val annotatedString = buildAnnotatedString {
+                    message.text?.let { append(it) }
+                    if (message.link != null) {
+                        append("\n\n")
+                        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)) {
+                            append(message.link)
                         }
                     }
-                    Text(annotatedString, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.bodyLarge)
-                    Text(message.time, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
                 }
+                Text(annotatedString, style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    message.time,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                    modifier = Modifier.align(Alignment.End).padding(top = 4.dp)
+                )
             }
-            Reactions(message.reactions)
         }
+        Reactions(message.reactions)
     }
 }
 
 @Composable
-private fun PollMessageBubble(
-    poll: Poll?,
-    onVote: (optionId: Int) -> Unit
-) {
+private fun PollMessageBubble(poll: Poll?, onVote: (optionId: Int) -> Unit) {
     if (poll == null) return
-
     val totalVotes = poll.options.sumOf { it.votes }
 
-    Box(modifier = Modifier.fillMaxWidth().padding(start = 32.dp)) {
-        Column(horizontalAlignment = Alignment.End) {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .padding(12.dp)
-            ) {
-                Column {
-                    Text(poll.question, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyLarge)
-                    Text("Select one or more", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp, bottom = 12.dp))
+    Box(
+        modifier = Modifier
+            .shadow(0.5.dp, RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(16.dp)
+    ) {
+        Column {
+            Text(poll.question, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+            Text("Select one or more", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp, bottom = 12.dp))
 
-                    poll.options.forEach { option ->
-                        PollOptionItem(
-                            option = option,
-                            totalVotes = totalVotes,
-                            onVote = { onVote(option.id) }
-                        )
-                        Spacer(Modifier.height(12.dp))
-                    }
-                }
+            poll.options.forEach { option ->
+                PollOptionItem(option, totalVotes) { onVote(option.id) }
+                Spacer(Modifier.height(8.dp))
             }
         }
     }
@@ -264,178 +352,86 @@ private fun PollMessageBubble(
 
 @Composable
 private fun PollOptionItem(option: PollOption, totalVotes: Int, onVote: () -> Unit) {
-    val progress = if (totalVotes > 0) {
-        option.votes.toFloat() / totalVotes.toFloat()
-    } else {
-        0f
-    }
-    val progressColor = MaterialTheme.colorScheme.primary
-
-    Row(
-        modifier = Modifier.fillMaxWidth().clickable(onClick = onVote),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(
-            selected = option.isSelected,
-            onClick = onVote,
-            colors = RadioButtonDefaults.colors(
-                selectedColor = progressColor,
-                unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        )
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(option.icon, fontSize = 16.sp)
-            Text(option.text, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.bodyLarge)
+    val progress = if (totalVotes > 0) option.votes.toFloat() / totalVotes.toFloat() else 0f
+    
+    Column(modifier = Modifier.fillMaxWidth().clickable(onClick = onVote)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(selected = option.isSelected, onClick = onVote)
+            Text(option.text, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
+            Text(option.votes.toString(), style = MaterialTheme.typography.labelMedium)
         }
-        Text(option.votes.toString(), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-    }
-    Box(
-        modifier = Modifier
-            .height(6.dp)
-            .fillMaxWidth()
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        Box(
-            modifier = Modifier
-                .height(6.dp)
-                .fillMaxWidth(progress)
-                .clip(CircleShape)
-                .background(progressColor)
+        LinearProgressIndicator(
+            progress = { progress },
+            modifier = Modifier.fillMaxWidth().height(8.dp).clip(CircleShape),
+            color = MaterialTheme.colorScheme.primary,
+            trackColor = MaterialTheme.colorScheme.surface
         )
     }
 }
 
 @Composable
-private fun ImageMessageBubble(message: MessageItem) {
-    Box(modifier = Modifier.fillMaxWidth().padding(start = 32.dp)) {
-        Column(horizontalAlignment = Alignment.End) {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-            ) {
-                Column {
-                    // Display the image if one exists
-                    if (message.image != null) {
-                        AsyncImage(
-                            model = message.image,
-                            contentDescription = "Channel Image",
-                            error = painterResource(Res.drawable.grattitude),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(max = 240.dp) // Use heightIn for flexible height
-                                .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-
-                    // Display text and time, but only if text is not null
-                    if (message.text != null) {
-                        Row(
-                            modifier = Modifier
-                                .align(Alignment.End)
-                                .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 4.dp),
-                            verticalAlignment = Alignment.Bottom,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                text = message.text,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.weight(1f, fill = false) // Prevents text from pushing time
-                            )
-                            Text(
-                                text = message.time,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    } else {
-                        // If there's no text, just show the time over the image
-                        Text(
-                            text = message.time,
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier
-                                .align(Alignment.End)
-                                .padding(8.dp)
-                                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        )
-                    }
+private fun ImageMessageBubble(message: MessageItem, onImageClick: (String) -> Unit) {
+    Box(
+        modifier = Modifier
+            .shadow(0.5.dp, RoundedCornerShape(16.dp))
+            .clip(RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable { message.image?.let { onImageClick(it) } }
+    ) {
+        Column {
+            AsyncImage(
+                model = message.image,
+                contentDescription = null,
+                error = painterResource(Res.drawable.grattitude),
+                placeholder = painterResource(Res.drawable.image_large),
+                modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp),
+                contentScale = ContentScale.Crop
+            )
+            if (message.text != null) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    Text(message.text, style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        message.time,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                        modifier = Modifier.align(Alignment.End).padding(top = 4.dp)
+                    )
                 }
             }
-            Reactions(message.reactions)
         }
     }
 }
-
 
 @Composable
 private fun Reactions(reactions: Map<String, Int>) {
     val visibleReactions = reactions.filter { it.value > 0 }.keys.joinToString("")
     if (visibleReactions.isNotEmpty()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier
-                .offset(y = (-12).dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+        Surface(
+            modifier = Modifier.offset(y = (-8).dp, x = 8.dp),
+            shape = CircleShape,
+            tonalElevation = 2.dp,
+            shadowElevation = 1.dp
         ) {
-            Text(visibleReactions, fontSize = 14.sp)
-            Text(reactions.values.sum().toString(), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-            Icon(Icons.AutoMirrored.Filled.Reply, "Reply", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(visibleReactions, fontSize = 12.sp)
+                Text(reactions.values.sum().toString(), style = MaterialTheme.typography.labelSmall)
+            }
         }
     }
 }
 
 @Composable
 private fun DateDivider(date: String) {
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.8f))
-                .padding(horizontal = 12.dp, vertical = 4.dp)
+    Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) {
+        Surface(
+            shape = RoundedCornerShape(12.dp),
+            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         ) {
-            Text(date, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+            Text(date, modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), style = MaterialTheme.typography.labelSmall)
         }
-    }
-}
-
-// --- PREVIEWS ---
-
-@Preview(name = "Channel Screen (Dark Mode)", showBackground = true)
-@Composable
-private fun ChannelDetailScreenDarkPreview() {
-    val fakeRepository = ChatRepository()
-    val previewViewModel =
-        ChatViewModel(fakeRepository)
-    AppTheme(useDarkTheme = true) {
-        ChannelDetailScreen(
-            onBack = {}, viewModel = previewViewModel, channelId = "1",
-            onChannelInfoClick = {},
-        )
-    }
-}
-
-@Preview(name = "Channel Screen (Light Mode)", showBackground = true)
-@Composable
-private fun ChannelDetailScreenLightPreview() {
-    val fakeRepository = ChatRepository()
-    val previewViewModel =
-        ChatViewModel(fakeRepository)
-    AppTheme(useDarkTheme = false) {
-        ChannelDetailScreen(
-            onBack = {}, viewModel = previewViewModel, channelId = "1",
-            onChannelInfoClick = {}
-        )
     }
 }

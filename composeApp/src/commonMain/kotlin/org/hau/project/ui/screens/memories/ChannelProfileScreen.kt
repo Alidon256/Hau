@@ -20,6 +20,7 @@ import hau.composeapp.generated.resources.grattitude
 import kotlinx.coroutines.launch
 import org.hau.project.models.AttachmentType
 import org.hau.project.models.Channels
+import org.hau.project.ui.components.ChannelProfileTopBar
 import org.hau.project.ui.components.DangerSettingsRow
 import org.hau.project.ui.theme.AppTheme
 import org.hau.project.ui.theme.SocialTheme
@@ -76,11 +77,11 @@ fun ChannelProfileScreen(
 
     Scaffold(
         topBar = {
-            _root_ide_package_.org.hau.project.ui.components.ChannelProfileTopBar(
+            ChannelProfileTopBar(
                 channelName = uiState.channel?.channelName ?: "",
                 avatarUrl = uiState.channel?.channelRes,
                 isCollapsed = isHeaderCollapsed,
-                onNavigateBack = { onAction(_root_ide_package_.org.hau.project.ui.screens.memories.ProfileAction.NavigateBack) }
+                onNavigateBack = { onAction(ProfileAction.NavigateBack) }
             )
         },
         containerColor = MaterialTheme.colorScheme.background
