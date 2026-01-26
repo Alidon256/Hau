@@ -1,8 +1,6 @@
 package org.hau.project.ui.screens.chats
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,7 +12,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -22,32 +19,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import coil3.compose.rememberAsyncImagePainter
-import hau.composeapp.generated.resources.Res
-import hau.composeapp.generated.resources.grattitude
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.hau.project.data.repositories.ChatRepository
-import org.hau.project.models.Message
-import org.hau.project.models.MessageSender
-import org.hau.project.models.MessageStatus
+import org.hau.project.ui.components.AttachmentDropdownMenu
 import org.hau.project.ui.components.Avatar
+import org.hau.project.ui.components.MessageActionMenu
 import org.hau.project.ui.components.MessageBubble
+import org.hau.project.ui.components.ModernCallPanel
 import org.hau.project.ui.components.Routes
 import org.hau.project.utils.WindowSize
 import org.hau.project.utils.rememberWindowSize
 import org.hau.project.viewModels.ChatViewModel
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class CallUIState { IDLE, CALLING, ACTIVE }
@@ -272,219 +256,5 @@ fun DetailScreen(
                 onAcceptCall = { callState = CallUIState.ACTIVE }
             )
         }
-    }
-}
-
-@Composable
-fun ModernCallPanel(
-    userName: String,
-    avatarUrl: org.jetbrains.compose.resources.DrawableResource?,
-    callType: CallType,
-    callState: CallUIState,
-    onEndCall: () -> Unit,
-    onAcceptCall: () -> Unit
-) {
-    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
-    val pulseScale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.15f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "pulseScale"
-    )
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.85f))
-            .clickable(enabled = false) {} // Consume clicks
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            // User Avatar with Pulse
-            Box(contentAlignment = Alignment.Center) {
-                if (callState == CallUIState.CALLING) {
-                    Box(
-                        modifier = Modifier
-                            .size(140.dp)
-                            .scale(pulseScale)
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f), CircleShape)
-                    )
-                }
-                
-                if (avatarUrl != null) {
-                    Image(
-                        painter = painterResource(avatarUrl),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Box(
-                        Modifier
-                            .size(120.dp)
-                            .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(Icons.Default.Person, null, modifier = Modifier.size(60.dp))
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(24.dp))
-
-            Text(
-                text = userName,
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.White,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                text = if (callState == CallUIState.CALLING) "Calling..." else "00:05",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White.copy(alpha = 0.7f)
-            )
-
-            Spacer(Modifier.height(60.dp))
-
-            // Call Controls
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(32.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Mute
-                CallControlButton(
-                    icon = Icons.Default.MicOff,
-                    containerColor = Color.White.copy(alpha = 0.1f),
-                    contentColor = Color.White,
-                    onClick = {}
-                )
-
-                // End Call
-                CallControlButton(
-                    icon = Icons.Default.CallEnd,
-                    containerColor = Color.Red,
-                    contentColor = Color.White,
-                    size = 64.dp,
-                    iconSize = 32.dp,
-                    onClick = onEndCall
-                )
-
-                // Speaker / Camera Switch
-                CallControlButton(
-                    icon = if (callType == CallType.VIDEO) Icons.Default.FlipCameraIos else Icons.Default.VolumeUp,
-                    containerColor = Color.White.copy(alpha = 0.1f),
-                    contentColor = Color.White,
-                    onClick = {}
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun CallControlButton(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    containerColor: Color,
-    contentColor: Color,
-    size: androidx.compose.ui.unit.Dp = 52.dp,
-    iconSize: androidx.compose.ui.unit.Dp = 24.dp,
-    onClick: () -> Unit
-) {
-    Surface(
-        onClick = onClick,
-        modifier = Modifier.size(size),
-        shape = CircleShape,
-        color = containerColor,
-        contentColor = contentColor
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Icon(icon, contentDescription = null, modifier = Modifier.size(iconSize))
-        }
-    }
-}
-
-@Composable
-fun AttachmentDropdownMenu(expanded: Boolean, onDismiss: () -> Unit) {
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = onDismiss,
-        offset = DpOffset(0.dp, (-280).dp), // Position it upwards from the icon
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .clip(RoundedCornerShape(20.dp))
-    ) {
-        DropdownMenuItem(
-            text = { Text("Document") },
-            leadingIcon = { Icon(Icons.Outlined.Description, null, tint = Color(0xFF7F66FF)) },
-            onClick = onDismiss
-        )
-        DropdownMenuItem(
-            text = { Text("Photos & Videos") },
-            leadingIcon = { Icon(Icons.Outlined.PhotoLibrary, null, tint = Color(0xFF007AFF)) },
-            onClick = onDismiss
-        )
-        DropdownMenuItem(
-            text = { Text("Camera") },
-            leadingIcon = { Icon(Icons.Outlined.PhotoCamera, null, tint = Color(0xFFFF2D55)) },
-            onClick = onDismiss
-        )
-        DropdownMenuItem(
-            text = { Text("Contact") },
-            leadingIcon = { Icon(Icons.Outlined.Person, null, tint = Color(0xFF007AFF)) },
-            onClick = onDismiss
-        )
-        DropdownMenuItem(
-            text = { Text("Poll") },
-            leadingIcon = { Icon(Icons.Outlined.Poll, null, tint = Color(0xFFFFBC38)) },
-            onClick = onDismiss
-        )
-    }
-}
-
-@Composable
-fun MessageActionMenu(expanded: Boolean, onDismiss: () -> Unit) {
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = onDismiss,
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .clip(RoundedCornerShape(16.dp))
-    ) {
-        DropdownMenuItem(
-            text = { Text("Reply") },
-            leadingIcon = { Icon(Icons.AutoMirrored.Filled.Reply, null) },
-            onClick = onDismiss
-        )
-        DropdownMenuItem(
-            text = { Text("Copy") },
-            leadingIcon = { Icon(Icons.Outlined.ContentCopy, null) },
-            onClick = onDismiss
-        )
-        DropdownMenuItem(
-            text = { Text("Forward") },
-            leadingIcon = { Icon(Icons.AutoMirrored.Filled.Reply, null, modifier = Modifier.size(24.dp)) }, 
-            onClick = onDismiss
-        )
-        DropdownMenuItem(
-            text = { Text("Star") },
-            leadingIcon = { Icon(Icons.Outlined.StarOutline, null) },
-            onClick = onDismiss
-        )
-        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-        DropdownMenuItem(
-            text = { Text("Delete") },
-            leadingIcon = { Icon(Icons.Outlined.Delete, null, tint = MaterialTheme.colorScheme.error) },
-            onClick = onDismiss
-        )
     }
 }

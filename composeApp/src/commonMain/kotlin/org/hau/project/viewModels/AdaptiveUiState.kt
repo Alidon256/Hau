@@ -13,7 +13,6 @@ class AdaptiveUiState {
     private val _selectedProfileId = MutableStateFlow<String?>(null)
     val selectedProfileId: StateFlow<String?> = _selectedProfileId
 
-    // --- THIS IS THE KEY ---
     // A new state to track IF the current selection is a channel.
     private val _isChannelSelected = MutableStateFlow(false)
     val isChannelSelected: StateFlow<Boolean> = _isChannelSelected

@@ -13,10 +13,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val settingsFactory = SettingsFactory(applicationContext)
-
+        SettingsFactory.setContext(this)
         setContent {
-            App(settingsFactory)
+            App(SettingsFactory())
         }
     }
 }

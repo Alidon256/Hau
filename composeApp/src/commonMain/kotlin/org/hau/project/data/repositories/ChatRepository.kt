@@ -250,6 +250,13 @@ open class ChatRepository {
                 Message(
                     "m1_8",
                     sender = MessageSender.Me,
+                    text = "Can't wait 😊",
+                    time = "10:12 AM",
+                    status = MessageStatus.DELIVERED
+                ),
+                Message(
+                    "m1_9",
+                    sender = MessageSender.Me,
                     text = "See you tomorrow!",
                     time = "11:30 AM",
                     status = MessageStatus.SENT

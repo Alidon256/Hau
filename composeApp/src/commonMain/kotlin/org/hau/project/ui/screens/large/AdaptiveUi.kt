@@ -30,7 +30,9 @@ import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.ic_launcher_playstore
 import org.hau.project.data.repositories.ChatRepository
 import org.hau.project.ui.components.NavDestinaton
+import org.hau.project.ui.components.ProfilePlaceholder
 import org.hau.project.ui.components.Routes
+import org.hau.project.ui.components.SettingsDetailPlaceholder
 import org.hau.project.ui.screens.calls.CallsScreen
 import org.hau.project.ui.screens.chats.ChatScreen
 import org.hau.project.ui.screens.chats.DetailScreen
@@ -240,69 +242,3 @@ private fun ChatDetailPlaceholder() {
     }
 }
 
-@Composable
-private fun ProfilePlaceholder() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-
-        Icon(
-            imageVector = Icons.Outlined.PersonPinCircle,
-            contentDescription = "No Profile Selected",
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-            modifier = Modifier.size(150.dp)
-        )
-        Spacer(Modifier.height(16.dp))
-        Text(
-            "Contact Info",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Spacer(Modifier.height(8.dp))
-        Text(
-            "Click on a user's avatar or profile in a chat to see their details here.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.widthIn(max = 300.dp)
-        )
-    }
-}
-
-@Composable
-private fun SettingsDetailPlaceholder() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Settings, // Replace with appropriate icon
-            contentDescription = "Settings",
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-            modifier = Modifier.size(150.dp)
-        )
-        Spacer(Modifier.height(16.dp))
-        Text(
-            "Settings",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Spacer(Modifier.height(8.dp))
-        Text(
-            "Select a category to view its settings.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.widthIn(max = 300.dp)
-        )
-    }
-}

@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.hau.project.ui.components.BottomNavItem
 import org.hau.project.ui.components.NavDestinaton
+import org.hau.project.ui.components.RailItem
 import org.hau.project.ui.components.Routes
 
 @Composable
@@ -91,40 +92,5 @@ fun NavigationRail(
                     .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f))
             )
         }
-    }
-}
-
-@Composable
-private fun RailItem(
-    item: BottomNavItem,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val backgroundColor = if (isSelected) {
-        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
-    } else {
-        Color.Transparent
-    }
-    
-    val contentColor = if (isSelected) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.onSurfaceVariant
-    }
-
-    Box(
-        modifier = Modifier
-            .size(48.dp)
-            .clip(CircleShape)
-            .background(backgroundColor)
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
-            contentDescription = null,
-            modifier = Modifier.size(24.dp), // Standard WhatsApp size
-            tint = contentColor
-        )
     }
 }

@@ -52,6 +52,10 @@ import org.hau.project.data.repositories.ChatRepository
 import org.hau.project.models.CallActions
 import org.hau.project.models.CallType
 import org.hau.project.models.RecentCalls
+import org.hau.project.ui.components.CallsActionItem
+import org.hau.project.ui.components.RecentCallsItem
+import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.hau.project.viewModels.ChatViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -166,181 +170,28 @@ fun CallsScreen(viewModel: ChatViewModel) {
     }
 }
 
-@Composable
-fun CallsActionItem(callItem: CallActions) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .size(60.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant), // Use theme color
-            contentAlignment = Alignment.Center
-        ) {
-            if (callItem.isCommunity) {
-                Image(
-                    painter = painterResource(Res.drawable.grattitude),
-                    contentDescription = "Community",
-                    modifier = Modifier.clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Icon(
-                    callItem.icon,
-                    contentDescription = callItem.actionText,
-                    tint = MaterialTheme.colorScheme.primary // Use primary color for icons
-                )
-            }
-        }
-        Text(
-            text = callItem.actionText,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant // Use theme color
-        )
-    }
-}
 
-@Composable
-fun RecentCallsItem(recentCall: RecentCalls) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {} // Make item clickable
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = painterResource(recentCall.callerImageRes),
-            contentDescription = recentCall.callerName,
-            modifier = Modifier.clip(CircleShape).size(56.dp),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 12.dp)
-                .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Determine text color based on if the call was missed
-                val nameColor = if (recentCall.callTimes == 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
-                Text(
-                    text = recentCall.callerName,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = nameColor
-                )
-                if (recentCall.callTimes > 1) {
-                    Text(
-                        text = "(${recentCall.callTimes})",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = nameColor
-                    )
-                }
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Icon(
-                    Icons.AutoMirrored.Outlined.ArrowForward,
-                    contentDescription = "Call direction",
-                    modifier = Modifier
-                        .size(16.dp)
-                        .rotate(if (recentCall.isSender) -45f else 135f),
-                    tint = if (recentCall.isSender) Color(0xFF00C853) else MaterialTheme.colorScheme.error // Green for outgoing, red for incoming/missed
-                )
-                Text(
-                    text = recentCall.timestamp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant, // Use theme color
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-        }
-        IconButton(onClick = { /* TODO: Initiate call */ }) {
-            val callIcon = when (recentCall.callType) {
-                CallType.AUDIO -> Icons.Outlined.Call
-                CallType.VIDEO -> Icons.Outlined.Videocam
-            }
-            Icon(
-                imageVector = callIcon,
-                contentDescription = "Call ${recentCall.callerName}",
-                tint = MaterialTheme.colorScheme.primary // Use primary theme color
-            )
-        }
-    }
-}
-
-// --- PREVIEWS ---
-
-@Preview(name = "Full Calls Screen")
+@Preview(name = "Full Calls Screen - Dark")
 @Composable
 fun CallsScreenPreview() {
     val fakeRepository = ChatRepository()
-    val previewViewModel =
-        ChatViewModel(fakeRepository)
-    // AppTheme {
+    val previewViewModel = ChatViewModel(fakeRepository)
+   AppTheme(
+       theme = SocialTheme.Sky,
+       useDarkTheme = true
+   ) {
     CallsScreen(viewModel = previewViewModel)
-    // }
-}
-
-@Preview(name = "Recent Call - Outgoing")
-@Composable
-fun RecentCallsItemOutgoingPreview() {
-    // AppTheme {
-    Box(Modifier.background(MaterialTheme.colorScheme.background)) {
-        RecentCallsItem(
-            RecentCalls(
-                callerName = "Mugumya Ali",
-                callerImageRes = Res.drawable.story_3,
-                callTimes = 2,
-                timestamp = "Just now",
-                isSender = true, // Outgoing call
-                callType = CallType.VIDEO
-            ),
-        )
     }
-    // }
 }
-
-@Preview(name = "Recent Call - Missed")
+@Preview(name = "Full Calls Screen - Ligh")
 @Composable
-fun RecentCallsItemMissedPreview() {
-    // AppTheme {
-    Box(Modifier.background(MaterialTheme.colorScheme.background)) {
-        RecentCallsItem(
-            RecentCalls(
-                callerName = "Jane Doe",
-                callerImageRes = Res.drawable.story_2,
-                callTimes = 0, // Missed call
-                timestamp = "15 minutes ago",
-                isSender = false,
-                callType = CallType.AUDIO
-            ),
-        )
+fun CallsScreenLightPreview() {
+    val fakeRepository = ChatRepository()
+    val previewViewModel = ChatViewModel(fakeRepository)
+    AppTheme(
+        theme = SocialTheme.Sky,
+        useDarkTheme = false
+    ) {
+        CallsScreen(viewModel = previewViewModel)
     }
-    // }
-}
-
-@Preview(name = "Call Action Item")
-@Composable
-fun CallActionsPreview() {
-    // AppTheme {
-    Box(Modifier.background(MaterialTheme.colorScheme.background).padding(16.dp)) {
-        CallsActionItem(
-            CallActions(
-                Icons.Outlined.Call,
-                "Call Link",
-                isCommunity = false
-            )
-        )
-    }
-    // }
 }
