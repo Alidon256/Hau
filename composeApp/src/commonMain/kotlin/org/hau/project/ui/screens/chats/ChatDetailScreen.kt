@@ -123,7 +123,9 @@ fun DetailScreen(
                                 callType = CallType.AUDIO
                                 callState = CallUIState.CALLING
                             } else {
-                                navController?.navigate(Routes.AUDIO_CALL)
+                                //navController?.navigate(Routes.AUDIO_CALL)
+                                callType = CallType.AUDIO
+                                callState = CallUIState.CALLING
                             }
                         }) {
                             Icon(Icons.Default.Phone, "Audio Chat", tint = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -137,8 +139,14 @@ fun DetailScreen(
                                 onDismissRequest = { isTopMenuExpanded = false },
                                 modifier = Modifier.clip(RoundedCornerShape(16.dp))
                             ) {
-                                DropdownMenuItem(text = { Text("Contact info") }, onClick = { isTopMenuExpanded = false })
-                                DropdownMenuItem(text = { Text("Select messages") }, onClick = { isTopMenuExpanded = false })
+                                DropdownMenuItem(
+                                    text = { Text("Contact info") },
+                                    onClick = {navController?.navigate(Routes.USER_PROFILE)}
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Select messages") },
+                                    onClick = { isTopMenuExpanded = false }
+                                )
                                 DropdownMenuItem(text = { Text("Mute notifications") }, onClick = { isTopMenuExpanded = false })
                                 DropdownMenuItem(text = { Text("Clear chat") }, onClick = { isTopMenuExpanded = false })
                                 DropdownMenuItem(text = { Text("Delete chat") }, onClick = { isTopMenuExpanded = false })

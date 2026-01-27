@@ -1,22 +1,15 @@
 package org.hau.project.ui.screens.settings
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Forum
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Help
@@ -25,7 +18,6 @@ import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.QrCode
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,12 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import hau.composeapp.generated.resources.Res
@@ -53,17 +40,12 @@ import org.hau.project.models.SettingsUser
 import org.hau.project.ui.components.Routes
 import org.hau.project.ui.components.SettingRow
 import org.hau.project.ui.components.SettingsUserItem
-import org.hau.project.ui.theme.AppTheme
-import org.hau.project.ui.theme.SocialTheme
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(
-    navController: NavController? = null
+fun SScreen(
+    navController: NavController? = null,
+    onBackClick: () -> Unit
 ) {
     val settingsUser = SettingsUser(
         contactName = "Mugumya Ali",
@@ -147,14 +129,14 @@ fun SettingsScreen(
                             style = MaterialTheme.typography.titleLarge
                         )
                     },
-                    /*navigationIcon = {
-                        IconButton(onClick = { /* TODO: Handle navigation back */ }) {
+                    navigationIcon = {
+                        IconButton(onClick = { onBackClick() }) {
                             Icon(
                                 Icons.Outlined.ArrowBack,
                                 contentDescription = "Navigate Back"
                             )
                         }
-                    },*/
+                    },
                     actions = {
                         IconButton(onClick = {}) {
                             Icon(
@@ -193,26 +175,5 @@ fun SettingsScreen(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun SettingsScreenPreview() {
-   AppTheme(
-       useDarkTheme = true,
-       theme = SocialTheme.Sky
-   ){
-    SettingsScreen()
-    }
-}
-@Preview
-@Composable
-fun SettingsScreenLightPreview() {
-    AppTheme(
-        useDarkTheme = false,
-        theme = SocialTheme.Sky
-    ){
-        SettingsScreen()
     }
 }

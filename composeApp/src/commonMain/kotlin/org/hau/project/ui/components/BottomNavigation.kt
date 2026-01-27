@@ -55,6 +55,7 @@ import org.hau.project.ui.screens.chats.NewContactScreen
 import org.hau.project.ui.screens.chats.NewGroupScreen
 import org.hau.project.ui.screens.chats.UserProfileScreen
 import org.hau.project.ui.screens.memories.ChannelDetailScreen
+import org.hau.project.ui.screens.memories.ChannelProfileScreen
 import org.hau.project.ui.screens.memories.MemoriesScreen
 import org.hau.project.ui.screens.memories.ProfileAction
 import org.hau.project.ui.screens.memories.ScheduleCallScreen
@@ -64,6 +65,7 @@ import org.hau.project.ui.screens.settings.ChatSettingsScreen
 import org.hau.project.ui.screens.settings.DeleteAccountScreen
 import org.hau.project.ui.screens.settings.EmailAddressScreen
 import org.hau.project.ui.screens.settings.HelpSettingsScreen
+import org.hau.project.ui.screens.settings.SScreen
 import org.hau.project.ui.screens.settings.InviteFriendScreen
 import org.hau.project.ui.screens.settings.LanguageSettingsScreen
 import org.hau.project.ui.screens.settings.PasskeysScreen
@@ -72,6 +74,8 @@ import org.hau.project.ui.screens.settings.RequestAccountInfoScreen
 import org.hau.project.ui.screens.settings.SecurityNotificationsScreen
 import org.hau.project.ui.screens.settings.SettingsScreen
 import org.hau.project.ui.screens.settings.StorageSettingsScreen
+import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.hau.project.viewModels.ChatViewModel
 import org.hau.project.viewModels.ProfileViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -87,6 +91,7 @@ object Routes{
     @Serializable data object MEMORIES: NavDestinaton { override val routePattern: String = "MEMORIES" }
     @Serializable data object CALLS: NavDestinaton { override val routePattern: String = "CALLS" }
     @Serializable data object SETTINGS: NavDestinaton { override val routePattern: String = "SETTINGS" }
+    @Serializable data object S: NavDestinaton { override val routePattern: String = "S" }
     @Serializable data class CHANNEL_DETAIL(val channelId: String): NavDestinaton { override val routePattern: String = "CHANNEL_DETAIL" }
     @Serializable data class DETAIL(val chatId: String): NavDestinaton { override val routePattern: String = "DETAIL" }
     @Serializable data class CHANNEL_PROFILE(val channelId: String): NavDestinaton { override val routePattern: String = "CHANNEL_PROFILE" }
@@ -133,7 +138,7 @@ fun BottomNavigation(){
         )
     }
     val navController: NavHostController = rememberNavController()
-    val startDestination: org.hau.project.ui.components.NavDestinaton = _root_ide_package_.org.hau.project.ui.components.Routes.HOME
+    val startDestination: NavDestinaton = Routes.HOME
 
     val bottomNavItems = listOf(
         BottomNavItem(
@@ -244,7 +249,20 @@ fun BottomNavigation(){
                                 )
                             )
                         },
-                        onNewContactClick = { navController.navigate(Routes.NEW_CONTACTS) })
+                        onNewContactClick = { navController.navigate(Routes.NEW_CONTACTS) },
+                        onNewGroupClick = {
+                            navController.navigate(Routes.NEW_GROUPS)
+                        },
+                        onSettingsClick = {
+                            navController.navigate(Routes.S)
+                        }
+                    )
+                }
+                composable<Routes.S>{
+                    SScreen(
+                        navController,
+                        onBackClick = navController::popBackStack
+                    )
                 }
                 composable<Routes.SETTINGS>{
                     SettingsScreen(
@@ -331,7 +349,7 @@ fun BottomNavigation(){
                         profileViewModel.loadChannelProfile(args.channelId)
                     }
 
-                    _root_ide_package_.org.hau.project.ui.screens.memories.ChannelProfileScreen(
+                    ChannelProfileScreen(
                         uiState = uiState,
                         onAction = { action ->
                             when (action) {
@@ -440,20 +458,20 @@ fun BottomNavigation(){
 @Composable
 @Preview(showBackground = true)
 fun BottomNavigationPreview(){
-    _root_ide_package_.org.hau.project.ui.theme.AppTheme(
+    AppTheme(
         useDarkTheme = true,
-        theme = _root_ide_package_.org.hau.project.ui.theme.SocialTheme.Verdant
+        theme = SocialTheme.Verdant
     ) {
-        _root_ide_package_.org.hau.project.ui.components.BottomNavigation()
+        BottomNavigation()
     }
 }
 @Composable
 @Preview(showBackground = true)
 fun BottomNavigationLightPreview(){
-    _root_ide_package_.org.hau.project.ui.theme.AppTheme(
+    AppTheme(
         useDarkTheme = false,
-        theme = _root_ide_package_.org.hau.project.ui.theme.SocialTheme.Verdant
+        theme = SocialTheme.Verdant
     ) {
-        _root_ide_package_.org.hau.project.ui.components.BottomNavigation()
+        BottomNavigation()
     }
 }

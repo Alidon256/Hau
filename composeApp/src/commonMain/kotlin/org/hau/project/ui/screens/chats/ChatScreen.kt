@@ -47,7 +47,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun ChatScreen(
     viewModel: ChatViewModel,
     onChatClick: (String) -> Unit,
-    onNewContactClick: () -> Unit
+    onNewContactClick: () -> Unit,
+    onNewGroupClick: () -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     val uiState by viewModel.chatListState.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -135,7 +137,9 @@ fun ChatScreen(
                                     )
                                     DropdownMenuItem(
                                         text = { Text("New Group") },
-                                        onClick = { /* Handle click */ isMenuExpanded = false },
+                                        onClick = {
+                                            onNewGroupClick()
+                                        },
                                         colors = itemColors,
                                     )
                                     DropdownMenuItem(
@@ -155,7 +159,9 @@ fun ChatScreen(
                                     )
                                     DropdownMenuItem(
                                         text = { Text("Settings") },
-                                        onClick = { /* Handle click */ isMenuExpanded = false },
+                                        onClick = {
+                                            onSettingsClick()
+                                        },
                                         colors = itemColors,
                                     )
                                 }
@@ -187,7 +193,9 @@ fun ChatScreenLightPreview() {
         ChatScreen(
             viewModel = previewViewModel,
             onChatClick = { chatId -> println("Chat clicked: $chatId") },
-            onNewContactClick = { println("New contact clicked") }
+            onNewContactClick = { println("New contact clicked") },
+            onNewGroupClick = {},
+            onSettingsClick = {}
         )
     }
 }
@@ -200,7 +208,9 @@ fun ChatScreenDarkPreview() {
         ChatScreen(
             viewModel = previewViewModel,
             onChatClick = { chatId -> println("Chat clicked: $chatId") },
-            onNewContactClick = { println("New contact clicked") }
+            onNewContactClick = { println("New contact clicked") },
+            onNewGroupClick = {},
+            onSettingsClick = {}
         )
     }
 }

@@ -93,7 +93,9 @@ fun AdaptiveUi() {
                 ChatScreen(
                     viewModel = chatViewModel,
                     onChatClick = { chatId -> adaptiveUiState.selectChat(chatId) },
-                    onNewContactClick = {}
+                    onNewContactClick = {},
+                    onNewGroupClick = {},
+                    onSettingsClick = {}
                 )
             }
             composable<Routes.MEMORIES> {
