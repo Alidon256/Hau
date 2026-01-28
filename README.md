@@ -11,13 +11,19 @@ It demonstrates how to architect cross‑platform UIs using Compose Multiplatfor
 
 ![Hau Themes](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2Fmore%2FScreenshot%20(1435).png?alt=media&token=5c226a5f-af93-4533-bb81-62aa3723c6f3)
 
-![Hau jvm1](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2Fmore%2FScreenshot%20(1456).png?alt=media&token=dbaecae3-e5dd-490b-8566-bad72950eb12)
+![Hau jvm1](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2FHau%2FScreenshot%20(1504).png?alt=media&token=fb83872b-a613-4ca8-9878-a46b4ba9cb1a)
 
 ![Hau jvm2](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2Fmore%2FScreenshot%20(1457).png?alt=media&token=8ebc0e8e-9b30-42d4-ab7c-339bdf950234)
 
 ![Hau jvm3](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2Fmore%2FScreenshot%20(1458).png?alt=media&token=a8ca5e5c-89c4-41c2-805b-a34ea474bf57)
 
 ![Hau jvm4](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2Fmore%2FScreenshot%20(1459).png?alt=media&token=0da5fc98-667c-47af-a52e-ec9446dc7621)
+
+![Hau both1](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2FHau%2FScreenshot%20(1500).png?alt=media&token=b9478e33-a7fa-4e41-809d-7926013a670a)
+
+![Hau both2](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2FHau%2FScreenshot%20(1501).png?alt=media&token=bed64675-b604-41bf-9e9b-d5835d65d6bd)
+
+![Hau both3](https://firebasestorage.googleapis.com/v0/b/tija-a7b75.firebasestorage.app/o/My%20videos%2FHau%2FScreenshot%20(1506).png?alt=media&token=b2baf796-b20b-4417-9270-ec2020ae5f04)
 
 ---
 
