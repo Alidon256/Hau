@@ -18,6 +18,7 @@ import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,10 +34,18 @@ import hau.composeapp.generated.resources.story_2
 import hau.composeapp.generated.resources.story_3
 import org.hau.project.models.CallType
 import org.hau.project.models.RecentCalls
+import org.hau.project.ui.theme.AppTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
+/**
+ * A component representing a single entry in the recent calls list.
+ *
+ * It displays the caller's avatar, name (with optional call count), 
+ * call direction (incoming/outgoing/missed), timestamp, and a call action button.
+ *
+ * @param recentCall The [RecentCalls] data object containing call details.
+ */
 @Composable
 fun RecentCallsItem(recentCall: RecentCalls) {
     Row(
@@ -63,7 +72,7 @@ fun RecentCallsItem(recentCall: RecentCalls) {
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Determine text color based on if the call was missed
+                // Determine text color based on if the call was missed (callTimes == 0 indicates missed in this context)
                 val nameColor = if (recentCall.callTimes == 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
                 Text(
                     text = recentCall.callerName,
@@ -90,11 +99,11 @@ fun RecentCallsItem(recentCall: RecentCalls) {
                     modifier = Modifier
                         .size(16.dp)
                         .rotate(if (recentCall.isSender) -45f else 135f),
-                    tint = if (recentCall.isSender) Color(0xFF00C853) else MaterialTheme.colorScheme.error // Green for outgoing, red for incoming/missed
+                    tint = if (recentCall.isSender) Color(0xFF00C853) else MaterialTheme.colorScheme.error
                 )
                 Text(
                     text = recentCall.timestamp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant, // Use theme color
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -107,45 +116,46 @@ fun RecentCallsItem(recentCall: RecentCalls) {
             Icon(
                 imageVector = callIcon,
                 contentDescription = "Call ${recentCall.callerName}",
-                tint = MaterialTheme.colorScheme.primary // Use primary theme color
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }
 }
+
 @Preview(name = "Recent Call - Outgoing")
 @Composable
 fun RecentCallsItemOutgoingPreview() {
-    // AppTheme {
-    Box(Modifier.background(MaterialTheme.colorScheme.background)) {
-        RecentCallsItem(
-            RecentCalls(
-                callerName = "Mugumya Ali",
-                callerImageRes = Res.drawable.story_3,
-                callTimes = 2,
-                timestamp = "Just now",
-                isSender = true, // Outgoing call
-                callType = CallType.VIDEO
-            ),
-        )
+    AppTheme {
+        Surface {
+            RecentCallsItem(
+                RecentCalls(
+                    callerName = "Mugumya Ali",
+                    callerImageRes = Res.drawable.story_3,
+                    callTimes = 2,
+                    timestamp = "Just now",
+                    isSender = true,
+                    callType = CallType.VIDEO
+                ),
+            )
+        }
     }
-    // }
 }
 
 @Preview(name = "Recent Call - Missed")
 @Composable
 fun RecentCallsItemMissedPreview() {
-    // AppTheme {
-    Box(Modifier.background(MaterialTheme.colorScheme.background)) {
-        RecentCallsItem(
-            RecentCalls(
-                callerName = "Jane Doe",
-                callerImageRes = Res.drawable.story_2,
-                callTimes = 0, // Missed call
-                timestamp = "15 minutes ago",
-                isSender = false,
-                callType = CallType.AUDIO
-            ),
-        )
+    AppTheme {
+        Surface {
+            RecentCallsItem(
+                RecentCalls(
+                    callerName = "Jane Doe",
+                    callerImageRes = Res.drawable.story_2,
+                    callTimes = 0,
+                    timestamp = "15 minutes ago",
+                    isSender = false,
+                    callType = CallType.AUDIO
+                ),
+            )
+        }
     }
-    // }
 }

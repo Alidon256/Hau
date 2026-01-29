@@ -38,6 +38,19 @@ import org.hau.project.utils.rememberWindowSize
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * A specialized [TopAppBar] for the Channel Profile screen that features a collapsible header effect.
+ *
+ * This component intelligently manages its visibility based on the scroll state of the screen:
+ * 1.  **Expanded State**: Background is transparent, allowing the profile banner to show through.
+ * 2.  **Collapsed State**: Fades in a solid background and reveals the channel's avatar and name
+ *     next to the back button for persistent context during browsing.
+ *
+ * @param channelName The name of the channel to display when the bar is collapsed.
+ * @param avatarUrl The [DrawableResource] for the channel avatar.
+ * @param isCollapsed Whether the scroll position has passed the threshold to collapse the bar.
+ * @param onNavigateBack Callback for the back navigation action.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelProfileTopBar(
@@ -48,13 +61,15 @@ fun ChannelProfileTopBar(
 ) {
     val windowSize = rememberWindowSize()
     val isLargeScreen = windowSize >= WindowSize.Expanded
-    // A separate surface handles the background color transition for a cleaner effect
+
+    // A separate surface handles the background color transition for a cleaner visual effect.
     Surface(
         color = if (isCollapsed) MaterialTheme.colorScheme.background else Color.Transparent,
         shadowElevation = if (isCollapsed) 2.dp else 0.dp
     ) {
         TopAppBar(
             title = {
+                // Reveal the channel identity only when the large header avatar has scrolled away.
                 AnimatedVisibility(
                     visible = isCollapsed,
                     enter = fadeIn(animationSpec = tween(200, delayMillis = 100)),
@@ -80,20 +95,22 @@ fun ChannelProfileTopBar(
                 }
             },
             navigationIcon = {
+                // The back button is suppressed on large screens where rail-based navigation is used.
                 if(!isLargeScreen) {
                     IconButton(onClick = onNavigateBack) {
-                        // Use a scrim for better visibility on the banner
+                        // White tint ensures visibility over dark or colorful banner images.
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = Color.White)
                     }
                 }
             },
             actions = {
                 if(!isLargeScreen) {
-                    IconButton(onClick = { /* More options */ }) {
+                    IconButton(onClick = { /* Handle overflow actions */ }) {
                         Icon(Icons.Default.MoreVert, "More Options", tint = Color.White)
                     }
                 }
             },
+            // The top bar itself remains transparent to allow the underlying Surface to control the tint.
             colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
         )
     }

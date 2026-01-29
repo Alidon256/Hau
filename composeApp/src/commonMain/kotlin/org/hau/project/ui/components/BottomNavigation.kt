@@ -80,11 +80,18 @@ import org.hau.project.viewModels.ChatViewModel
 import org.hau.project.viewModels.ProfileViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * Interface representing a navigation destination in the application.
+ */
 @Serializable
 sealed interface NavDestinaton{
+    /** The pattern of the route for this destination. */
     val routePattern: String
 }
 
+/**
+ * Object containing all the routes used for navigation in the application.
+ */
 @Serializable
 object Routes{
     @Serializable data object HOME: NavDestinaton { override val routePattern: String = "HOME" }
@@ -117,13 +124,22 @@ object Routes{
     @Serializable data object ACCOUNT : NavDestinaton { override val routePattern: String = "ACCOUNT" }
 }
 
-
+/**
+ * Data class representing an item in the bottom navigation bar.
+ *
+ * @param unselectedIcon The icon to be displayed when the item is not selected.
+ * @param selectedIcon The icon to be displayed when the item is selected.
+ * @param destination The navigation destination associated with the item.
+ */
 data class BottomNavItem(
     val unselectedIcon: ImageVector,
     val selectedIcon: ImageVector,
     val destination: NavDestinaton
 )
 
+/**
+ * Composable function that displays the bottom navigation bar and manages navigation within the application.
+ */
 @Composable
 fun BottomNavigation(){
     val chatRepository = remember { ChatRepository() }
@@ -455,6 +471,10 @@ fun BottomNavigation(){
 
     }
 }
+
+/**
+ * Preview function for the [BottomNavigation] composable in dark mode with the Verdant theme.
+ */
 @Composable
 @Preview(showBackground = true)
 fun BottomNavigationPreview(){
@@ -465,6 +485,10 @@ fun BottomNavigationPreview(){
         BottomNavigation()
     }
 }
+
+/**
+ * Preview function for the [BottomNavigation] composable in light mode with the Verdant theme.
+ */
 @Composable
 @Preview(showBackground = true)
 fun BottomNavigationLightPreview(){

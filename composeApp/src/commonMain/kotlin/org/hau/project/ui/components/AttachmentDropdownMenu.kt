@@ -20,36 +20,51 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 
+/**
+ * A contextual dropdown menu used for selecting various types of chat attachments.
+ *
+ * This component is typically anchored to an attachment icon (like a paperclip) in the 
+ * chat input bar. It provides a visual list of options such as sharing documents, 
+ * photos, contacts, or creating polls.
+ *
+ * @param expanded Whether the dropdown menu is currently visible to the user.
+ * @param onDismiss Callback triggered when the user taps outside the menu or selects an item.
+ */
 @Composable
 fun AttachmentDropdownMenu(expanded: Boolean, onDismiss: () -> Unit) {
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
-        offset = DpOffset(0.dp, (-280).dp), // Position it upwards from the icon
+        offset = DpOffset(0.dp, (-280).dp), // Position it upwards from the anchor icon
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .clip(RoundedCornerShape(20.dp))
     ) {
+        // Option to attach documents
         DropdownMenuItem(
             text = { Text("Document") },
             leadingIcon = { Icon(Icons.Outlined.Description, null, tint = Color(0xFF7F66FF)) },
             onClick = onDismiss
         )
+        // Option to share existing media from the gallery
         DropdownMenuItem(
             text = { Text("Photos & Videos") },
             leadingIcon = { Icon(Icons.Outlined.PhotoLibrary, null, tint = Color(0xFF007AFF)) },
             onClick = onDismiss
         )
+        // Option to take a new photo or video
         DropdownMenuItem(
             text = { Text("Camera") },
             leadingIcon = { Icon(Icons.Outlined.PhotoCamera, null, tint = Color(0xFFFF2D55)) },
             onClick = onDismiss
         )
+        // Option to share a contact card
         DropdownMenuItem(
             text = { Text("Contact") },
             leadingIcon = { Icon(Icons.Outlined.Person, null, tint = Color(0xFF007AFF)) },
             onClick = onDismiss
         )
+        // Option to create an interactive poll
         DropdownMenuItem(
             text = { Text("Poll") },
             leadingIcon = { Icon(Icons.Outlined.Poll, null, tint = Color(0xFFFFBC38)) },

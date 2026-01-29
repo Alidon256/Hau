@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsTopAppBar
+import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

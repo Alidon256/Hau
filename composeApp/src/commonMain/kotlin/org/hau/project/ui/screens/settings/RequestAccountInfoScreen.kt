@@ -11,10 +11,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsHeader
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsInfoItem
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsSwitchItem
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsTopAppBar
+import org.hau.project.ui.components.SettingsHeader
+import org.hau.project.ui.components.SettingsInfoItem
+import org.hau.project.ui.components.SettingsSwitchItem
+import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

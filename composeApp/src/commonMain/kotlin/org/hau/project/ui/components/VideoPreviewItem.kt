@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,7 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import org.hau.project.ui.theme.AppTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A lightweight video preview component designed for chat messages or media galleries.
+ *
+ * It displays a placeholder with a play/pause toggle. In a real implementation, 
+ * this would likely integrate with a video player like ExoPlayer or a similar KMP-compatible 
+ * media library.
+ *
+ * @param videoUrl The URL of the video to preview. Currently used as a placeholder.
+ */
 @Composable
 fun VideoPreviewItem(videoUrl: String? = null) {
     var isPlaying by remember { mutableStateOf(false) }
@@ -49,3 +61,14 @@ fun VideoPreviewItem(videoUrl: String? = null) {
     }
 }
 
+@Preview
+@Composable
+fun VideoPreviewItemPreview() {
+    AppTheme {
+        Surface {
+            Box(Modifier.padding(16.dp)) {
+                VideoPreviewItem()
+            }
+        }
+    }
+}

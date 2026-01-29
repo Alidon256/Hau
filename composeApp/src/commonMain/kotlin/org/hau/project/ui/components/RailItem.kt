@@ -14,7 +14,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-
+/**
+ * A navigation item designed for use in a [NavigationRail] (typically on large screens/tablets).
+ *
+ * It provides a circular background highlight when selected and toggles between 
+ * selected and unselected icons.
+ *
+ * @param item The [BottomNavItem] data containing the icons and destination for this rail item.
+ * @param isSelected Whether this item is currently selected in the navigation rail.
+ * @param onClick Callback triggered when the item is clicked.
+ */
 @Composable
 fun RailItem(
     item: BottomNavItem,
@@ -44,7 +53,7 @@ fun RailItem(
         Icon(
             imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
             contentDescription = null,
-            modifier = Modifier.size(24.dp), // Standard WhatsApp size
+            modifier = Modifier.size(24.dp),
             tint = contentColor
         )
     }

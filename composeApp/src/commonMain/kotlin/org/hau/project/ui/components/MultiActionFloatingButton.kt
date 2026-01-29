@@ -12,28 +12,33 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.hau.project.models.FabAction
-
+import org.hau.project.ui.theme.AppTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
- * An animated, multi-action Floating Action Button (FAB) that expands
- * to show several sub-actions in a speed-dial fashion.
+ * An animated, speed-dial style Floating Action Button (FAB).
  *
- * @param onStateChange Callback for when the button is expanded or collapsed.
+ * When clicked, the main button rotates and expands vertically to reveal a list
+ * of sub-actions. This is ideal for screens requiring multiple related actions
+ * (e.g., attaching different media types) without cluttering the UI.
+ *
+ * @param modifier The modifier to be applied to the root container.
+ * @param onStateChange Callback invoked when the expansion state changes.
+ * Useful for blurring backgrounds or dimming the main content.
  */
 @Composable
 fun MultiActionFloatingButton(
@@ -42,42 +47,21 @@ fun MultiActionFloatingButton(
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
-    // Define the list of actions
+    // Configuration for the sub-actions shown upon expansion.
     val actions = listOf(
-        _root_ide_package_.org.hau.project.models.FabAction(
-            Icons.Default.Photo,
-            "Gallery",
-            Color(0xFF8E44AD),
-            {}),
-        _root_ide_package_.org.hau.project.models.FabAction(
-            Icons.Default.CameraAlt,
-            "Camera",
-            Color(0xFFE74C3C),
-            {}),
-        _root_ide_package_.org.hau.project.models.FabAction(
-            Icons.Default.Headphones,
-            "Audio",
-            Color(0xFFF39C12),
-            {}),
-        _root_ide_package_.org.hau.project.models.FabAction(
-            Icons.Default.Description,
-            "Document",
-            Color(0xFF2980B9),
-            {}),
-        _root_ide_package_.org.hau.project.models.FabAction(
-            Icons.Default.Person,
-            "Contact",
-            Color(0xFF2ECC71),
-            {})
+        FabAction(Icons.Default.Photo, "Gallery", Color(0xFF8E44AD), {}),
+        FabAction(Icons.Default.CameraAlt, "Camera", Color(0xFFE74C3C), {}),
+        FabAction(Icons.Default.Headphones, "Audio", Color(0xFFF39C12), {}),
+        FabAction(Icons.Default.Description, "Document", Color(0xFF2980B9), {}),
+        FabAction(Icons.Default.Person, "Contact", Color(0xFF2ECC71), {})
     )
 
-    // Animate the rotation of the main FAB icon (+ to x)
+    // Smooth rotation animation for the primary FAB icon (+ to X).
     val rotation by animateFloatAsState(
         targetValue = if (isExpanded) 45f else 0f,
         animationSpec = tween(durationMillis = 200)
     )
 
-    // When the state changes, invoke the callback
     LaunchedEffect(isExpanded) {
         onStateChange(isExpanded)
     }
@@ -87,7 +71,7 @@ fun MultiActionFloatingButton(
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // The expanding list of actions
+        // Revealed list of sub-actions with fade and vertical expansion.
         AnimatedVisibility(
             visible = isExpanded,
             enter = fadeIn() + expandVertically(expandFrom = Alignment.Bottom),
@@ -98,12 +82,12 @@ fun MultiActionFloatingButton(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 actions.forEach { action ->
-                    _root_ide_package_.org.hau.project.ui.components.ActionItem(action = action)
+                    ActionItem(action = action)
                 }
             }
         }
 
-        // The main FAB that controls the expansion
+        // The primary trigger FAB.
         Box(
             modifier = Modifier
                 .size(56.dp)
@@ -114,7 +98,7 @@ fun MultiActionFloatingButton(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add Attachment",
+                contentDescription = "Toggle Actions",
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.rotate(rotation)
             )
@@ -122,13 +106,18 @@ fun MultiActionFloatingButton(
     }
 }
 
+/**
+ * A horizontal row representing a single sub-action in the FAB speed-dial.
+ *
+ * @param action The data model containing the icon, label, and click handler.
+ */
 @Composable
-private fun ActionItem(action: org.hau.project.models.FabAction) {
+private fun ActionItem(action: FabAction) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Label with a semi-transparent background
+        // Action Label with elevated background for readability.
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(6.dp))
@@ -143,7 +132,7 @@ private fun ActionItem(action: org.hau.project.models.FabAction) {
             )
         }
 
-        // Circular action button
+        // Circular Action Button.
         Box(
             modifier = Modifier
                 .size(48.dp)
@@ -157,6 +146,26 @@ private fun ActionItem(action: org.hau.project.models.FabAction) {
                 contentDescription = action.label,
                 tint = Color.White
             )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun MultiActionFloatingButtonLightPreview() {
+    AppTheme(useDarkTheme = false) {
+        Box(Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.BottomEnd) {
+            MultiActionFloatingButton()
+        }
+    }
+}
+
+@Preview
+@Composable
+fun MultiActionFloatingButtonDarkPreview() {
+    AppTheme(useDarkTheme = true) {
+        Box(Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.BottomEnd) {
+            MultiActionFloatingButton()
         }
     }
 }

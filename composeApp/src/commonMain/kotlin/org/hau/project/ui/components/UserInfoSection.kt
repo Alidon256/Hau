@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -24,21 +25,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.hau.project.data.repositories.formatCount
 import org.hau.project.models.User
+import org.hau.project.ui.theme.AppTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
+/**
+ * A profile header section displaying key user information.
+ *
+ * It shows the user's display name, a verified badge if applicable, 
+ * and their follower count. The name and badge area is clickable to show 
+ * more verification info.
+ *
+ * @param user The [User] data model containing name, verification status, and follower count.
+ * @param onShowVerified Callback invoked when the user clicks on the name/verification area.
+ */
 @Composable
 fun UserInfoSection(
-    user: org.hau.project.models.User,
+    user: User,
     onShowVerified: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(top = 8.dp) // Added top padding
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(top = 8.dp)
     ) {
         Row(
             modifier = Modifier.clickable(
                 onClick = onShowVerified,
-                indication = null, // No ripple effect for this click
+                indication = null, // No ripple effect for this click to maintain a clean header look
                 interactionSource = remember { MutableInteractionSource() }
             ),
             verticalAlignment = Alignment.CenterVertically,
@@ -61,10 +73,32 @@ fun UserInfoSection(
         }
         Spacer(Modifier.height(4.dp))
         Text(
-            text = "User ∙ ${_root_ide_package_.org.hau.project.data.repositories.formatCount(user.followerCount)} followers",
+            text = "User ∙ ${formatCount(user.followerCount)} followers",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(Modifier.height(24.dp))
+    }
+}
+
+@Preview
+@Composable
+fun UserInfoSectionPreview() {
+    AppTheme {
+        Surface {
+            UserInfoSection(
+                user = User(
+                    id = "1",
+                    name = "Jane Doe",
+                    isVerified = true,
+                    followerCount = 12500,
+                    imageRes = null,
+                    about = "Living life one day at a time.",
+                    phoneNumber = "+123456789",
+                    isMuted = false
+                ),
+                onShowVerified = {}
+            )
+        }
     }
 }

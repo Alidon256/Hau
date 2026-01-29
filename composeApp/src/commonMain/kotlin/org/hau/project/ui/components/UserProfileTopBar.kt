@@ -38,6 +38,18 @@ import org.hau.project.utils.rememberWindowSize
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * A specialized top app bar for user profile screens that supports a collapsing effect.
+ *
+ * When collapsed, it reveals the user's name and avatar within the bar. On mobile devices, 
+ * it includes navigation and overflow actions. On larger screens, these are hidden 
+ * to align with a multi-pane layout.
+ *
+ * @param userName The name of the user to display in the title.
+ * @param avatarUrl The [DrawableResource] for the user's profile image.
+ * @param isCollapsed Whether the bar is in its collapsed state (scrolled past the banner).
+ * @param onNavigateBack Callback for the back navigation icon.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserProfileTopAppBar(

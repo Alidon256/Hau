@@ -1,33 +1,15 @@
 package org.hau.project.ui.components
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CallEnd
-import androidx.compose.material.icons.filled.FlipCameraIos
-import androidx.compose.material.icons.filled.MicOff
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.VolumeUp
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -40,9 +22,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.hau.project.ui.screens.chats.CallType
 import org.hau.project.ui.screens.chats.CallUIState
+import org.hau.project.ui.theme.AppTheme
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * An immersive, full-screen call interface providing a modern communication experience.
+ *
+ * Features:
+ * 1. **Visual Pulse**: Animates a subtle glow around the user's avatar during the [CallUIState.CALLING] phase.
+ * 2. **Contextual Controls**: Provides standard call actions like Mute, Hang Up, and Speaker/Camera switching.
+ * 3. **Dynamic Feedback**: Displays the call status (e.g., "Calling...", duration) and adapts to Audio/Video types.
+ *
+ * @param userName The display name of the contact being called.
+ * @param avatarUrl The [DrawableResource] for the contact's profile picture.
+ * @param callType Whether the call is [CallType.AUDIO] or [CallType.VIDEO].
+ * @param callState The current phase of the call (IDLE, CALLING, ACTIVE).
+ * @param onEndCall Callback triggered when the hang-up button is pressed.
+ * @param onAcceptCall Callback triggered when an incoming call is accepted.
+ */
 @Composable
 fun ModernCallPanel(
     userName: String,
@@ -67,14 +66,14 @@ fun ModernCallPanel(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.85f))
-            .clickable(enabled = false) {} // Consume clicks
+            .clickable(enabled = false) {} // Consume clicks to prevent interaction with underlying UI
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // User Avatar with Pulse
+            // User Avatar with Pulse Animation
             Box(contentAlignment = Alignment.Center) {
                 if (callState == CallUIState.CALLING) {
                     Box(
@@ -88,7 +87,7 @@ fun ModernCallPanel(
                 if (avatarUrl != null) {
                     Image(
                         painter = painterResource(avatarUrl),
-                        contentDescription = null,
+                        contentDescription = "Contact Avatar",
                         modifier = Modifier
                             .size(120.dp)
                             .clip(CircleShape)
@@ -124,12 +123,12 @@ fun ModernCallPanel(
 
             Spacer(Modifier.height(60.dp))
 
-            // Call Controls
+            // Main Call Controls
             Row(
                 horizontalArrangement = Arrangement.spacedBy(32.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Mute
+                // Mute Mic Toggle
                 CallControlButton(
                     icon = Icons.Default.MicOff,
                     containerColor = Color.White.copy(alpha = 0.1f),
@@ -137,7 +136,7 @@ fun ModernCallPanel(
                     onClick = {}
                 )
 
-                // End Call
+                // Termination Button
                 CallControlButton(
                     icon = Icons.Default.CallEnd,
                     containerColor = Color.Red,
@@ -147,7 +146,7 @@ fun ModernCallPanel(
                     onClick = onEndCall
                 )
 
-                // Speaker / Camera Switch
+                // Visual Toggle (Speaker for Audio, Flip Camera for Video)
                 CallControlButton(
                     icon = if (callType == CallType.VIDEO) Icons.Default.FlipCameraIos else Icons.Default.VolumeUp,
                     containerColor = Color.White.copy(alpha = 0.1f),
@@ -156,5 +155,20 @@ fun ModernCallPanel(
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun ModernCallPanelPreview() {
+    AppTheme {
+        ModernCallPanel(
+            userName = "Mugumya Ali",
+            avatarUrl = null,
+            callType = CallType.AUDIO,
+            callState = CallUIState.CALLING,
+            onEndCall = {},
+            onAcceptCall = {}
+        )
     }
 }

@@ -12,7 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.avator
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsTopAppBar
+import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

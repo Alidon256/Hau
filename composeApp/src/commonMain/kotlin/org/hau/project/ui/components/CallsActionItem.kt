@@ -25,6 +25,15 @@ import org.hau.project.models.CallActions
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A specialized action item for the Calls screen.
+ *
+ * This component displays an icon or an image within a circular background,
+ * followed by a text label. It is used for actions like "Create Call Link"
+ * or displaying community call shortcuts.
+ *
+ * @param callItem The [CallActions] data model containing the icon, text, and type.
+ */
 @Composable
 fun CallsActionItem(callItem: CallActions) {
     Column(
@@ -61,11 +70,9 @@ fun CallsActionItem(callItem: CallActions) {
     }
 }
 
-
 @Preview(name = "Call Action Item")
 @Composable
 fun CallActionsPreview() {
-    // AppTheme {
     Box(Modifier.background(MaterialTheme.colorScheme.background).padding(16.dp)) {
         CallsActionItem(
             CallActions(
@@ -75,5 +82,4 @@ fun CallActionsPreview() {
             )
         )
     }
-    // }
 }

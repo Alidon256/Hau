@@ -8,15 +8,15 @@ import org.jetbrains.compose.resources.DrawableResource
 /**
  * Represents a single chat conversation in a user's chat list.
  *
- * @param id The unique identifier for the chat.
- * @param userName The name of the other user in the chat.
- * @param profileRes The drawable resource for the user's profile picture.
- * @param lastMessage The content of the most recent message in the chat.
- * @param timestamp The time the last message was sent.
- * @param unreadCount The number of unread messages in the chat.
- * @param isOnline Indicates if the user is currently online.
- * @param isSent Indicates if the last message was sent by the current user.
- * @param hasSeen Indicates if the current user has seen the last message.
+ * @property id The unique identifier for the chat.
+ * @property userName The name of the other user in the chat.
+ * @property profileRes The [DrawableResource] for the user's profile picture.
+ * @property lastMessage The content of the most recent message in the chat.
+ * @property timestamp The time the last message was sent.
+ * @property unreadCount The number of unread messages in the chat.
+ * @property isOnline Indicates if the user is currently online.
+ * @property isSent Indicates if the last message was sent by the current user.
+ * @property hasSeen Indicates if the current user has seen the last message.
  */
 data class Chat(
     val id: String,
@@ -42,11 +42,11 @@ enum class MessageSender {
 /**
  * Data class for displaying recommended channels to the user.
  *
- * @param id The unique ID of the channel.
- * @param channelRes The resource ID for the channel's display image.
- * @param channelName The name of the recommended channel.
- * @param followerCount The number of followers the channel has.
- * @param isVerified True if the channel is verified, false otherwise.
+ * @property id The unique ID of the channel.
+ * @property channelRes The [DrawableResource] for the channel's display image.
+ * @property channelName The name of the recommended channel.
+ * @property followerCount The number of followers the channel has.
+ * @property isVerified True if the channel is verified, false otherwise.
  */
 data class RecommendedChannels(
     val id: String,
@@ -59,16 +59,16 @@ data class RecommendedChannels(
 /**
  * Represents a communication channel, which can be a group or a broadcast list.
  *
- * @param id The unique identifier for the channel.
- * @param channelRes The drawable resource for the channel's avatar.
- * @param message The last message sent in the channel.
- * @param attachmentType The type of attachment in the last message, if any.
- * @param timestamp The time the last message was sent.
- * @param unreadMessages The number of unread messages in the channel.
- * @param channelName The name of the channel.
- * @param isRead Whether the last message has been read.
- * @param followerCount The number of followers or subscribers to the channel.
- * @param isVerified Whether the channel is officially verified.
+ * @property id The unique identifier for the channel.
+ * @property channelRes The [DrawableResource] for the channel's avatar.
+ * @property message The last message sent in the channel.
+ * @property attachmentType The type of attachment in the last message, if any.
+ * @property timestamp The time the last message was sent.
+ * @property unreadMessages The number of unread messages in the channel.
+ * @property channelName The name of the channel.
+ * @property isRead Whether the last message has been read.
+ * @property followerCount The number of followers or subscribers to the channel.
+ * @property isVerified Whether the channel is officially verified.
  */
 data class Channels(
     val id: String,
@@ -93,20 +93,20 @@ enum class AttachmentType{
 /**
  * Holds information about a recent call, either incoming or outgoing.
  *
- * @param callerName The name of the person who was on the call.
- * @param callerImageRes The resource ID for the caller's profile image.
- * @param callTimes The number of times the call was made or received.
- * @param timestamp The time the call took place.
- * @param isSender True if the current user initiated the call, false if they received it.
- * @param callType The type of call (AUDIO or VIDEO).
+ * @property callerName The name of the person who was on the call.
+ * @property callerImageRes The [DrawableResource] for the caller's profile image.
+ * @property callTimes The number of times the call was made or received.
+ * @property timestamp The time the call took place.
+ * @property isSender True if the current user initiated the call, false if they received it.
+ * @property callType The type of call ([CallType.AUDIO] or [CallType.VIDEO]).
  */
-data class  RecentCalls(
+data class RecentCalls(
     val callerName: String,
     val callerImageRes: DrawableResource,
     val callTimes: Int,
     val timestamp: String,
     val isSender: Boolean,
-    val callType: org.hau.project.models.CallType
+    val callType: CallType
 )
 
 /**
@@ -119,9 +119,9 @@ enum class CallType{
 /**
  * Represents an action that can be taken from the call screen, like starting a new call or creating a community.
  *
- * @param icon The icon representing the action.
- * @param actionText The text label for the action.
- * @param isCommunity True if the action is related to a community, false otherwise.
+ * @property icon The [ImageVector] representing the action.
+ * @property actionText The text label for the action.
+ * @property isCommunity True if the action is related to a community, false otherwise.
  */
 data class CallActions(
     val icon: ImageVector,
@@ -133,22 +133,22 @@ data class CallActions(
  * Represents a single message within a chat.
  * This class is serializable to allow for easy storage or transmission.
  *
- * @param id The unique identifier for the message.
- * @param sender The sender of the message, either `Me` or `Them`.
- * @param text The textual content of the message.
- * @param time The timestamp of the message.
- * @param imageUrl The URL of an image attachment, if any.
- * @param videoUrl The URL of a video attachment, if any.
- * @param audioUrl The URL of an audio attachment, if any.
- * @param documentUrl The URL of a document attachment, if any.
- * @param documentName The name of the attached document.
- * @param documentSize The size of the attached document.
- * @param status The delivery status of the message.
+ * @property id The unique identifier for the message.
+ * @property sender The sender of the message, either [MessageSender.Me] or [MessageSender.Them].
+ * @property text The textual content of the message.
+ * @property time The timestamp of the message.
+ * @property imageUrl The URL of an image attachment, if any.
+ * @property videoUrl The URL of a video attachment, if any.
+ * @property audioUrl The URL of an audio attachment, if any.
+ * @property documentUrl The URL of a document attachment, if any.
+ * @property documentName The name of the attached document.
+ * @property documentSize The size of the attached document.
+ * @property status The delivery status of the message.
  */
 @Serializable
 data class Message(
     val id: String,
-    val sender: org.hau.project.models.MessageSender,
+    val sender: MessageSender,
     val text: String? = null,
     val time: String,
     val imageUrl: String? = null,
@@ -157,7 +157,7 @@ data class Message(
     val documentUrl: String? = null,
     val documentName: String? = null,
     val documentSize: String? = null,
-    val status: org.hau.project.models.MessageStatus? = null
+    val status: MessageStatus? = null
 )
 
 
@@ -169,22 +169,22 @@ enum class MessageStatus { SENT, DELIVERED, READ }
 /**
  * A summarized view of a chat, suitable for a preview list.
  *
- * @param id The unique identifier for the chat.
- * @param user The user associated with the chat.
- * @param lastMessage The last message exchanged.
- * @param time The timestamp of the last message.
- * @param unreadCount The number of unread messages.
- * @param isVerified Whether the user is verified.
- * @param isMuted Whether the chat is muted.
- * @param isPinned Whether the chat is pinned.
- * @param isArchived Whether the chat is archived.
- * @param mediaType The type of media in the last message (e.g., "photo", "video").
- * @param mediaUrl The URL of the media in the last message.
- * @param mediaDuration The duration of the media, if applicable.
+ * @property id The unique identifier for the chat.
+ * @property user The user associated with the chat.
+ * @property lastMessage The last message exchanged.
+ * @property time The timestamp of the last message.
+ * @property unreadCount The number of unread messages.
+ * @property isVerified Whether the user is verified.
+ * @property isMuted Whether the chat is muted.
+ * @property isPinned Whether the chat is pinned.
+ * @property isArchived Whether the chat is archived.
+ * @property mediaType The type of media in the last message (e.g., "photo", "video").
+ * @property mediaUrl The URL of the media in the last message.
+ * @property mediaDuration The duration of the media, if applicable.
  */
 data class ChatPreview(
     val id: String = "",
-    val user: org.hau.project.models.StoryUser = _root_ide_package_.org.hau.project.models.StoryUser(),
+    val user: StoryUser = StoryUser(),
     val lastMessage: String = "",
     val time: String = "",
     val unreadCount: Int = 0,
@@ -198,17 +198,17 @@ data class ChatPreview(
 ) {
     // Secondary constructor for Firestore
     constructor() : this("",
-        _root_ide_package_.org.hau.project.models.StoryUser(), "", "", 0, false, false, false, false, null, null, null)
+        StoryUser(), "", "", 0, false, false, false, false, null, null, null)
 }
 
 /**
  * Represents a user, particularly in the context of stories or statuses.
  *
- * @param id The unique identifier for the user.
- * @param name The user's display name.
- * @param avatarUrl The URL for the user's avatar image.
- * @param hasStory Whether the user has an active story.
- * @param status The user's current status message.
+ * @property id The unique identifier for the user.
+ * @property name The user's display name.
+ * @property avatarUrl The URL for the user's avatar image.
+ * @property hasStory Whether the user has an active story.
+ * @property status The user's current status message.
  */
 data class StoryUser(
     val id: String = "",
@@ -224,12 +224,12 @@ data class StoryUser(
 /**
  * Represents a new contact that can be added to the user's chat list.
  *
- * @param id The unique ID for the contact.
- * @param contactRes The drawable resource for the contact's avatar.
- * @param contactName The name of the contact.
- * @param contactDesc A short description or status for the contact.
- * @param contact The contact information (e.g., phone number or username).
- * @param isOwner Whether the contact is the owner of a group or channel.
+ * @property id The unique ID for the contact.
+ * @property contactRes The [DrawableResource] for the contact's avatar.
+ * @property contactName The name of the contact.
+ * @property contactDesc A short description or status for the contact.
+ * @property contact The contact information (e.g., phone number or username).
+ * @property isOwner Whether the contact is the owner of a group or channel.
  */
 data class NewContacts(
     val id: String,
@@ -243,11 +243,11 @@ data class NewContacts(
 /**
  * Represents a single option in a poll.
  *
- * @param id The unique identifier for the option.
- * @param text The text of the poll option.
- * @param icon A string identifier for an optional icon.
- * @param votes The number of votes this option has received.
- * @param isSelected Whether the current user has selected this option.
+ * @property id The unique identifier for the option.
+ * @property text The text of the poll option.
+ * @property icon A string identifier for an optional icon.
+ * @property votes The number of votes this option has received.
+ * @property isSelected Whether the current user has selected this option.
  */
 class PollOption(
     val id: Int,
@@ -260,14 +260,14 @@ class PollOption(
 /**
  * Represents an item in a channel's message feed. This can be a text message, a link, an image, or a poll.
  *
- * @param id The unique identifier for the message item.
- * @param text The text content of the message, if any.
- * @param link A URL included in the message, if any.
- * @param time The timestamp of the message.
- * @param reactions A map of reaction emojis to their counts.
- * @param isPoll Whether this message item is a poll.
- * @param poll The poll data, if this item is a poll.
- * @param image The URL of an image in the message, if any.
+ * @property id The unique identifier for the message item.
+ * @property text The text content of the message, if any.
+ * @property link A URL included in the message, if any.
+ * @property time The timestamp of the message.
+ * @property reactions A map of reaction emojis to their counts.
+ * @property isPoll Whether this message item is a poll.
+ * @property poll The [Poll] data, if this item is a poll.
+ * @property image The URL of an image in the message, if any.
  */
 data class MessageItem(
     val id: String,
@@ -276,17 +276,17 @@ data class MessageItem(
     val time: String = "",
     val reactions: Map<String, Int> = emptyMap(),
     val isPoll: Boolean = false,
-    val poll: org.hau.project.models.Poll? = null,
+    val poll: Poll? = null,
     val image: String? = null
 )
 
 /**
  * Represents a poll within a message.
  *
- * @param question The question being asked in the poll.
- * @param options The list of [PollOption]s that users can vote on.
+ * @property question The question being asked in the poll.
+ * @property options The list of [PollOption]s that users can vote on.
  */
 data class Poll(
     val question: String,
-    val options: List<org.hau.project.models.PollOption>
+    val options: List<PollOption>
 )

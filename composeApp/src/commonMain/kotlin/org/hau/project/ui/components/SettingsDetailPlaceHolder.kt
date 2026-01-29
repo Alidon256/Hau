@@ -13,14 +13,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.hau.project.ui.theme.AppTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
+/**
+ * A placeholder component displayed in the settings details pane on large screens.
+ *
+ * This UI is shown when no settings category has been selected from the primary 
+ * navigation rail or master list. It encourages the user to select an item to 
+ * view its configuration options.
+ */
 @Composable
 fun SettingsDetailPlaceholder() {
     Column(
@@ -32,24 +41,34 @@ fun SettingsDetailPlaceholder() {
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            imageVector = Icons.Outlined.Settings, // Replace with appropriate icon
-            contentDescription = "Settings",
+            imageVector = Icons.Outlined.Settings,
+            contentDescription = "Settings Placeholder",
             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
             modifier = Modifier.size(150.dp)
         )
         Spacer(Modifier.height(16.dp))
         Text(
-            "Settings",
+            text = "Settings",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            "Select a category to view its settings.",
+            text = "Select a category to view its settings.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier.widthIn(max = 300.dp)
         )
+    }
+}
+
+@Preview
+@Composable
+fun SettingsDetailPlaceholderPreview() {
+    AppTheme {
+        Surface {
+            SettingsDetailPlaceholder()
+        }
     }
 }

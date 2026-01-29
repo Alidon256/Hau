@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsTopAppBar
+import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.components.NavDestinaton
 import org.hau.project.ui.components.Routes
 import org.hau.project.ui.theme.AppTheme

@@ -3,14 +3,10 @@ package org.hau.project.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,9 +23,24 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.grattitude
+import org.hau.project.ui.theme.AppTheme
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A highly immersive header component for User and Channel profiles.
+ *
+ * It features a parallax banner effect and a reactive avatar that shrinks
+ * and fades based on the screen's scroll position. This creates a premium,
+ * modern app feel similar to Twitter or WhatsApp profiles.
+ *
+ * @param bannerUrl The remote URL for the wide background banner.
+ * @param bannerHeight The initial vertical height of the banner area.
+ * @param avatarInitialSize The diameter of the avatar when fully expanded.
+ * @param scrollOffset The current pixel scroll position from the parent list.
+ * @param avatarUrl The local [DrawableResource] for the user's profile picture.
+ */
 @Composable
 fun ProfileHeader(
     bannerUrl: String,
@@ -45,32 +56,33 @@ fun ProfileHeader(
         modifier = Modifier.fillMaxWidth().height(bannerHeight + avatarInitialSize / 2),
         contentAlignment = Alignment.TopCenter
     ) {
-        // --- Parallax Banner ---
+        // --- PARALLAX BANNER ---
         AsyncImage(
             model = bannerUrl,
             contentDescription = "Profile banner",
             error = painterResource(Res.drawable.grattitude),
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxWidth().height(bannerHeight).graphicsLayer {
-                translationY = scrollOffset * 0.5f // Parallax effect
-                alpha = 1f - (scrollOffset / bannerHeightPx).coerceIn(0f, 1f) // Fade out
+                translationY = scrollOffset * 0.5f // Moves slower than scroll for parallax
+                alpha = 1f - (scrollOffset / bannerHeightPx).coerceIn(0f, 1f) // Fades out as it hits top
             }
         )
-        // --- Gradient Overlay for Top Bar contrast ---
+
+        // Contrast Gradient for status bar icons.
         Box(
             modifier = Modifier.fillMaxWidth().height(80.dp).background(
                 Brush.verticalGradient(colors = listOf(Color.Black.copy(0.5f), Color.Transparent))
             )
         )
 
-        // --- Animated Avatar ---
+        // --- ANIMATED AVATAR ---
         Box(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(top = avatarYPosition)
                 .size(avatarInitialSize)
                 .graphicsLayer {
-                    // Avatar shrinks as it scrolls up under the toolbar
+                    // Calculate collapse based on scroll distance relative to banner height.
                     val collapsePercentage = (scrollOffset / (bannerHeightPx - avatarInitialSize.toPx() / 2)).coerceIn(0f, 1f)
                     val scale = lerp(1f.sp, 0f.sp, collapsePercentage).value
                     scaleX = scale
@@ -79,15 +91,34 @@ fun ProfileHeader(
                 }
         ) {
             Image(
-                painter = painterResource(avatarUrl?: Res.drawable.grattitude),
+                painter = painterResource(avatarUrl ?: Res.drawable.grattitude),
                 contentDescription = "Profile Picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.background)
                     .border(4.dp, MaterialTheme.colorScheme.background, CircleShape)
-                    .clip(CircleShape)
             )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ProfileHeaderLightPreview() {
+    AppTheme(useDarkTheme = false) {
+        Surface {
+            ProfileHeader("", 200.dp, 100.dp, 0f, null)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ProfileHeaderDarkPreview() {
+    AppTheme(useDarkTheme = true) {
+        Surface {
+            ProfileHeader("", 200.dp, 100.dp, 50f, null)
         }
     }
 }

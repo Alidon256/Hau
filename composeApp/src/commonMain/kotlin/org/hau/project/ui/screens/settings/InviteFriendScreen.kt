@@ -18,8 +18,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsHeader
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsTopAppBar
+import org.hau.project.ui.components.SettingsHeader
+import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 

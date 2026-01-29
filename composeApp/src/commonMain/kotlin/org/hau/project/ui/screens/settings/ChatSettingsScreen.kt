@@ -29,15 +29,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsHeader
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsInfoItem
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsSwitchItem
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsTopAppBar
+import org.hau.project.ui.components.SettingsHeader
+import org.hau.project.ui.components.SettingsInfoItem
+import org.hau.project.ui.components.SettingsSwitchItem
+import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
 import org.hau.project.ui.theme.SocialTheme
 import org.hau.project.viewModels.LocalThemeViewModel
-import org.hau.project.viewModels.ThemeViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable

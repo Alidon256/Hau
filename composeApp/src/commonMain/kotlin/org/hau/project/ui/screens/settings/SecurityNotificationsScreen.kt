@@ -11,14 +11,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import org.hau.project.ui.appTwo.ui.screens.settings.SettingsTopAppBar
+import org.hau.project.ui.components.SettingsSwitchItem
+import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -103,7 +100,7 @@ fun SecurityNotificationsScreen(onBack: () -> Unit) {
             HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
             Spacer(Modifier.height(16.dp))
 
-            _root_ide_package_.org.hau.project.ui.appTwo.ui.screens.settings.SettingsSwitchItem(
+            SettingsSwitchItem(
                 title = "Show security notifications on this device",
                 subtitle = "Get notified when your security code changes for a contact's phone in an end-to-end encrypted chat.",
                 checked = showNotifications,

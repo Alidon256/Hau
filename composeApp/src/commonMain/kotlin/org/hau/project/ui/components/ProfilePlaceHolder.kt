@@ -20,6 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+/**
+ * A placeholder component displayed when no user profile is selected.
+ *
+ * Typically used in a details pane on large screens (tablets/desktop) when a user
+ * first opens the app or hasn't interacted with a specific contact's profile yet.
+ */
 @Composable
 fun ProfilePlaceholder() {
     Column(

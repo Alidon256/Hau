@@ -20,6 +20,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
+/**
+ * A reusable settings row component used in preference screens or profile settings.
+ *
+ * Displays an icon followed by a title and a subtitle. The entire row is interactive.
+ *
+ * @param icon The [ImageVector] to display at the start of the row.
+ * @param title The primary text to display.
+ * @param subtitle The secondary descriptive text to display below the title.
+ * @param onClick Callback triggered when the row is clicked.
+ */
 @Composable
 fun SettingRow(
     icon: ImageVector,
@@ -37,7 +47,7 @@ fun SettingRow(
         Icon(
             imageVector = icon,
             contentDescription = title,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant, // Use for icons
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.width(24.dp))
@@ -48,13 +58,13 @@ fun SettingRow(
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface // Use for titles
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant, // Use for subtitles
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )

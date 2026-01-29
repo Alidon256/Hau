@@ -1,4 +1,4 @@
-package org.hau.project.ui.appTwo.ui.screens.settings
+package org.hau.project.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

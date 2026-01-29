@@ -47,16 +47,33 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A dynamic search bar component that can expand from a simple row to a full-width text input.
+ *
+ * Features:
+ * - Smooth expansion animation using [animateDpAsState].
+ * - Focus management with [FocusRequester].
+ * - Keyboard integration with [LocalSoftwareKeyboardController] and [LocalFocusManager].
+ * - Crossfade animation for the search/back icon.
+ *
+ * @param query The current search text.
+ * @param onQueryChange Callback for when the search text changes.
+ * @param onSearch Callback for when the user triggers the search action from the keyboard.
+ * @param isExpanded Whether the search bar is currently in its expanded (input) state.
+ * @param onToggleExpanded Callback to switch between collapsed and expanded states.
+ * @param modifier Custom modifier for the search bar container.
+ * @param placeholderText The text to display when the search bar is empty or collapsed.
+ */
 @Composable
 fun SearchBar(
-    query:String,
+    query: String,
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
     isExpanded: Boolean,
     onToggleExpanded: () -> Unit,
     modifier: Modifier = Modifier,
-    placeholderText: String ="Search..."
-){
+    placeholderText: String = "Search..."
+) {
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -132,7 +149,7 @@ fun SearchBar(
                                 .focusRequester(focusRequester)
                                 .onFocusChanged { focusState ->
                                     if (!focusState.isFocused && isExpanded) {
-                                        // if (query.isEmpty()) onToggleExpand()
+                                        // Optional: handle focus loss
                                     }
                                 },
                             placeholder = {
@@ -152,7 +169,7 @@ fun SearchBar(
                             keyboardActions = KeyboardActions(
                                 onSearch = {
                                     onSearch(query)
-                                    focusManager.clearFocus() // Hide keyboard
+                                    focusManager.clearFocus()
                                 }
                             ),
                             colors = TextFieldDefaults.colors(
@@ -182,7 +199,7 @@ fun SearchBar(
                 }
 
                 if (isExpanded && query.isNotEmpty()) {
-                    IconButton(onClick = { onQueryChange("") /* Clears query */ }) {
+                    IconButton(onClick = { onQueryChange("") }) {
                         Icon(
                             imageVector = Icons.Default.Clear,
                             contentDescription = "Clear Query",
@@ -199,11 +216,11 @@ fun SearchBar(
 
 @Preview
 @Composable
-fun SearchBarPreviewCollapsed() {
+private fun SearchBarPreviewCollapsed() {
     MaterialTheme {
         var isExpanded by remember { mutableStateOf(false) }
         var query by remember { mutableStateOf("") }
-        _root_ide_package_.org.hau.project.ui.components.SearchBar(
+        SearchBar(
             query = query,
             onQueryChange = { query = it },
             onSearch = {},
@@ -215,11 +232,11 @@ fun SearchBarPreviewCollapsed() {
 
 @Preview
 @Composable
-fun SearchBarPreviewExpandedEmpty() {
+private fun SearchBarPreviewExpandedEmpty() {
     MaterialTheme {
         var isExpanded by remember { mutableStateOf(true) }
         var query by remember { mutableStateOf("") }
-        _root_ide_package_.org.hau.project.ui.components.SearchBar(
+        SearchBar(
             query = query,
             onQueryChange = { query = it },
             onSearch = {},
@@ -231,11 +248,11 @@ fun SearchBarPreviewExpandedEmpty() {
 
 @Preview
 @Composable
-fun SearchBarPreviewExpandedWithQuery() {
+private fun SearchBarPreviewExpandedWithQuery() {
     MaterialTheme {
         var isExpanded by remember { mutableStateOf(true) }
         var query by remember { mutableStateOf("Compose") }
-        _root_ide_package_.org.hau.project.ui.components.SearchBar(
+        SearchBar(
             query = query,
             onQueryChange = { query = it },
             onSearch = {},
@@ -244,4 +261,3 @@ fun SearchBarPreviewExpandedWithQuery() {
         )
     }
 }
-
