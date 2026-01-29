@@ -102,7 +102,8 @@ fun SettingsUserItemPreview() {
                     contactName = "Jane Doe",
                     contactDesc = "Living life one day at a time.",
                     contactRes = Res.drawable.grattitude,
-                    contactId = "1"
+                    contactId = "1",
+                    contact = "+256 766555522"
                 )
             )
         }
