@@ -21,11 +21,28 @@ import org.hau.project.viewModels.SplashViewModel
 import org.hau.project.viewModels.ThemeViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * The root Composable function for the Hau application.
+ *
+ * This function serves as the central orchestration point for the app's UI. It performs
+ * several key tasks:
+ * 1.  State Initialization: Initializes core ViewModels ([ThemeViewModel], [SplashViewModel])
+ *     and collects their states.
+ * 2.  Adaptive Layout Management: Uses [rememberWindowSize] to determine the current
+ *     window size class and switch between mobile ([BottomNavigation]) and desktop/tablet
+ *     ([AdaptiveUi]) layouts.
+ * 3.  Theme Injection: Provides the [ThemeViewModel] to the entire application tree via
+ *     [LocalThemeViewModel] and applies the global [AppTheme].
+ * 4.  Loading State Handling: Displays a [SplashScreen] while initial data is being
+ *     "loaded" (simulated in [SplashViewModel]).
+ *
+ * @param settingsFactory A factory for creating platform-specific settings for persistence.
+ */
 @Composable
 @Preview
 fun App(settingsFactory: SettingsFactory) {
 
-
+    // Initialize the primary Theme ViewModel with platform-specific persistence
     val themeViewModel: ThemeViewModel = viewModel(
         factory = ThemeViewModel.createFactory(settingsFactory)
     )
@@ -46,6 +63,7 @@ fun App(settingsFactory: SettingsFactory) {
                 if (isLoading) {
                     SplashScreen(onAnimationFinished = { splashViewModel.setLoading(false) })
                 } else {
+                    // Adaptive Navigation Routing based on screen size
                     when (windowSize) {
                         WindowSize.Compact, WindowSize.Medium -> {
                             BottomNavigation()

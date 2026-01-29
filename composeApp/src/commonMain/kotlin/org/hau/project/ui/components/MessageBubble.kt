@@ -27,6 +27,24 @@ import org.hau.project.models.MessageSender
 import org.hau.project.models.MessageStatus
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A polished message bubble component.
+ *
+ * This component features:
+ * 1.  Entrance Animation: Each bubble slides in from the side with a staggered spring animation
+ *     based on its [index] in the list.
+ * 2.  Adaptive Shape: Asymmetrical rounded corners that clearly distinguish between
+ *     outgoing (mine) and incoming (theirs) messages.
+ * 3.  Metadata Integration: Neatly displays the message timestamp and delivery status
+ *     (ticks) within the bubble.
+ * 4.  Interactive Actions: Supports long-press/right-click via [combinedClickable] to
+ *     trigger the parent screen's action menu.
+ *
+ * @param message The data model containing message text, sender info, time, and status.
+ * @param index The zero-based position of the message in the current list view, used for staggered delays.
+ * @param showMeta Whether to display the timestamp and status icons. Defaults to true.
+ * @param onLongPress Callback triggered when the bubble is long-clicked (mobile) or right-clicked (desktop).
+ */
 @Composable
 fun MessageBubble(
     message: Message,
@@ -36,13 +54,14 @@ fun MessageBubble(
 ) {
     val isMine = message.sender == MessageSender.Me
 
-    // --- ANIMATION LOGIC FROM GIST ---
+    // --- ANIMATION CONFIGURATION ---
+    // Start with a slight horizontal offset and slide into the final position.
     val startOffsetX = if (isMine) 150f else -150f
     val slideAnim = remember { Animatable(startOffsetX) }
     val alphaAnim = remember { Animatable(0f) }
 
     LaunchedEffect(message.id) {
-        // Stagger the animation based on index
+        // Apply a staggered delay so messages appear one after another.
         delay(index * 50L)
         launch {
             slideAnim.animateTo(
@@ -61,6 +80,7 @@ fun MessageBubble(
         }
     }
 
+    // Color definitions based on the current theme and sender.
     val incomingColor = MaterialTheme.colorScheme.surfaceVariant
     val outgoingColor = MaterialTheme.colorScheme.primaryContainer
     val readTickColor = Color(0xFF53BDEB)
@@ -68,6 +88,7 @@ fun MessageBubble(
     val bubbleColor = if (isMine) outgoingColor else incomingColor
     val textColor = if (isMine) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
 
+    // Distinctive asymmetrical shape for messaging continuity.
     val bubbleShape = if (isMine) {
         RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 2.dp)
     } else {
@@ -94,7 +115,7 @@ fun MessageBubble(
                     .clip(bubbleShape)
                     .background(bubbleColor)
                     .combinedClickable(
-                        onClick = { },
+                        onClick = { /* Optional: handle single-tap selection */ },
                         onLongClick = onLongPress
                     )
                     .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -132,7 +153,7 @@ fun MessageBubble(
                                 }
                                 Icon(
                                     imageVector = icon,
-                                    contentDescription = null,
+                                    contentDescription = "Status",
                                     tint = color,
                                     modifier = Modifier.size(14.dp)
                                 )

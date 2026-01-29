@@ -25,18 +25,32 @@ import org.hau.project.ui.components.NavDestinaton
 import org.hau.project.ui.components.RailItem
 import org.hau.project.ui.components.Routes
 
+/**
+ * A WhatsApp-inspired side navigation rail designed for expanded screens (Desktop/Tablets).
+ * 
+ * This component provides a vertical navigation structure, separating primary actions
+ * (Chats, Memories, Calls) at the top from secondary actions (Settings) at the bottom.
+ * It features a modern design with subtle elevation and a clear visual indicator for
+ * the currently selected destination.
+ * 
+ * @param selectedDestination The current navigation destination to highlight.
+ * @param onDestinationSelected Callback triggered when a new navigation item is clicked.
+ * @param modifier Modifier to be applied to the root Surface.
+ */
 @Composable
 fun NavigationRail(
     selectedDestination: NavDestinaton,
     onDestinationSelected: (NavDestinaton) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Primary navigation items positioned at the top of the rail.
     val topItems = listOf(
         BottomNavItem(Icons.Outlined.Forum, Icons.Filled.Forum, Routes.HOME),
         BottomNavItem(Icons.Outlined.Stream, Icons.Filled.Stream, Routes.MEMORIES),
         BottomNavItem(Icons.Outlined.Call, Icons.Filled.Call, Routes.CALLS),
     )
 
+    // Secondary navigation items positioned at the bottom of the rail.
     val bottomItems = listOf(
         BottomNavItem(Icons.Outlined.Settings, Icons.Filled.Settings, Routes.SETTINGS)
     )
@@ -55,7 +69,7 @@ fun NavigationRail(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // Top Section
+                // Top Section: Core messaging features
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -69,7 +83,7 @@ fun NavigationRail(
                     }
                 }
 
-                // Bottom Section
+                // Bottom Section: Auxiliary features (Settings)
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -84,7 +98,7 @@ fun NavigationRail(
                 }
             }
             
-            // Subtle Vertical Divider
+            // Subtle Vertical Divider: Provides a crisp boundary between the rail and the list pane.
             Box(
                 modifier = Modifier
                     .fillMaxHeight()

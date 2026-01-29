@@ -43,6 +43,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.accompanist.systemuicontroller)
             implementation(libs.androidx.material3.window.size.class1)
+            implementation(libs.coil.network.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
