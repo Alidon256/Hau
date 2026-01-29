@@ -23,20 +23,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import hau.composeapp.generated.resources.Res
+import hau.composeapp.generated.resources.story_3
 import org.hau.project.data.repositories.formatCount
 import org.hau.project.models.User
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * A profile header section displaying key user information.
  *
- * It shows the user's display name, a verified badge if applicable, 
- * and their follower count. The name and badge area is clickable to show 
- * more verification info.
+ * This component presents the user's primary identity details including:
+ * - Display Name
+ * - Verification status (via a badge)
+ * - Formatted follower count
  *
- * @param user The [User] data model containing name, verification status, and follower count.
- * @param onShowVerified Callback invoked when the user clicks on the name/verification area.
+ * The identity row (Name + Badge) is interactive and triggers the [onShowVerified] 
+ * callback, allowing users to discover more about the verification status.
+ *
+ * @param user The [User] model containing profile data to display.
+ * @param onShowVerified Callback triggered when the user clicks the verification area.
  */
 @Composable
 fun UserInfoSection(
@@ -50,7 +57,7 @@ fun UserInfoSection(
         Row(
             modifier = Modifier.clickable(
                 onClick = onShowVerified,
-                indication = null, // No ripple effect for this click to maintain a clean header look
+                indication = null, // Maintaining a clean, non-distracting header aesthetic
                 interactionSource = remember { MutableInteractionSource() }
             ),
             verticalAlignment = Alignment.CenterVertically,
@@ -65,7 +72,7 @@ fun UserInfoSection(
                 Spacer(Modifier.width(6.dp))
                 Icon(
                     imageVector = Icons.Default.Verified,
-                    contentDescription = "Verified",
+                    contentDescription = "Verified Account",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(20.dp)
                 )
@@ -81,21 +88,47 @@ fun UserInfoSection(
     }
 }
 
-@Preview
+/**
+ * Preview for [UserInfoSection] in Light Mode using the Sky theme.
+ */
+@Preview(name = "User Info (Sky Light)")
 @Composable
-fun UserInfoSectionPreview() {
-    AppTheme {
+fun UserInfoSectionPreviewLight() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
         Surface {
             UserInfoSection(
                 user = User(
                     id = "1",
                     name = "Jane Doe",
-                    isVerified = true,
+                    handle = "@janedoe",
+                    avatarRes = Res.drawable.story_3,
                     followerCount = 12500,
-                    imageRes = null,
-                    about = "Living life one day at a time.",
-                    phoneNumber = "+123456789",
-                    isMuted = false
+                    isVerified = true,
+                    bio = "Living life one day at a time."
+                ),
+                onShowVerified = {}
+            )
+        }
+    }
+}
+
+/**
+ * Preview for [UserInfoSection] in Dark Mode using the Sky theme.
+ */
+@Preview(name = "User Info (Sky Dark)")
+@Composable
+fun UserInfoSectionPreviewDark() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            UserInfoSection(
+                user = User(
+                    id = "1",
+                    name = "Jane Doe",
+                    handle = "@janedoe",
+                    avatarRes = Res.drawable.story_3,
+                    followerCount = 12500,
+                    isVerified = true,
+                    bio = "Living life one day at a time."
                 ),
                 onShowVerified = {}
             )

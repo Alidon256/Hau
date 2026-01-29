@@ -480,7 +480,7 @@ private fun TextBubblePreviewLight() {
         Surface {
             TextMessageBubble(
                 MessageItem(
-                    id = 1,
+                    id = "1",
                     text = "Hello everyone! Welcome to our channel.",
                     time = "10:30 AM",
                     reactions = mapOf("👍" to 5, "❤️" to 2)
@@ -499,8 +499,8 @@ private fun PollBubblePreviewDark() {
                 poll = Poll(
                     question = "What is your favorite color?",
                     options = listOf(
-                        PollOption(1, "Blue", null, 10, true),
-                        PollOption(2, "Green", null, 5, false)
+                        PollOption(1, "Blue", "🔵", 10, true),
+                        PollOption(2, "Green", "🟢", 5, false)
                     )
                 ),
                 onVote = {}
