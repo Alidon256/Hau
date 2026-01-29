@@ -19,8 +19,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A screen that allows users to schedule a future call with a contact.
+ *
+ * It provides options to set the call title, description, start and end times,
+ * call type (e.g., Video), and reminders.
+ *
+ * @param onBack Callback invoked when the user closes the screen without saving.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleCallScreen(onBack: () -> Unit) {
@@ -164,6 +173,10 @@ fun ScheduleCallScreen(onBack: () -> Unit) {
     }
 }
 
+/**
+ * A reusable row component for displaying a setting or information item with an icon,
+ * title, and subtitle.
+ */
 @Composable
 private fun InfoRow(
     icon: ImageVector,
@@ -199,6 +212,9 @@ private fun InfoRow(
     }
 }
 
+/**
+ * A vertical dashed line used as a visual connector between date/time markers.
+ */
 @Composable
 private fun DashedLine() {
     Box(
@@ -212,18 +228,18 @@ private fun DashedLine() {
 
 // --- PREVIEWS ---
 
-@Preview(name = "Schedule Call (Dark Mode)", showBackground = true)
+@Preview(name = "Schedule Call (Sky Dark)", showBackground = true)
 @Composable
 private fun ScheduleCallScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
         ScheduleCallScreen(onBack = {})
     }
 }
 
-@Preview(name = "Schedule Call (Light Mode)", showBackground = true)
+@Preview(name = "Schedule Call (Sky Light)", showBackground = true)
 @Composable
 private fun ScheduleCallScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
         ScheduleCallScreen(onBack = {})
     }
 }

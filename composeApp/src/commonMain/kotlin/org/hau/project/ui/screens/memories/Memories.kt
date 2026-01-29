@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Share
@@ -40,9 +41,24 @@ import hau.composeapp.generated.resources.story_3
 import org.hau.project.data.repositories.formatCount
 import org.hau.project.models.Channels
 import org.hau.project.models.RecommendedChannels
+import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
+import org.hau.project.viewModels.ChatDetailUiState
 import org.hau.project.viewModels.ChatViewModel
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * The primary entry point for the Memories feature.
+ *
+ * This screen facilitates navigation between followed "Channels" and a high-quality "Gallery"
+ * of media. It manages the tab state and handles the visibility of the fullscreen
+ * interactive image viewer.
+ *
+ * @param viewModel The [ChatViewModel] used to observe channel and recommendation states.
+ * @param onChannelClick Callback invoked when a channel item is selected.
+ * @param onAddMemoryClick Callback invoked when the user initiates adding a new memory.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemoriesScreen(
@@ -88,7 +104,6 @@ fun MemoriesScreen(
                         containerColor = Color.Transparent,
                         divider = {},
                         indicator = {
-                            // Using the receiver scope 'this' to access 'tabPositions' correctly
                             TabRowDefaults.SecondaryIndicator(
                                 modifier = Modifier.tabIndicatorOffset(selectedTabIndex),
                                 color = MaterialTheme.colorScheme.primary
@@ -154,6 +169,12 @@ fun MemoriesScreen(
     }
 }
 
+/**
+ * A grid-based view that displays media in a staggered layout.
+ *
+ * @param images A list of image URLs to be displayed.
+ * @param onImageClick Callback providing the index of the clicked image.
+ */
 @Composable
 private fun MemoriesGalleryView(images: List<String>, onImageClick: (Int) -> Unit) {
     LazyVerticalStaggeredGrid(
@@ -184,6 +205,18 @@ private fun MemoriesGalleryView(images: List<String>, onImageClick: (Int) -> Uni
     }
 }
 
+/**
+ * An immersive, fullscreen image viewer designed for high-fidelity media inspection.
+ *
+ * Features:
+ * - Smooth crossfade transitions between images.
+ * - Interactive tap zones for left/right navigation.
+ * - Top-bar controls for sharing, downloading, and closing.
+ *
+ * @param images The collection of image URLs to browse.
+ * @param initialIndex The index of the image to display first.
+ * @param onClose Callback to dismiss the viewer.
+ */
 @Composable
 private fun FullscreenGalleryViewer(
     images: List<String>,
@@ -265,10 +298,18 @@ private fun FullscreenGalleryViewer(
     }
 }
 
+/**
+ * A scrollable list of followed and recommended spaces.
+ *
+ * @param uiChannelState State containing followed channels.
+ * @param uiRecommendedChannels State containing suggested channels to follow.
+ * @param onChannelClick Navigation callback for followed channels.
+ * @param onAddMemoryClick Callback for the banner's add action.
+ */
 @Composable
 private fun ChannelsListView(
-    uiChannelState: org.hau.project.viewModels.ChatDetailUiState,
-    uiRecommendedChannels: org.hau.project.viewModels.ChatDetailUiState,
+    uiChannelState: ChatDetailUiState,
+    uiRecommendedChannels: ChatDetailUiState,
     onChannelClick: (String) -> Unit,
     onAddMemoryClick: () -> Unit
 ) {
@@ -296,6 +337,12 @@ private fun ChannelsListView(
     }
 }
 
+/**
+ * A prominent header component used to encourage users to share new memory updates.
+ * Features a gradient background and a circular avatar with an 'add' badge.
+ *
+ * @param onClick Callback invoked when the banner is clicked.
+ */
 @Composable
 fun MemoriesBanner(onClick: () -> Unit) {
     Row(
@@ -316,7 +363,7 @@ fun MemoriesBanner(onClick: () -> Unit) {
                 contentScale = ContentScale.Crop
             )
             Box(Modifier.size(20.dp).background(MaterialTheme.colorScheme.primary, CircleShape).border(2.dp, MaterialTheme.colorScheme.surface, CircleShape), contentAlignment = Alignment.Center) {
-                Icon(Icons.Outlined.Add, null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(14.dp))
+                Icon(Icons.Default.Add, null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(14.dp))
             }
         }
         Column {
@@ -326,6 +373,12 @@ fun MemoriesBanner(onClick: () -> Unit) {
     }
 }
 
+/**
+ * Represents an individual followed channel row with avatar, name, last message, and timestamp.
+ *
+ * @param channel The [Channels] model containing data for the row.
+ * @param onClick Callback invoked when the item is clicked.
+ */
 @Composable
 fun ChannelItem(channel: Channels, onClick: () -> Unit) {
     Row(
@@ -349,6 +402,12 @@ fun ChannelItem(channel: Channels, onClick: () -> Unit) {
     }
 }
 
+/**
+ * Represents a suggested channel item with follow action and verification badges.
+ *
+ * @param recommended The [RecommendedChannels] model containing suggestion data.
+ * @param onFollowClick Callback invoked when the follow button is clicked.
+ */
 @Composable
 fun RecommendedChannelsItem(recommended: RecommendedChannels, onFollowClick: () -> Unit) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -367,8 +426,70 @@ fun RecommendedChannelsItem(recommended: RecommendedChannels, onFollowClick: () 
             }
             Text("${formatCount(recommended.followerCount)} followers", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Button(onClick = {}, shape = RoundedCornerShape(20.dp), colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onPrimaryContainer)) {
+        Button(onClick = onFollowClick, shape = RoundedCornerShape(20.dp), colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onPrimaryContainer)) {
             Text("Follow")
+        }
+    }
+}
+
+// --- PREVIEWS ---
+
+@Preview(name = "Memories Banner (Sky Light)")
+@Composable
+private fun MemoriesBannerPreviewLight() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            MemoriesBanner(onClick = {})
+        }
+    }
+}
+
+@Preview(name = "Memories Banner (Sky Dark)")
+@Composable
+private fun MemoriesBannerPreviewDark() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            MemoriesBanner(onClick = {})
+        }
+    }
+}
+
+@Preview(name = "Channel Item (Sky Light)")
+@Composable
+private fun ChannelItemPreviewLight() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            ChannelItem(
+                channel = Channels(
+                    id = "1",
+                    channelName = "Sky Watchers",
+                    channelRes = Res.drawable.grattitude,
+                    message = "Clear skies expected tonight!",
+                    timestamp = "12:45 PM",
+                    followerCount = 1200,
+                    isVerified = true,
+                    isRead = false,
+                    unreadMessages = 0,
+                    attachmentType = null
+                ),
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(name = "Gallery View (Sky Light)")
+@Composable
+private fun GalleryPreviewLight() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            MemoriesGalleryView(
+                images = listOf(
+                    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1200",
+                    "https://images.unsplash.com/photo-1518005020251-6fb201b287dd?auto=format&fit=crop&q=80&w=1000"
+                ),
+                onImageClick = {}
+            )
         }
     }
 }

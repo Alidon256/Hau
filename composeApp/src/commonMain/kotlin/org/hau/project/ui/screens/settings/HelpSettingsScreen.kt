@@ -20,6 +20,7 @@ import androidx.compose.material.icons.outlined.Report
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,8 +29,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A screen providing access to support resources, legal documents, and app information.
+ *
+ * It includes links to the help center, feedback submission, terms of service,
+ * privacy policy, and channel reports.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun HelpSettingsScreen(onBack: () -> Unit) {
     Scaffold(
@@ -86,6 +96,10 @@ fun HelpSettingsScreen(onBack: () -> Unit) {
     }
 }
 
+/**
+ * A specialized row item for the Help screen, displaying an icon, title,
+ * and an optional subtitle.
+ */
 @Composable
 fun SettingsInfoHelpItem(
     icon: ImageVector,
@@ -124,18 +138,22 @@ fun SettingsInfoHelpItem(
     }
 }
 
-@Preview(name = "Help (Dark)", showBackground = true)
+@Preview(name = "Help Settings (Sky Dark)", showBackground = true)
 @Composable
 private fun HelpSettingsScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
-        HelpSettingsScreen {}
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            HelpSettingsScreen {}
+        }
     }
 }
 
-@Preview(name = "Help (Light)", showBackground = true)
+@Preview(name = "Help Settings (Sky Light)", showBackground = true)
 @Composable
 private fun HelpSettingsScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
-        HelpSettingsScreen {}
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            HelpSettingsScreen {}
+        }
     }
 }

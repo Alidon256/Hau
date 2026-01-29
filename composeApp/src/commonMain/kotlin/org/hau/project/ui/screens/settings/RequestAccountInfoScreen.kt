@@ -1,11 +1,11 @@
 package org.hau.project.ui.screens.settings
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.*
@@ -16,8 +16,18 @@ import org.hau.project.ui.components.SettingsInfoItem
 import org.hau.project.ui.components.SettingsSwitchItem
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A screen that allows users to request a formal report of their account information
+ * and channel activity.
+ *
+ * It provides options for manual requests and automated monthly report generation,
+ * emphasizing that personal messages are not included in these exports.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun RequestAccountInfoScreen(onBack: () -> Unit) {
     var autoAccountReport by remember { mutableStateOf(false) }
@@ -71,18 +81,22 @@ fun RequestAccountInfoScreen(onBack: () -> Unit) {
     }
 }
 
-@Preview(name = "Request Account Info (Dark)", showBackground = true)
+@Preview(name = "Request Account Info (Sky Dark)")
 @Composable
 private fun RequestAccountInfoScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
-        RequestAccountInfoScreen {}
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            RequestAccountInfoScreen {}
+        }
     }
 }
 
-@Preview(name = "Request Account Info (Light)", showBackground = true)
+@Preview(name = "Request Account Info (Sky Light)")
 @Composable
 private fun RequestAccountInfoScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
-        RequestAccountInfoScreen {}
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            RequestAccountInfoScreen {}
+        }
     }
 }

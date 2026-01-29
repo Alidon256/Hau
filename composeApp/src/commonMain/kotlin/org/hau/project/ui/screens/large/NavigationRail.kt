@@ -26,7 +26,7 @@ import org.hau.project.ui.components.RailItem
 import org.hau.project.ui.components.Routes
 
 /**
- * A WhatsApp-inspired side navigation rail designed for expanded screens (Desktop/Tablets).
+ * A side navigation rail designed for expanded screens (Desktop/Tablets).
  * 
  * This component provides a vertical navigation structure, separating primary actions
  * (Chats, Memories, Calls) at the top from secondary actions (Settings) at the bottom.

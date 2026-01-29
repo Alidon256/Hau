@@ -1,15 +1,12 @@
 package org.hau.project.ui.screens.calls
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,12 +14,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.AddIcCall
-import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -38,28 +32,26 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import hau.composeapp.generated.resources.Res
-import hau.composeapp.generated.resources.grattitude
-import hau.composeapp.generated.resources.story_2
-import hau.composeapp.generated.resources.story_3
 import org.hau.project.data.repositories.ChatRepository
-import org.hau.project.models.CallActions
-import org.hau.project.models.CallType
-import org.hau.project.models.RecentCalls
 import org.hau.project.ui.components.CallsActionItem
 import org.hau.project.ui.components.RecentCallsItem
 import org.hau.project.ui.theme.AppTheme
 import org.hau.project.ui.theme.SocialTheme
 import org.hau.project.viewModels.ChatViewModel
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * The main screen for displaying call history and call-related actions.
+ *
+ * This screen features a top app bar with search and more options, 
+ * a list of quick call actions in a horizontal row, and a vertical list 
+ * of recent calls. It also includes a Floating Action Button (FAB) to 
+ * initiate new calls.
+ *
+ * @param viewModel The [ChatViewModel] that provides the state for call actions and recent calls.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CallsScreen(viewModel: ChatViewModel) {

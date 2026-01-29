@@ -30,44 +30,51 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import hau.composeapp.generated.resources.Res
-import hau.composeapp.generated.resources.image_large // Using the same doctor image
+import hau.composeapp.generated.resources.image_large
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A screen representing an active or ringing audio call.
+ *
+ * It features a blurred background of the caller's image for a premium look, 
+ * a central large avatar, and prominently displayed call controls at the bottom.
+ *
+ * @param onBack Callback invoked when the user navigates back from the call screen.
+ */
 @Composable
 fun AudioCallScreen(onBack: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
-        // 1. Blurred Background Image
+        // 1. Blurred Background Image for aesthetic depth
         Image(
             painter = painterResource(Res.drawable.image_large),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
-                .blur(radius = 24.dp), // Apply a strong blur effect
+                .blur(radius = 24.dp),
             contentScale = ContentScale.Crop
         )
-        // Dark overlay for better text contrast
+        // Semi-transparent overlay to ensure text legibility
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.4f))
         )
 
-        // 2. Main Content
+        // 2. Main UI Content
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Top action bar
             AudioTopBar(onBackClick = onBack)
             Spacer(modifier = Modifier.height(64.dp))
 
-            // Large Avatar
+            // Focus Point: Caller's Avatar
             Image(
                 painter = painterResource(Res.drawable.image_large),
-                contentDescription = "Dr. Fresh Smile",
+                contentDescription = "Caller Avatar",
                 modifier = Modifier
                     .size(200.dp)
                     .clip(CircleShape),
@@ -75,7 +82,7 @@ fun AudioCallScreen(onBack: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Caller Name and Status
+            // Caller Metadata
             Text(
                 "Dr. Fresh Smile",
                 style = MaterialTheme.typography.headlineLarge,
@@ -84,20 +91,22 @@ fun AudioCallScreen(onBack: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                "Ringing...", // Or show the call timer "15:20"
+                "Ringing...", 
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White.copy(alpha = 0.8f)
             )
 
-            // This spacer pushes the controls to the bottom
             Spacer(modifier = Modifier.weight(1f))
 
-            // Action Buttons
+            // Interaction layer: Mute, End Call, Speaker
             AudioCallActionButtons()
         }
     }
 }
 
+/**
+ * Top bar for the audio call screen containing navigation and "add person" actions.
+ */
 @Composable
 private fun AudioTopBar(onBackClick: () -> Unit) {
     Row(
@@ -105,7 +114,6 @@ private fun AudioTopBar(onBackClick: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Back Button
         IconButton(
             onClick = onBackClick,
             colors = IconButtonDefaults.iconButtonColors(
@@ -116,9 +124,8 @@ private fun AudioTopBar(onBackClick: () -> Unit) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Go back")
         }
 
-        // Add Person Button
         IconButton(
-            onClick = { /* Add person to call */ },
+            onClick = { /* TODO: Implement multi-party call logic */ },
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.White.copy(alpha = 0.2f),
                 contentColor = Color.White
@@ -129,6 +136,9 @@ private fun AudioTopBar(onBackClick: () -> Unit) {
     }
 }
 
+/**
+ * Bottom control panel for managing active audio call states.
+ */
 @Composable
 private fun AudioCallActionButtons() {
     var isMuted by remember { mutableStateOf(false) }
@@ -137,20 +147,19 @@ private fun AudioCallActionButtons() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 32.dp), // Add padding to lift it from the very bottom
+            .padding(bottom = 32.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Mute Button
         AudioActionButton(
             icon = if (isMuted) Icons.Default.MicOff else Icons.Default.Mic,
             text = "Mute",
             onClick = { isMuted = !isMuted }
         )
 
-        // End Call Button (Featured)
+        // The "End Call" button is emphasized with a larger size and distinct color
         IconButton(
-            onClick = { /* End Call */ },
+            onClick = { /* TODO: End call session */ },
             modifier = Modifier.size(72.dp),
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.Red,
@@ -160,18 +169,19 @@ private fun AudioCallActionButtons() {
             Icon(Icons.Default.CallEnd, contentDescription = "End Call", modifier = Modifier.size(36.dp))
         }
 
-        // Speaker Button
         AudioActionButton(
             icon = Icons.Default.VolumeUp,
             text = "Speaker",
             onClick = { isSpeakerOn = !isSpeakerOn },
-            // Make it visually active or inactive
             backgroundColor = if (isSpeakerOn) Color.White.copy(alpha = 0.3f) else Color.Transparent,
             borderColor = if (isSpeakerOn) Color.Transparent else Color.White.copy(alpha = 0.5f)
         )
     }
 }
 
+/**
+ * A reusable action button used in the audio call control panel.
+ */
 @Composable
 private fun AudioActionButton(
     icon: ImageVector,

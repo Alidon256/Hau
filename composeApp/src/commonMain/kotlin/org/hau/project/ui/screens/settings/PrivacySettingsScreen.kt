@@ -25,8 +25,17 @@ import org.hau.project.ui.components.SettingsInfoItem
 import org.hau.project.ui.components.SettingsSwitchItem
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A screen for managing user privacy configurations.
+ *
+ * It allows users to control visibility of personal information (e.g., last seen,
+ * profile picture), toggle read receipts, and manage disappearing messages.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun PrivacySettingsScreen(onBack: () -> Unit) {
     var readReceiptsEnabled by remember { mutableStateOf(true) }
@@ -100,6 +109,10 @@ fun PrivacySettingsScreen(onBack: () -> Unit) {
     }
 }
 
+/**
+ * A prominent banner encouraging users to perform a "Privacy Checkup" to review
+ * their current settings.
+ */
 @Composable
 private fun PrivacyCheckupBanner() {
     Row(
@@ -143,18 +156,18 @@ private fun PrivacyCheckupBanner() {
     }
 }
 
-@Preview(name = "Privacy Settings (Dark)", showBackground = true)
+@Preview(name = "Privacy Settings (Sky Dark)", showBackground = true)
 @Composable
 private fun PrivacySettingsScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
         PrivacySettingsScreen {}
     }
 }
 
-@Preview(name = "Privacy Settings (Light)", showBackground = true)
+@Preview(name = "Privacy Settings (Sky Light)", showBackground = true)
 @Composable
 private fun PrivacySettingsScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
         PrivacySettingsScreen {}
     }
 }

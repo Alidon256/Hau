@@ -20,6 +20,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -39,20 +40,30 @@ import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.grattitude
 import kotlinx.coroutines.launch
 import org.hau.project.data.repositories.formatCount
-import org.hau.project.ui.components.ActionButtonsRow
-import org.hau.project.ui.components.PrivacyInfoBottomSheet
-import org.hau.project.ui.components.ProfileHeader
-import org.hau.project.ui.components.SettingsRow
-import org.hau.project.ui.components.UserInfoSection
-import org.hau.project.ui.components.UserProfileTopAppBar
-import org.hau.project.ui.components.VerifiedInfoBottomSheet
+import org.hau.project.models.User
+import org.hau.project.ui.components.*
 import org.hau.project.ui.screens.memories.BottomSheetType
 import org.hau.project.ui.screens.memories.DangerChannelZoneSection
 import org.hau.project.ui.screens.memories.ProfileAction
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.hau.project.models.User
+import org.hau.project.ui.theme.AppTheme
 import org.hau.project.viewModels.UserProfileUiState
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A comprehensive profile screen for individual users.
+ *
+ * This screen employs a collapsing header effect where the user's avatar and banner 
+ * react to scroll gestures. It provides access to shared media, notification settings, 
+ * privacy details, and social actions (e.g., Block/Report).
+ *
+ * Key UI features:
+ * - **Collapsing Header**: Dynamic TopAppBar that reveals content on scroll.
+ * - **BottomSheet Integration**: Contextual info for verification and privacy.
+ * - **Adaptive Information**: Displays relevant user metadata and social statistics.
+ *
+ * @param uiState The [UserProfileUiState] containing the user data and loading/error states.
+ * @param onAction Callback to handle various profile-related events (Back, Mute, Media, etc.).
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserProfileScreen(
@@ -125,8 +136,7 @@ fun UserProfileScreen(
                         UserInfoSection(
                             user = uiState.user,
                             onShowVerified = {
-                                activeBottomSheet =
-                                    BottomSheetType.VERIFIED
+                                activeBottomSheet = BottomSheetType.VERIFIED
                             }
                         )
                     }
@@ -140,13 +150,12 @@ fun UserProfileScreen(
 
                     // --- SETTINGS & INFO LIST ---
                     item {
-                        SettingsSection(
+                        ProfileSettingsSection(
                             mediaCount = uiState.mediaCount,
                             isMuted = uiState.isMuted,
                             onAction = onAction,
                             onShowPrivacy = {
-                                activeBottomSheet =
-                                    BottomSheetType.PRIVACY
+                                activeBottomSheet = BottomSheetType.PRIVACY
                             }
                         )
                         HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant, thickness = 8.dp)
@@ -154,9 +163,7 @@ fun UserProfileScreen(
 
                     // --- DANGEROUS ACTIONS ---
                     item {
-                        DangerChannelZoneSection(
-                            onAction
-                        )
+                        DangerChannelZoneSection(onAction)
                     }
                 }
             }
@@ -186,8 +193,12 @@ fun UserProfileScreen(
         }
     }
 }
+
+/**
+ * A vertical list of settings rows specific to the user profile screen.
+ */
 @Composable
-fun SettingsSection(
+fun ProfileSettingsSection(
     mediaCount: Int,
     isMuted: Boolean,
     onAction: (ProfileAction) -> Unit,
@@ -197,9 +208,7 @@ fun SettingsSection(
         SettingsRow(
             icon = Icons.Outlined.PermMedia,
             text = "Media, Links, and Docs",
-            trailingText = formatCount(
-                mediaCount.toLong()
-            ),
+            trailingText = formatCount(mediaCount.toLong()),
             onClick = { onAction(ProfileAction.ViewMedia) }
         )
         SettingsRow(
@@ -213,7 +222,7 @@ fun SettingsSection(
             icon = Icons.Outlined.Public,
             text = "Your Profile",
             description = "No one can find profile and see what's been shared.",
-            onClick = {} // Non-interactive for now
+            onClick = {} // Non-interactive placeholder
         )
         SettingsRow(
             icon = Icons.Outlined.Dialpad,
@@ -227,26 +236,30 @@ fun SettingsSection(
 @Preview
 @Composable
 fun UserProfileScreenPreview() {
-    val sampleUser = User(
-        id = "1",
-        name = "John Doe",
-        handle = "@johndoe",
-        avatarRes = Res.drawable.grattitude,
-        bannerUrl = "https://images.pexels.com/photos/1051075/pexels-photo-1051075.jpeg",
-        followerCount = 1234,
-        isVerified = true,
-        bio = "This is a sample bio for the user profile screen."
-    )
-    val uiState = UserProfileUiState(
-        isLoading = false,
-        user = sampleUser,
-        isMuted = false,
-        mediaCount = 42,
-        bannerUrl = "https://images.pexels.com/photos/1051075/pexels-photo-1051075.jpeg",
-        error = null
-    )
-    UserProfileScreen(
-        uiState = uiState,
-        onAction = {}
-    )
+    AppTheme {
+        Surface {
+            val sampleUser = User(
+                id = "1",
+                name = "John Doe",
+                handle = "@johndoe",
+                avatarRes = Res.drawable.grattitude,
+                bannerUrl = "https://images.pexels.com/photos/1051075/pexels-photo-1051075.jpeg",
+                followerCount = 1234,
+                isVerified = true,
+                bio = "This is a sample bio for the user profile screen."
+            )
+            val uiState = UserProfileUiState(
+                isLoading = false,
+                user = sampleUser,
+                isMuted = false,
+                mediaCount = 42,
+                bannerUrl = "https://images.pexels.com/photos/1051075/pexels-photo-1051075.jpeg",
+                error = null
+            )
+            UserProfileScreen(
+                uiState = uiState,
+                onAction = {}
+            )
+        }
+    }
 }

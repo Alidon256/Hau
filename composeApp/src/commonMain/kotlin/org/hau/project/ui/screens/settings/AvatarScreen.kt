@@ -14,9 +14,19 @@ import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.avator
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A screen that introduces the "Avatars" feature, allowing users to create
+ * personalized digital representations of themselves.
+ *
+ * It features a hero image, a descriptive title, and an action button to initiate
+ * the avatar creation process.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun AvatarScreen(onBack: () -> Unit) {
     Scaffold(
@@ -30,7 +40,7 @@ fun AvatarScreen(onBack: () -> Unit) {
         bottomBar = {
             Column(modifier = Modifier.padding(16.dp)) {
                 Button(
-                    onClick = { /* TODO */ },
+                    onClick = { /* TODO: Launch Avatar Creator */ },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
@@ -49,7 +59,7 @@ fun AvatarScreen(onBack: () -> Unit) {
         ) {
             Image(
                 painter = painterResource(Res.drawable.avator),
-                contentDescription = "Avatars",
+                contentDescription = "Avatar Showcase",
                 modifier = Modifier.fillMaxWidth(0.8f)
             )
             Spacer(Modifier.height(24.dp))
@@ -72,18 +82,18 @@ fun AvatarScreen(onBack: () -> Unit) {
 }
 
 
-@Preview(name = "Avatar Screen (Dark)", showBackground = true)
+@Preview(name = "Avatar Screen (Sky Dark)", showBackground = true)
 @Composable
 private fun AvatarScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
         AvatarScreen {}
     }
 }
 
-@Preview(name = "Avatar Screen (Light)", showBackground = true)
+@Preview(name = "Avatar Screen (Sky Light)", showBackground = true)
 @Composable
 private fun AvatarScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
         AvatarScreen {}
     }
 }

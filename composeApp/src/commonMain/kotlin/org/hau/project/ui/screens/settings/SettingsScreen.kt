@@ -34,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -59,7 +60,15 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
+/**
+ * The main settings hub of the application.
+ *
+ * This screen displays the user's profile summary and a categorized list of settings,
+ * allowing navigation to specific configuration screens like Account, Privacy,
+ * and Notifications.
+ *
+ * @param navController The navigation controller used for routing to different settings sections.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -131,12 +140,12 @@ fun SettingsScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background, // Use theme background
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             Column {
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background, // Use surface color
+                        containerColor = MaterialTheme.colorScheme.background,
                         titleContentColor = MaterialTheme.colorScheme.onSurface,
                         actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -147,14 +156,6 @@ fun SettingsScreen(
                             style = MaterialTheme.typography.titleLarge
                         )
                     },
-                    /*navigationIcon = {
-                        IconButton(onClick = { /* TODO: Handle navigation back */ }) {
-                            Icon(
-                                Icons.Outlined.ArrowBack,
-                                contentDescription = "Navigate Back"
-                            )
-                        }
-                    },*/
                     actions = {
                         IconButton(onClick = {}) {
                             Icon(
@@ -167,7 +168,7 @@ fun SettingsScreen(
                 HorizontalDivider(
                     modifier = Modifier.fillMaxWidth(),
                     thickness = 1.dp,
-                    color = MaterialTheme.colorScheme.outlineVariant // Use theme color for dividers
+                    color = MaterialTheme.colorScheme.outlineVariant
                 )
             }
         }
@@ -196,23 +197,24 @@ fun SettingsScreen(
     }
 }
 
-@Preview
+@Preview(name = "Settings Screen (Sky Dark)")
 @Composable
 fun SettingsScreenPreview() {
    AppTheme(
        useDarkTheme = true,
        theme = SocialTheme.Sky
    ){
-    SettingsScreen()
+    Surface { SettingsScreen() }
     }
 }
-@Preview
+
+@Preview(name = "Settings Screen (Sky Light)")
 @Composable
 fun SettingsScreenLightPreview() {
     AppTheme(
         useDarkTheme = false,
         theme = SocialTheme.Sky
     ){
-        SettingsScreen()
+        Surface { SettingsScreen() }
     }
 }

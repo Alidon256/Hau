@@ -13,8 +13,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A screen for managing the user's primary email address.
+ *
+ * It provides status information (e.g., verification status) and allows the user
+ * to update their email. The email is used for account recovery and is not
+ * visible to other users.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun EmailAddressScreen(onBack: () -> Unit) {
     Scaffold(
@@ -96,18 +106,22 @@ fun EmailAddressScreen(onBack: () -> Unit) {
     }
 }
 
-@Preview(name = "Email Address (Dark)", showBackground = true)
+@Preview(name = "Email Address (Sky Dark)", showBackground = true)
 @Composable
 private fun EmailAddressScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
-        EmailAddressScreen {}
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            EmailAddressScreen {}
+        }
     }
 }
 
-@Preview(name = "Email Address (Light)", showBackground = true)
+@Preview(name = "Email Address (Sky Light)", showBackground = true)
 @Composable
 private fun EmailAddressScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
-        EmailAddressScreen {}
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            EmailAddressScreen {}
+        }
     }
 }

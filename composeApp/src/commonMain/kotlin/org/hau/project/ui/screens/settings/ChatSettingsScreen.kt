@@ -38,6 +38,15 @@ import org.hau.project.ui.theme.SocialTheme
 import org.hau.project.viewModels.LocalThemeViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A comprehensive screen for managing chat-related preferences and application appearance.
+ *
+ * It provides a modern interface for selecting the app's accent theme (Verdant, Sky, etc.),
+ * toggling dark mode, and configuring functional settings like "Enter is send" and
+ * media visibility.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun ChatSettingsScreen(
     onBack: () -> Unit
@@ -112,6 +121,10 @@ fun ChatSettingsScreen(
     }
 }
 
+/**
+ * A decorative card that holds the theme selection logic, including dark mode
+ * toggling and color swatch selection.
+ */
 @Composable
 fun ThemeSelectorCard(
     currentTheme: SocialTheme,
@@ -189,6 +202,10 @@ fun ThemeSelectorCard(
     }
 }
 
+/**
+ * A circular color swatch representing a specific [SocialTheme].
+ * It animates when selected to provide visual feedback.
+ */
 @Composable
 fun ThemeSwatch(
     theme: SocialTheme,
@@ -203,10 +220,10 @@ fun ThemeSwatch(
 
     // Define simple gradient for each theme
     val gradient = when (theme) {
-        SocialTheme.Verdant -> Brush.linearGradient(listOf(Color(0xFF075E54), Color(0xFF25D366)))
+        SocialTheme.Electric -> Brush.linearGradient(listOf(Color(0xFFFFFC00), Color(0xFF3CB2E2)))
         SocialTheme.Sky -> Brush.linearGradient(listOf(Color(0xFF1DA1F2), Color(0xFF657786)))
         SocialTheme.Twilight -> Brush.linearGradient(listOf(Color(0xFF833AB4), Color(0xFFE1306C)))
-        SocialTheme.Electric -> Brush.linearGradient(listOf(Color(0xFFFFFC00), Color(0xFF3CB2E2)))
+        SocialTheme.Verdant -> Brush.linearGradient(listOf(Color(0xFF075E54), Color(0xFF25D366)))
     }
 
     Column(
@@ -241,10 +258,22 @@ fun ThemeSwatch(
     }
 }
 
-@Preview(name = "Chat Settings Modern")
+@Preview(name = "Chat Settings (Sky Light)")
 @Composable
-private fun ChatSettingsScreenPreview() {
-    AppTheme {
-        ChatSettingsScreen({})
+private fun ChatSettingsScreenPreviewLight() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            ChatSettingsScreen({})
+        }
+    }
+}
+
+@Preview(name = "Chat Settings (Sky Dark)")
+@Composable
+private fun ChatSettingsScreenPreviewDark() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            ChatSettingsScreen({})
+        }
     }
 }

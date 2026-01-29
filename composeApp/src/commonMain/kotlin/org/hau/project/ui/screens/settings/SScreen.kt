@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,7 +41,20 @@ import org.hau.project.models.SettingsUser
 import org.hau.project.ui.components.Routes
 import org.hau.project.ui.components.SettingRow
 import org.hau.project.ui.components.SettingsUserItem
+import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A legacy or secondary Settings screen (SScreen) that displays a list of configuration
+ * categories and the current user's profile summary.
+ *
+ * This screen provides navigation to various subsections of the app settings such as
+ * Account, Privacy, Notifications, and Storage.
+ *
+ * @param navController The navigation controller used to route to different setting sections.
+ * @param onBackClick Callback invoked when the user navigates back from this screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SScreen(
@@ -113,12 +127,12 @@ fun SScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background, // Use theme background
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             Column {
                 TopAppBar(
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background, // Use surface color
+                        containerColor = MaterialTheme.colorScheme.background,
                         titleContentColor = MaterialTheme.colorScheme.onSurface,
                         actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -149,7 +163,7 @@ fun SScreen(
                 HorizontalDivider(
                     modifier = Modifier.fillMaxWidth(),
                     thickness = 1.dp,
-                    color = MaterialTheme.colorScheme.outlineVariant // Use theme color for dividers
+                    color = MaterialTheme.colorScheme.outlineVariant
                 )
             }
         }
@@ -174,6 +188,26 @@ fun SScreen(
                     onClick = item.onClick
                 )
             }
+        }
+    }
+}
+
+@Preview(name = "SScreen (Sky Light)")
+@Composable
+private fun SScreenPreviewLight() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            SScreen(onBackClick = {})
+        }
+    }
+}
+
+@Preview(name = "SScreen (Sky Dark)")
+@Composable
+private fun SScreenPreviewDark() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            SScreen(onBackClick = {})
         }
     }
 }

@@ -8,8 +8,6 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -18,10 +16,10 @@ import androidx.compose.ui.unit.dp
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.grattitude
 import kotlinx.coroutines.launch
+import org.hau.project.data.repositories.formatCount
 import org.hau.project.models.AttachmentType
 import org.hau.project.models.Channels
-import org.hau.project.ui.components.ChannelProfileTopBar
-import org.hau.project.ui.components.DangerSettingsRow
+import org.hau.project.ui.components.*
 import org.hau.project.ui.theme.AppTheme
 import org.hau.project.ui.theme.SocialTheme
 import org.hau.project.viewModels.ProfileUiState
@@ -47,6 +45,16 @@ enum class BottomSheetType {
     PRIVACY, VERIFIED
 }
 
+/**
+ * Displays the profile information for a channel, including its banner, avatar,
+ * follower count, and various settings/actions like muting or unfollowing.
+ *
+ * It uses a collapsible header effect that synchronizes with the scroll position
+ * of the content.
+ *
+ * @param uiState The current state of the profile, including channel data and loading status.
+ * @param onAction Callback for handling user interactions within the screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelProfileScreen(
@@ -56,7 +64,7 @@ fun ChannelProfileScreen(
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    var activeBottomSheet by remember { mutableStateOf<org.hau.project.ui.screens.memories.BottomSheetType?>(null) }
+    var activeBottomSheet by remember { mutableStateOf<BottomSheetType?>(null) }
     val modalSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     // Derived state for calculating scroll-based animations efficiently.
@@ -105,7 +113,7 @@ fun ChannelProfileScreen(
                 ) {
                     // --- HEADER: BANNER & AVATAR ---
                     item {
-                        _root_ide_package_.org.hau.project.ui.components.ProfileHeader(
+                        ProfileHeader(
                             bannerUrl = uiState.bannerUrl,
                             bannerHeight = bannerHeight,
                             avatarInitialSize = avatarInitialSize,
@@ -116,30 +124,28 @@ fun ChannelProfileScreen(
 
                     // --- INFO: NAME, FOLLOWERS, ACTIONS ---
                     item {
-                        _root_ide_package_.org.hau.project.ui.components.ChannelInfoSection(
+                        ChannelInfoSection(
                             channel = uiState.channel,
                             onShowVerified = {
-                                activeBottomSheet =
-                                    _root_ide_package_.org.hau.project.ui.screens.memories.BottomSheetType.VERIFIED
+                                activeBottomSheet = BottomSheetType.VERIFIED
                             }
                         )
                     }
 
                     item {
-                        _root_ide_package_.org.hau.project.ui.components.ActionButtonsRow()
+                        ActionButtonsRow()
                         Spacer(modifier = Modifier.height(16.dp))
                         HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant, thickness = 8.dp)
                     }
 
                     // --- SETTINGS & INFO LIST ---
                     item {
-                        _root_ide_package_.org.hau.project.ui.screens.memories.SettingsSection(
+                        SettingsSection(
                             mediaCount = uiState.mediaCount,
                             isMuted = uiState.isMuted,
                             onAction = onAction,
                             onShowPrivacy = {
-                                activeBottomSheet =
-                                    _root_ide_package_.org.hau.project.ui.screens.memories.BottomSheetType.PRIVACY
+                                activeBottomSheet = BottomSheetType.PRIVACY
                             }
                         )
                         HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant, thickness = 8.dp)
@@ -147,9 +153,7 @@ fun ChannelProfileScreen(
 
                     // --- DANGEROUS ACTIONS ---
                     item {
-                        _root_ide_package_.org.hau.project.ui.screens.memories.DangerChannelZoneSection(
-                            onAction
-                        )
+                        DangerChannelZoneSection(onAction)
                     }
                 }
             }
@@ -163,12 +167,12 @@ fun ChannelProfileScreen(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
             ) {
                 when (activeBottomSheet) {
-                    _root_ide_package_.org.hau.project.ui.screens.memories.BottomSheetType.VERIFIED -> _root_ide_package_.org.hau.project.ui.components.VerifiedInfoBottomSheet(
+                    BottomSheetType.VERIFIED -> VerifiedInfoBottomSheet(
                         onClose = {
                             coroutineScope.launch { modalSheetState.hide() }
                                 .invokeOnCompletion { activeBottomSheet = null }
                         })
-                    _root_ide_package_.org.hau.project.ui.screens.memories.BottomSheetType.PRIVACY -> _root_ide_package_.org.hau.project.ui.components.PrivacyInfoBottomSheet(
+                    BottomSheetType.PRIVACY -> PrivacyInfoBottomSheet(
                         onClose = {
                             coroutineScope.launch { modalSheetState.hide() }
                                 .invokeOnCompletion { activeBottomSheet = null }
@@ -180,7 +184,10 @@ fun ChannelProfileScreen(
     }
 }
 
-
+/**
+ * A section within the channel profile that lists general settings like media viewing,
+ * notification muting, and privacy information.
+ */
 @Composable
 private fun SettingsSection(
     mediaCount: Int,
@@ -189,28 +196,26 @@ private fun SettingsSection(
     onShowPrivacy: () -> Unit
 ) {
     Column {
-        _root_ide_package_.org.hau.project.ui.components.SettingsRow(
+        SettingsRow(
             icon = Icons.Outlined.PermMedia,
             text = "Media, Links, and Docs",
-            trailingText = _root_ide_package_.org.hau.project.data.repositories.formatCount(
-                mediaCount.toLong()
-            ),
-            onClick = { onAction(_root_ide_package_.org.hau.project.ui.screens.memories.ProfileAction.ViewMedia) }
+            trailingText = formatCount(mediaCount.toLong()),
+            onClick = { onAction(ProfileAction.ViewMedia) }
         )
-        _root_ide_package_.org.hau.project.ui.components.SettingsRow(
+        SettingsRow(
             icon = Icons.Outlined.Notifications,
             text = "Mute Notifications",
             isToggle = true,
             checked = isMuted,
-            onCheckedChange = { onAction(_root_ide_package_.org.hau.project.ui.screens.memories.ProfileAction.ToggleMute) }
+            onCheckedChange = { onAction(ProfileAction.ToggleMute) }
         )
-        _root_ide_package_.org.hau.project.ui.components.SettingsRow(
+        SettingsRow(
             icon = Icons.Outlined.Public,
             text = "Public Channel",
             description = "Anyone can find this channel and see what's been shared.",
             onClick = {} // Non-interactive for now
         )
-        _root_ide_package_.org.hau.project.ui.components.SettingsRow(
+        SettingsRow(
             icon = Icons.Outlined.Dialpad,
             text = "Profile Privacy",
             description = "This channel has added privacy for your profile and phone number.",
@@ -219,6 +224,10 @@ private fun SettingsSection(
     }
 }
 
+/**
+ * A section containing actions that could lead to significant changes, such as
+ * unfollowing or reporting the channel.
+ */
 @Composable
 fun DangerChannelZoneSection(onAction: (ProfileAction) -> Unit) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {

@@ -28,13 +28,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import hau.composeapp.generated.resources.*
 import org.hau.project.ui.theme.AppTheme
-import org.hau.project.ui.theme.SocialTheme // <-- CORRECTED: Use SocialTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-// --- STATE MANAGEMENT & DATA MODELS ---
-
+/**
+ * Data model representing a contact that can be selected for inclusion in a new group.
+ *
+ * @param id Unique identifier for the contact.
+ * @param resource Avatar image resource.
+ * @param name Display name.
+ * @param description Status or phone number.
+ * @param isSelected Current selection state.
+ */
 data class SelectableContact(
     val id: String,
     val resource: DrawableResource,
@@ -43,13 +50,28 @@ data class SelectableContact(
     val isSelected: Boolean = false
 )
 
+/**
+ * Encapsulates UI actions for the New Group creation flow.
+ */
 sealed interface NewGroupAction {
+    /** Toggles the selection state of a specific contact. */
     data class ToggleContact(val contactId: String) : NewGroupAction
 }
 
+/**
+ * A multi-step group creation screen.
+ *
+ * It allows users to search and select multiple contacts from their list. 
+ * Selected contacts are displayed in a horizontal row at the top for quick removal.
+ * A Floating Action Button (FAB) appears once at least one contact is selected to 
+ * proceed to the next step (e.g., naming the group).
+ *
+ * @param onBack Callback for navigating back to the previous screen.
+ * @param onContinue Callback invoked with the final list of selected contacts.
+ */
 @Composable
 fun NewGroupScreen(
-    onBack: () -> Unit ,
+    onBack: () -> Unit,
     onContinue: (List<SelectableContact>) -> Unit = {}
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -102,14 +124,13 @@ fun NewGroupScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
-                    // Use Material Icon
                     Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Continue")
                 }
             }
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            // --- SELECTED CONTACTS ROW ---
+            // --- SELECTED CONTACTS DISPLAY ---
             AnimatedVisibility(visible = selectedContacts.isNotEmpty()) {
                 LazyRow(
                     modifier = Modifier
@@ -127,7 +148,7 @@ fun NewGroupScreen(
                 }
             }
 
-            // --- CONTACT LIST ---
+            // --- ALL CONTACTS LIST ---
             LazyColumn(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -146,13 +167,11 @@ fun NewGroupScreen(
 }
 
 
-// --- UI SUB-COMPONENTS ---
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NewGroupTopAppBar(
     searchQuery: String,
-    onQueryChange: (String)-> Unit,
+    onQueryChange: (String) -> Unit,
     onBack: () -> Unit,
     selectedContactCount: Int
 ) {
@@ -171,7 +190,6 @@ private fun NewGroupTopAppBar(
         },
         navigationIcon = {
             IconButton(onClick = onBack) {
-                // Use Material Icon
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
         },
@@ -181,6 +199,9 @@ private fun NewGroupTopAppBar(
     )
 }
 
+/**
+ * A small avatar chip used to display and remove a selected contact.
+ */
 @Composable
 private fun SelectedContactChip(contact: SelectableContact, onRemove: () -> Unit) {
     Box(contentAlignment = Alignment.TopEnd) {
@@ -203,7 +224,7 @@ private fun SelectedContactChip(contact: SelectableContact, onRemove: () -> Unit
             )
         }
         Icon(
-            imageVector = Icons.Filled.Cancel, // Use Material Icon
+            imageVector = Icons.Filled.Cancel,
             contentDescription = "Remove ${contact.name}",
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
@@ -215,6 +236,9 @@ private fun SelectedContactChip(contact: SelectableContact, onRemove: () -> Unit
     }
 }
 
+/**
+ * A row item representing a contact with a checkbox-like selection state.
+ */
 @Composable
 private fun ContactSelectItem(contact: SelectableContact, onToggle: () -> Unit) {
     Row(
@@ -236,7 +260,7 @@ private fun ContactSelectItem(contact: SelectableContact, onToggle: () -> Unit) 
             )
             if (contact.isSelected) {
                 Icon(
-                    imageVector = Icons.Filled.CheckCircle, // Use Material Icon
+                    imageVector = Icons.Filled.CheckCircle,
                     contentDescription = "Selected",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
@@ -265,12 +289,10 @@ private fun ListHeader(text: String) {
 }
 
 
-// --- PREVIEWS ---
-
 @Preview(name = "New Group - Light (Verdant)", showBackground = true)
 @Composable
 private fun NewGroupScreenPreviewLight() {
-    AppTheme(theme = SocialTheme.Verdant, useDarkTheme = false) { // Use SocialTheme
+    AppTheme(theme = SocialTheme.Verdant, useDarkTheme = false) {
         Surface {
             NewGroupScreen(
                 onBack = {},
@@ -283,7 +305,7 @@ private fun NewGroupScreenPreviewLight() {
 @Preview(name = "New Group - Dark (Sky)", showBackground = true)
 @Composable
 private fun NewGroupScreenPreviewDark() {
-    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) { // Use SocialTheme
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
         Surface {
             NewGroupScreen(
                 onBack = {},
@@ -333,8 +355,6 @@ private fun ContactSelectItemPreviewUnselected() {
     }
 }
 
-
-// --- FAKE DATA FOR PREVIEW & DEVELOPMENT ---
 
 private fun getFakeContacts() = listOf(
     SelectableContact(

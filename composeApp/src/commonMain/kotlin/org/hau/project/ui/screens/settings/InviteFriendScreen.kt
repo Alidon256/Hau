@@ -21,8 +21,17 @@ import androidx.compose.ui.unit.dp
 import org.hau.project.ui.components.SettingsHeader
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A screen that facilitates inviting friends to the platform.
+ *
+ * It provides a way to share a general invite link and lists local contacts
+ * who are not yet on the app, allowing users to send individual invitations.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun InviteFriendScreen(onBack: () -> Unit) {
     val contactsToInvite = remember {
@@ -69,6 +78,9 @@ fun InviteFriendScreen(onBack: () -> Unit) {
     }
 }
 
+/**
+ * An individual contact entry in the invite list.
+ */
 @Composable
 private fun InviteContactItem(name: String, number: String) {
     Row(
@@ -112,7 +124,9 @@ private fun InviteContactItem(name: String, number: String) {
     }
 }
 
-// Overload SettingsInfoItem to accept an icon
+/**
+ * A reusable row for displaying an action with an icon.
+ */
 @Composable
 private fun SettingsInfoItem(
     icon: ImageVector,
@@ -141,18 +155,18 @@ private fun SettingsInfoItem(
 }
 
 
-@Preview(name = "Invite Friend (Dark)", showBackground = true)
+@Preview(name = "Invite Friend (Sky Dark)", showBackground = true)
 @Composable
 private fun InviteFriendScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
         InviteFriendScreen {}
     }
 }
 
-@Preview(name = "Invite Friend (Light)", showBackground = true)
+@Preview(name = "Invite Friend (Sky Light)", showBackground = true)
 @Composable
 private fun InviteFriendScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
         InviteFriendScreen {}
     }
 }

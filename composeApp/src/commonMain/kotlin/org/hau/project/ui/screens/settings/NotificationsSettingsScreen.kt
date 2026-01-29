@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,8 +22,18 @@ import org.hau.project.ui.components.SettingsInfoItem
 import org.hau.project.ui.components.SettingsSwitchItem
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A comprehensive screen for configuring app-wide notification behaviors.
+ *
+ * Users can toggle conversation tones, reminders, high-priority notifications,
+ * and reaction alerts. It also provides deep-dive settings for message, group,
+ * call, and status notification specificities like tones and vibration patterns.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun NotificationsSettingsScreen(onBack: () -> Unit) {
     var conversationTones by remember { mutableStateOf(true) }
@@ -122,18 +133,22 @@ fun NotificationsSettingsScreen(onBack: () -> Unit) {
     }
 }
 
-@Preview(name = "Notifications (Dark)", showBackground = true)
+@Preview(name = "Notifications (Sky Dark)", showBackground = true)
 @Composable
 private fun NotificationsSettingsScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
-        NotificationsSettingsScreen {}
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            NotificationsSettingsScreen {}
+        }
     }
 }
 
-@Preview(name = "Notifications (Light)", showBackground = true)
+@Preview(name = "Notifications (Sky Light)", showBackground = true)
 @Composable
 private fun NotificationsSettingsScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
-        NotificationsSettingsScreen {}
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            NotificationsSettingsScreen {}
+        }
     }
 }

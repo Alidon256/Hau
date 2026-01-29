@@ -34,42 +34,50 @@ import hau.composeapp.generated.resources.copy_two
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * The introductory onboarding screen for new users.
+ *
+ * This screen welcomes users with a high-impact background image and a "glass" style 
+ * bottom sheet containing a value proposition and the primary "Get Started" call to action.
+ * It also features "Powered by Hau" branding at the bottom.
+ */
 @Composable
-fun OnboardingUsage(){
+fun OnboardingUsage() {
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-    ){paddingValues ->
+        modifier = Modifier.fillMaxSize()
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
+            // 1. Hero Image: Takes up most of the top screen space
             Image(
-                modifier = Modifier
-                    .weight(0.7f),
+                modifier = Modifier.weight(0.7f),
                 painter = painterResource(Res.drawable.copy_two),
-                contentDescription = "Image Background",
+                contentDescription = "Welcome background",
                 contentScale = ContentScale.Crop
             )
+
+            // 2. Interactive Bottom Panel
             Box(
                 modifier = Modifier
                     .weight(0.3f)
                     .fillMaxWidth()
-                    .offset(y= (-20).dp)
+                    .offset(y = (-20).dp) // Slight upward offset to overlap with the image
                     .background(
                         Color.White,
-                        RoundedCornerShape(34.dp,34.dp)
+                        RoundedCornerShape(34.dp, 34.dp)
                     )
-            ){
+            ) {
                 Column(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
-                ){
+                ) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
@@ -85,8 +93,10 @@ fun OnboardingUsage(){
                         fontSize = 16.sp
                     )
                     Spacer(modifier = Modifier.height(20.dp))
+                    
+                    // Main CTA
                     ElevatedButton(
-                        onClick = {},
+                        onClick = { /* TODO: Navigate to Registration/Auth */ },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(85.dp)
@@ -94,33 +104,36 @@ fun OnboardingUsage(){
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF703EFF)
                         )
-                    ){
+                    ) {
                         Text(
                             text = "Get Started",
                             color = Color.White,
                             fontSize = 18.sp
                         )
                     }
+                    
                     Spacer(modifier = Modifier.weight(1f))
+                    
+                    // Branding / Footer
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
-                    ){
-                      Text(
-                          text = "Powered by",
-                          color = Color.Black
-                      )
+                    ) {
+                        Text(
+                            text = "Powered by",
+                            color = Color.Black
+                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
                             Icons.Outlined.Explore,
-                            contentDescription = "Usage Icon",
+                            contentDescription = "App logo icon",
                             tint = Color.Black
                         )
                         Text(
-                            text = "Usage",
+                            text = "Hau",
                             color = Color.Black,
                             fontWeight = FontWeight.Bold
                         )
@@ -128,12 +141,11 @@ fun OnboardingUsage(){
                 }
             }
         }
-
     }
 }
 
 @Preview
 @Composable
-fun OnboardingUsagePreview(){
-    _root_ide_package_.org.hau.project.ui.screens.auth.OnboardingUsage()
+fun OnboardingUsagePreview() {
+    OnboardingUsage()
 }

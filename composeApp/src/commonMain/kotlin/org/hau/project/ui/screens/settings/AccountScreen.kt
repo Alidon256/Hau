@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.PhoneForwarded
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,15 +27,27 @@ import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.components.NavDestinaton
 import org.hau.project.ui.components.Routes
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-// Data class to structure the settings items for clarity and maintainability
+/**
+ * Represents an individual entry in the account settings list.
+ */
 private data class AccountSettingsItem(
     val icon: ImageVector,
     val title: String,
     val destination: NavDestinaton
 )
 
+/**
+ * A screen for managing account-level security and administrative tasks.
+ *
+ * It provides a list of options including security notifications, passkeys,
+ * email management, two-step verification, and account deletion.
+ *
+ * @param navController The navigation controller used to route to specific account features.
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun AccountScreen(
     navController: NavController,
@@ -113,22 +126,26 @@ fun AccountScreen(
 
 // --- PREVIEWS ---
 
-@Preview(name = "Account Screen (Dark)", showBackground = true)
+@Preview(name = "Account Screen (Sky Dark)", showBackground = true)
 @Composable
 private fun AccountScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
-        AccountScreen(
-            navController = rememberNavController(),
-            onBack = {})
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            AccountScreen(
+                navController = rememberNavController(),
+                onBack = {})
+        }
     }
 }
 
-@Preview(name = "Account Screen (Light)", showBackground = true)
+@Preview(name = "Account Screen (Sky Light)", showBackground = true)
 @Composable
 private fun AccountScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
-        AccountScreen(
-            navController = rememberNavController(),
-            onBack = {})
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            AccountScreen(
+                navController = rememberNavController(),
+                onBack = {})
+        }
     }
 }

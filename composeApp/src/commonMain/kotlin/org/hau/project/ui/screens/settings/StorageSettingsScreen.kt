@@ -22,6 +22,7 @@ fun StorageSettingsScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = {
             SettingsTopAppBar(
+
                 "Storage and data", onBack
             )
         },

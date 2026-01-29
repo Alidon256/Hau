@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,7 +26,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A placeholder screen displayed when a user navigates to the "Add" section of memories.
+ *
+ * It features a playful bouncing icon animation to indicate that the section is
+ * currently empty or under development, providing a friendly and interactive 
+ * "empty state" experience.
+ */
 @Composable
 fun AddScreen(){
     Column(
@@ -61,5 +72,25 @@ fun AddScreen(){
             modifier = Modifier.padding(16.dp),
             textAlign = TextAlign.Center
         )
+    }
+}
+
+@Preview(name = "Add Screen (Sky Light)")
+@Composable
+private fun AddScreenPreviewLight() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            AddScreen()
+        }
+    }
+}
+
+@Preview(name = "Add Screen (Sky Dark)")
+@Composable
+private fun AddScreenPreviewDark() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            AddScreen()
+        }
     }
 }

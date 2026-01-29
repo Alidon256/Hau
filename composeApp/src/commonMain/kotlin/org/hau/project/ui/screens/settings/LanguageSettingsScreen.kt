@@ -14,8 +14,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A screen allowing users to change the application's display language.
+ *
+ * It lists available languages with their native and English names, allowing
+ * the user to select one via radio buttons.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun LanguageSettingsScreen(onBack: () -> Unit) {
     val languages = remember {
@@ -59,6 +68,9 @@ fun LanguageSettingsScreen(onBack: () -> Unit) {
     }
 }
 
+/**
+ * An individual language selection item.
+ */
 @Composable
 private fun LanguageItem(
     nativeName: String,
@@ -98,18 +110,18 @@ private fun LanguageItem(
     }
 }
 
-@Preview(name = "Language Settings (Dark)", showBackground = true)
+@Preview(name = "Language Settings (Sky Dark)", showBackground = true)
 @Composable
 private fun LanguageSettingsScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
         LanguageSettingsScreen {}
     }
 }
 
-@Preview(name = "Language Settings (Light)", showBackground = true)
+@Preview(name = "Language Settings (Sky Light)", showBackground = true)
 @Composable
 private fun LanguageSettingsScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
         LanguageSettingsScreen {}
     }
 }

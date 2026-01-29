@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.PersonPinCircle
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,13 +42,28 @@ import org.hau.project.ui.screens.memories.ChannelDetailScreen
 import org.hau.project.ui.screens.memories.ChannelProfileScreen
 import org.hau.project.ui.screens.memories.MemoriesScreen
 import org.hau.project.ui.screens.settings.*
+import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.hau.project.utils.WindowSize
 import org.hau.project.utils.rememberWindowSize
 import org.hau.project.viewModels.AdaptiveUiState
 import org.hau.project.viewModels.ChatViewModel
 import org.hau.project.viewModels.ProfileViewModel
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * The root adaptive UI component that manages the multi-pane layout for different screen sizes.
+ *
+ * This component utilizes a 4-pane system designed for expanded screens:
+ * 1. **Navigation Rail**: Vertical navigation for core app sections.
+ * 2. **List Pane**: Displays lists like Chats, Memories, or Settings.
+ * 3. **Detail Pane**: Shows the content of a selected item (e.g., message thread or setting details).
+ * 4. **Info Pane**: Provides supplementary information (e.g., user profiles or channel info).
+ *
+ * It dynamically adjusts its visibility based on [WindowSize], collapsing or expanding
+ * panes to provide an optimized experience across Mobile, Tablet, and Desktop.
+ */
 @Composable
 fun AdaptiveUi() {
     val windowSize = rememberWindowSize()
@@ -199,6 +215,9 @@ fun AdaptiveUi() {
     }
 }
 
+/**
+ * A simple vertical line used to separate different functional panes in the adaptive UI.
+ */
 @Composable
 fun VerticalPaneDivider() {
     Box(
@@ -244,3 +263,22 @@ private fun ChatDetailPlaceholder() {
     }
 }
 
+@Preview(name = "Adaptive UI - Light", widthDp = 1280, heightDp = 800)
+@Composable
+private fun AdaptiveUiPreviewLight() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            AdaptiveUi()
+        }
+    }
+}
+
+@Preview(name = "Adaptive UI - Dark", widthDp = 1280, heightDp = 800)
+@Composable
+private fun AdaptiveUiPreviewDark() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            AdaptiveUi()
+        }
+    }
+}

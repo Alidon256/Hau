@@ -2,9 +2,7 @@ package org.hau.project.ui.screens.memories
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -21,28 +19,30 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.grattitude
-import org.hau.project.ui.theme.AppTheme
 import org.jetbrains.compose.resources.painterResource
 
 /**
- * A modern, immersive screen for viewing "Memories" (Images shared in channels).
- * Uses a staggered grid layout for a highly visual, social-media-like experience.
+ * A dedicated gallery screen for viewing shared "Memories" (media shared within channels).
+ *
+ * This screen displays a collection of images using a staggered grid layout for a 
+ * premium, visually interesting browsing experience. It includes a built-in 
+ * fullscreen viewer with interaction capabilities.
+ *
+ * @param onBack Callback invoked when the user navigates back from the gallery.
+ * @param memories A list of image URLs to display in the gallery.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemoriesGalleryScreen(
     onBack: () -> Unit,
-    memories: List<String> = emptyList() // List of Image URLs
+    memories: List<String> = emptyList()
 ) {
     var selectedImageUrl by remember { mutableStateOf<String?>(null) }
 
@@ -83,7 +83,7 @@ fun MemoriesGalleryScreen(
             }
         }
 
-        // Reuse the FullscreenImageViewer when an item is clicked
+        // --- FULLSCREEN IMAGE OVERLAY ---
         AnimatedVisibility(
             visible = selectedImageUrl != null,
             enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
@@ -99,6 +99,9 @@ fun MemoriesGalleryScreen(
     }
 }
 
+/**
+ * Individual memory item wrapper for the staggered grid.
+ */
 @Composable
 private fun MemoryItem(imageUrl: String, onClick: () -> Unit) {
     Card(
@@ -110,7 +113,7 @@ private fun MemoryItem(imageUrl: String, onClick: () -> Unit) {
     ) {
         AsyncImage(
             model = imageUrl,
-            contentDescription = "Memory",
+            contentDescription = "Memory Image",
             modifier = Modifier.fillMaxWidth().wrapContentHeight(),
             contentScale = ContentScale.FillWidth,
             error = painterResource(Res.drawable.grattitude)
@@ -118,6 +121,9 @@ private fun MemoryItem(imageUrl: String, onClick: () -> Unit) {
     }
 }
 
+/**
+ * Immersive fullscreen overlay for viewing a single memory in high detail.
+ */
 @Composable
 private fun FullscreenMemoryOverlay(imageUrl: String, onClose: () -> Unit) {
     Box(
@@ -127,12 +133,11 @@ private fun FullscreenMemoryOverlay(imageUrl: String, onClose: () -> Unit) {
     ) {
         AsyncImage(
             model = imageUrl,
-            contentDescription = null,
+            contentDescription = "Fullscreen Memory",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Fit
         )
 
-        // Header
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -166,6 +171,9 @@ private fun FullscreenMemoryOverlay(imageUrl: String, onClose: () -> Unit) {
     }
 }
 
+/**
+ * Placeholder state for an empty gallery.
+ */
 @Composable
 private fun EmptyMemoriesState() {
     Column(

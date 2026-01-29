@@ -37,37 +37,37 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 /**
  * Represents the current phase of a call interaction within the application.
  */
-enum class CallUIState { 
+enum class CallUIState {
     /** The application is not currently in a call. */
-    IDLE, 
+    IDLE,
     /** A call is being initiated, typically showing a pulsing avatar or ringing UI. */
-    CALLING, 
+    CALLING,
     /** The call is active and currently in progress. */
-    ACTIVE 
+    ACTIVE
 }
 
 /**
  * Defines the supported communication mediums for calls.
  */
-enum class CallType { 
+enum class CallType {
     /** Standard voice communication. */
-    AUDIO, 
+    AUDIO,
     /** High-definition video and audio communication. */
-    VIDEO 
+    VIDEO
 }
 
 /**
  * The primary interface for private 1-on-1 chat conversations.
- * 
+ *
  * This screen is designed with adaptive principles, changing its behavior based on the current
  * [WindowSize]. It features:
  * 1.  **Immersive Messaging**: Utilizes [MessageBubble] with staggered spring animations for a premium feel.
- * 2.  **In-App Overlays**: On expanded screens, calls are managed via [ModernCallPanel] to keep the user 
+ * 2.  **In-App Overlays**: On expanded screens, calls are managed via [ModernCallPanel] to keep the user
  *     within the conversation context.
  * 3.  **Contextual Menus**: Attachment and Message actions are anchored directly to relevant UI elements.
- * 4.  **Adaptive Header**: Intelligently hides the back button on desktop/tablet layouts where pane-based 
+ * 4.  **Adaptive Header**: Intelligently hides the back button on desktop/tablet layouts where pane-based
  *     navigation is present.
- * 
+ *
  * @param viewModel The shared business logic provider for chat state and message retrieval.
  * @param chatId The unique identifier for the specific conversation to load.
  * @param onBack Callback for standard backward navigation, primarily used on mobile devices.
@@ -180,9 +180,9 @@ fun DetailScreen(
                             ) {
                                 DropdownMenuItem(
                                     text = { Text("Contact info") },
-                                    onClick = { 
+                                    onClick = {
                                         isTopMenuExpanded = false
-                                        chat?.id?.let { onUserInfoClick(it) } 
+                                        chat?.id?.let { onUserInfoClick(it) }
                                     }
                                 )
                                 DropdownMenuItem(
@@ -271,7 +271,7 @@ fun DetailScreen(
                 ) {
                     itemsIndexed(uiState.messages.reversed()) { index, message ->
                         var isMenuExpanded by remember { mutableStateOf(false) }
-                        
+
                         Box(Modifier.fillMaxWidth()) {
                             MessageBubble(
                                 message = message,
@@ -279,7 +279,7 @@ fun DetailScreen(
                                 showMeta = true,
                                 onLongPress = { isMenuExpanded = true }
                             )
-                            
+
                             // Anchor Message Actions locally to each individual bubble.
                             MessageActionMenu(
                                 expanded = isMenuExpanded,

@@ -16,9 +16,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
+/**
+ * A screen introducing "Passkeys" as a secure and modern alternative to traditional
+ * passwords.
+ *
+ * It educates users on the benefits of passkeys, such as biometric login (face/fingerprint)
+ * and safe storage in password managers, and provides a prominent action to create one.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun PasskeysScreen(onBack: () -> Unit) {
     Scaffold(
@@ -83,6 +92,9 @@ fun PasskeysScreen(onBack: () -> Unit) {
     }
 }
 
+/**
+ * A reusable row for displaying a benefit or feature of passkeys with an icon.
+ */
 @Composable
 private fun PasskeyBenefitItem(icon: ImageVector, text: String) {
     Row(
@@ -95,18 +107,18 @@ private fun PasskeyBenefitItem(icon: ImageVector, text: String) {
     }
 }
 
-@Preview(name = "Passkeys (Dark)", showBackground = true)
+@Preview(name = "Passkeys (Sky Dark)", showBackground = true)
 @Composable
 private fun PasskeysScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
         PasskeysScreen {}
     }
 }
 
-@Preview(name = "Passkeys (Light)", showBackground = true)
+@Preview(name = "Passkeys (Sky Light)", showBackground = true)
 @Composable
 private fun PasskeysScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
         PasskeysScreen {}
     }
 }

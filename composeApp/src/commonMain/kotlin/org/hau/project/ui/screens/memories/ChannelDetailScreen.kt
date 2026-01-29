@@ -43,12 +43,22 @@ import org.hau.project.models.MessageItem
 import org.hau.project.models.Poll
 import org.hau.project.models.PollOption
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.hau.project.utils.WindowSize
 import org.hau.project.utils.rememberWindowSize
 import org.hau.project.viewModels.ChatViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A detailed view of a specific channel, displaying its message history,
+ * allowing users to view media, interact with polls, and follow channel updates.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ * @param viewModel The [ChatViewModel] managing the channel's data and state.
+ * @param channelId The unique identifier of the channel to display.
+ * @param onChannelInfoClick Callback invoked when the channel's info/profile is clicked.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelDetailScreen(
@@ -160,6 +170,9 @@ fun ChannelDetailScreen(
     }
 }
 
+/**
+ * A fullscreen overlay for viewing images with zoom and pan capabilities.
+ */
 @Composable
 private fun FullscreenImageViewer(imageUrl: String, onClose: () -> Unit) {
     var scale by remember { mutableStateOf(1f) }
@@ -219,6 +232,9 @@ private fun FullscreenImageViewer(imageUrl: String, onClose: () -> Unit) {
     }
 }
 
+/**
+ * Wraps channel messages to handle alignment and special types like date dividers.
+ */
 @Composable
 private fun ChannelMessageWrapper(message: MessageItem, content: @Composable () -> Unit) {
     if (message.text?.contains("December") == true) {
@@ -235,6 +251,9 @@ private fun ChannelMessageWrapper(message: MessageItem, content: @Composable () 
     }
 }
 
+/**
+ * The top app bar for the channel detail screen, showing channel info and actions.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChannelTopBar(
@@ -293,6 +312,9 @@ private fun ChannelTopBar(
     )
 }
 
+/**
+ * A message bubble for displaying plain text and links.
+ */
 @Composable
 private fun TextMessageBubble(message: MessageItem) {
     Column(horizontalAlignment = Alignment.Start) {
@@ -326,6 +348,9 @@ private fun TextMessageBubble(message: MessageItem) {
     }
 }
 
+/**
+ * A message bubble for interactive polls.
+ */
 @Composable
 private fun PollMessageBubble(poll: Poll?, onVote: (optionId: Int) -> Unit) {
     if (poll == null) return
@@ -350,6 +375,9 @@ private fun PollMessageBubble(poll: Poll?, onVote: (optionId: Int) -> Unit) {
     }
 }
 
+/**
+ * An individual option within a poll, showing progress and vote count.
+ */
 @Composable
 private fun PollOptionItem(option: PollOption, totalVotes: Int, onVote: () -> Unit) {
     val progress = if (totalVotes > 0) option.votes.toFloat() / totalVotes.toFloat() else 0f
@@ -369,6 +397,9 @@ private fun PollOptionItem(option: PollOption, totalVotes: Int, onVote: () -> Un
     }
 }
 
+/**
+ * A message bubble for displaying images with an optional caption.
+ */
 @Composable
 private fun ImageMessageBubble(message: MessageItem, onImageClick: (String) -> Unit) {
     Box(
@@ -402,6 +433,9 @@ private fun ImageMessageBubble(message: MessageItem, onImageClick: (String) -> U
     }
 }
 
+/**
+ * Displays reactions (emojis) for a message.
+ */
 @Composable
 private fun Reactions(reactions: Map<String, Int>) {
     val visibleReactions = reactions.filter { it.value > 0 }.keys.joinToString("")
@@ -424,6 +458,9 @@ private fun Reactions(reactions: Map<String, Int>) {
     }
 }
 
+/**
+ * A simple divider used to group messages by date.
+ */
 @Composable
 private fun DateDivider(date: String) {
     Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) {
@@ -432,6 +469,42 @@ private fun DateDivider(date: String) {
             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         ) {
             Text(date, modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), style = MaterialTheme.typography.labelSmall)
+        }
+    }
+}
+
+@Preview(name = "Text Bubble (Sky Light)")
+@Composable
+private fun TextBubblePreviewLight() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
+        Surface {
+            TextMessageBubble(
+                MessageItem(
+                    id = 1,
+                    text = "Hello everyone! Welcome to our channel.",
+                    time = "10:30 AM",
+                    reactions = mapOf("👍" to 5, "❤️" to 2)
+                )
+            )
+        }
+    }
+}
+
+@Preview(name = "Poll Bubble (Sky Dark)")
+@Composable
+private fun PollBubblePreviewDark() {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
+        Surface {
+            PollMessageBubble(
+                poll = Poll(
+                    question = "What is your favorite color?",
+                    options = listOf(
+                        PollOption(1, "Blue", null, 10, true),
+                        PollOption(2, "Green", null, 5, false)
+                    )
+                ),
+                onVote = {}
+            )
         }
     }
 }

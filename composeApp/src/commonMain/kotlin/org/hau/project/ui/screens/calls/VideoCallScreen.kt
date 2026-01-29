@@ -29,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,43 +50,59 @@ import androidx.compose.ui.unit.sp
 import hau.composeapp.generated.resources.Res
 import hau.composeapp.generated.resources.image_large
 import hau.composeapp.generated.resources.image_small
+import org.hau.project.ui.theme.AppTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A high-fidelity video call screen featuring immersive background video, 
+ * a "glassmorphism" control panel, and a picture-in-picture style self-view.
+ *
+ * This screen demonstrates advanced Compose UI techniques including:
+ * 1. **Immersive Media**: Full-screen background image representing the remote caller.
+ * 2. **Glassmorphism**: Semi-transparent UI elements with vertical gradients to create 
+ *    depth and maintain context.
+ * 3. **Interactive Controls**: Real-time state management for mute, video, and speaker toggles.
+ * 4. **Self-View**: A floating, rounded-corner window for the local user's camera feed.
+ *
+ * @param onBack Callback triggered when the user navigates back from the call.
+ */
 @Composable
 fun VideoCallScreen(onBack: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
-        // 1. Background Image (The Doctor)
+        // 1. Background Image: Represents the main incoming video stream.
         Image(
             painter = painterResource(Res.drawable.image_large),
-            contentDescription = "Doctor on call",
+            contentDescription = "Incoming Video Stream",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
 
-        // 2. Top Bar Items
-        _root_ide_package_.org.hau.project.ui.screens.calls.TopBarContent(
+        // 2. Top Navigation and Self-View
+        TopBarContent(
             onBackClick = onBack,
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .padding(16.dp)
         )
 
-        // 3. Main Content Overlay (Bottom Sheet)
+        // 3. Control Panel Layer
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
         ) {
-            // This spacer pushes the content up from the bottom
             Spacer(modifier = Modifier.weight(1f))
 
-            // Glassmorphism Bottom UI
-            _root_ide_package_.org.hau.project.ui.screens.calls.GlassmorphismContent()
+            // Glassmorphism Control Section
+            GlassmorphismContent()
         }
     }
 }
 
+/**
+ * Top bar layout containing the back navigation and the local user's video preview.
+ */
 @Composable
 private fun TopBarContent(onBackClick: () -> Unit, modifier: Modifier = Modifier) {
     Row(
@@ -93,7 +110,7 @@ private fun TopBarContent(onBackClick: () -> Unit, modifier: Modifier = Modifier
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top
     ) {
-        // Back Button
+        // Circular Back Button with subtle border
         IconButton(
             onClick = onBackClick,
             colors = IconButtonDefaults.iconButtonColors(
@@ -107,16 +124,16 @@ private fun TopBarContent(onBackClick: () -> Unit, modifier: Modifier = Modifier
         ) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Go back"
+                contentDescription = "End call and go back"
             )
         }
 
-        // Patient's Self-View
+        // Picture-in-Picture: The local user's camera feed.
         Image(
             painter = painterResource(Res.drawable.image_small),
-            contentDescription = "My video feed",
+            contentDescription = "My camera preview",
             modifier = Modifier
-                .size( 120.dp)
+                .size(120.dp)
                 .border(
                     1.dp,
                     color = Color.White.copy(alpha = 0.2f),
@@ -127,6 +144,9 @@ private fun TopBarContent(onBackClick: () -> Unit, modifier: Modifier = Modifier
     }
 }
 
+/**
+ * A semi-transparent bottom container for call metadata and interaction buttons.
+ */
 @Composable
 private fun GlassmorphismContent() {
     Column(
@@ -134,7 +154,6 @@ private fun GlassmorphismContent() {
             .fillMaxWidth()
             .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
             .background(
-                // This brush creates the semi-transparent "glass" effect
                 Brush.verticalGradient(
                     colors = listOf(
                         Color.White.copy(alpha = 0.2f),
@@ -145,14 +164,15 @@ private fun GlassmorphismContent() {
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Caller Info Bar
-        _root_ide_package_.org.hau.project.ui.screens.calls.CallerInfoBar()
+        CallerInfoBar()
         Spacer(modifier = Modifier.height(24.dp))
-        // Action Buttons
-        _root_ide_package_.org.hau.project.ui.screens.calls.CallActionButtons()
+        CallActionButtons()
     }
 }
 
+/**
+ * Displays basic info about the remote participant and an active call timer.
+ */
 @Composable
 private fun CallerInfoBar() {
     Row(
@@ -161,7 +181,7 @@ private fun CallerInfoBar() {
     ) {
         Image(
             painter = painterResource(Res.drawable.image_large),
-            contentDescription = "Doctor Avatar",
+            contentDescription = "Caller Avatar",
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape),
@@ -181,7 +201,7 @@ private fun CallerInfoBar() {
                 fontSize = 14.sp
             )
         }
-        // Call Timer
+        // Active Status Indicator and Timer
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier
@@ -198,6 +218,9 @@ private fun CallerInfoBar() {
     }
 }
 
+/**
+ * A row of controls for managing the active video call session.
+ */
 @Composable
 private fun CallActionButtons() {
     var isMuted by remember { mutableStateOf(false) }
@@ -208,23 +231,21 @@ private fun CallActionButtons() {
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Mute Button
         ActionButton(
             icon = if (isMuted) Icons.Default.MicOff else Icons.Default.Mic,
-            contentDescription = if (isMuted) "Unmute" else "Mute",
+            contentDescription = if (isMuted) "Turn on microphone" else "Mute microphone",
             onClick = { isMuted = !isMuted }
         )
 
-        // Video Off Button
         ActionButton(
             icon = if (isVideoOff) Icons.Default.VideocamOff else Icons.Default.Videocam,
-            contentDescription = if (isVideoOff) "Turn Video On" else "Turn Video Off",
+            contentDescription = if (isVideoOff) "Turn on camera" else "Turn off camera",
             onClick = { isVideoOff = !isVideoOff }
         )
 
-        // End Call Button (Featured)
+        // Prominent End Call Action
         IconButton(
-            onClick = { /* End Call */ },
+            onClick = { /* TODO: Terminate call session */ },
             modifier = Modifier.size(64.dp),
             colors = IconButtonDefaults.iconButtonColors(
                 containerColor = Color.Red,
@@ -234,25 +255,26 @@ private fun CallActionButtons() {
             Icon(Icons.Default.CallEnd, contentDescription = "End Call", modifier = Modifier.size(32.dp))
         }
 
-        // Speaker Button
         ActionButton(
             icon = Icons.Outlined.VolumeUp,
-            contentDescription = "Speaker",
-            onClick = { /* Toggle Speaker */ }
+            contentDescription = "Toggle speakerphone",
+            onClick = { /* TODO: Toggle audio route */ }
         )
 
-        // Flip Camera Button
         ActionButton(
-            icon = Icons.Default.FlipCameraAndroid, // You need to add this vector asset
-            contentDescription = "Flip Camera",
-            onClick = { /* Flip Camera */ }
+            icon = Icons.Default.FlipCameraAndroid,
+            contentDescription = "Switch camera",
+            onClick = { /* TODO: Flip camera sensor */ }
         )
     }
 }
 
+/**
+ * A reusable, stylized action button for the call control panel.
+ */
 @Composable
 private fun ActionButton(
-    icon: Any, // Can be ImageVector or Painter
+    icon: Any, 
     contentDescription: String,
     onClick: () -> Unit
 ) {
@@ -274,7 +296,9 @@ private fun ActionButton(
 @Preview
 @Composable
 private fun VideoCallScreenPreview() {
-    MaterialTheme {
-        VideoCallScreen(onBack = {})
+    AppTheme {
+        Surface {
+            VideoCallScreen(onBack = {})
+        }
     }
 }

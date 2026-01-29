@@ -29,62 +29,80 @@ import org.hau.project.ui.theme.AppTheme
 import org.hau.project.utils.LocalWindowWidth
 import org.hau.project.viewModels.ThemeViewModel
 
-fun main() =application {
-        val state = rememberWindowState()
-        val settingsFactory = SettingsFactory()
+/**
+ * The main entry point for the JVM (Desktop) application.
+ *
+ * It initializes the application window, provides platform-specific dependencies
+ * like [SettingsFactory], and sets up the root [AppTheme] and navigation.
+ * The window is configured to be undecorated, utilizing a [CustomTitleBar] for
+ * window management.
+ */
+fun main() = application {
+    val state = rememberWindowState()
+    val settingsFactory = SettingsFactory()
 
-        Window(
-            onCloseRequest = ::exitApplication,
-            title = "Hau",
-            state = state,
-            alwaysOnTop = true,
-            icon = painterResource("icon.png"),
-            undecorated = true
+    Window(
+        onCloseRequest = ::exitApplication,
+        title = "Hau",
+        state = state,
+        alwaysOnTop = true,
+        icon = painterResource("icon.png"),
+        undecorated = true
+    ) {
+        val themeViewModel: ThemeViewModel = viewModel(
+            factory = ThemeViewModel.createFactory(settingsFactory)
+        )
+        val themeUiState by themeViewModel.uiState.collectAsState()
+
+        AppTheme(
+            theme = themeUiState.theme,
+            useDarkTheme = themeUiState.isDarkMode
         ) {
-            val themeViewModel: ThemeViewModel = viewModel(
-                factory = ThemeViewModel.createFactory(settingsFactory)
-            )
-            val themeUiState by themeViewModel.uiState.collectAsState()
-
-            AppTheme(
-                theme = themeUiState.theme,
-                useDarkTheme = themeUiState.isDarkMode
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
             ) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    CompositionLocalProvider(LocalWindowWidth provides state.size.width) {
-                        Column(Modifier.fillMaxSize()) {
-                            // --- CUSTOM TITLE BAR ---
-                            WindowDraggableArea {
-                                CustomTitleBar(
-                                    title = "Hau",
-                                    onMinimize = { state.isMinimized = true },
-                                    onMaximize = {
-                                        state.placement =
-                                            if (state.placement == WindowPlacement.Maximized) {
-                                                WindowPlacement.Floating
-                                            } else {
-                                                WindowPlacement.Maximized
-                                            }
-                                    },
-                                    onClose = { exitApplication() }
-                                )
-                            }
+                CompositionLocalProvider(LocalWindowWidth provides state.size.width) {
+                    Column(Modifier.fillMaxSize()) {
+                        // --- CUSTOM TITLE BAR ---
+                        WindowDraggableArea {
+                            CustomTitleBar(
+                                title = "Hau",
+                                onMinimize = { state.isMinimized = true },
+                                onMaximize = {
+                                    state.placement =
+                                        if (state.placement == WindowPlacement.Maximized) {
+                                            WindowPlacement.Floating
+                                        } else {
+                                            WindowPlacement.Maximized
+                                        }
+                                },
+                                onClose = { exitApplication() }
+                            )
+                        }
 
-                            // --- APP CONTENT ---
-                            Box(Modifier.weight(1f)) {
-                                App(settingsFactory)
-                            }
+                        // --- APP CONTENT ---
+                        Box(Modifier.weight(1f)) {
+                            App(settingsFactory)
                         }
                     }
                 }
             }
         }
     }
+}
 
-
+/**
+ * A custom implementation of a window title bar for undecorated desktop windows.
+ *
+ * Provides a draggable area, the application icon, title, and standard window 
+ * controls (Minimize, Maximize/Restore, Close).
+ *
+ * @param title The text to display in the title bar.
+ * @param onMinimize Callback to minimize the window.
+ * @param onMaximize Callback to toggle between maximized and floating states.
+ * @param onClose Callback to exit the application.
+ */
 @Composable
 fun CustomTitleBar(
     title: String,
@@ -126,6 +144,9 @@ fun CustomTitleBar(
     }
 }
 
+/**
+ * A reusable button for title bar actions.
+ */
 @Composable
 fun TitleBarButton(
     icon: ImageVector,
@@ -140,7 +161,7 @@ fun TitleBarButton(
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            modifier = Modifier.size(20.dp), // Slightly larger for better centering visual
+            modifier = Modifier.size(20.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }

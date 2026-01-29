@@ -1,9 +1,6 @@
 package org.hau.project.ui.screens.settings
 
 import androidx.compose.foundation.clickable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -11,14 +8,24 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.hau.project.ui.components.SettingsSwitchItem
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A screen explaining the application's security and encryption measures.
+ *
+ * It provides details on end-to-end encryption for various media types and allows
+ * users to toggle security-related notifications.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @Composable
 fun SecurityNotificationsScreen(onBack: () -> Unit) {
     var showNotifications by remember { mutableStateOf(true) }
@@ -110,6 +117,9 @@ fun SecurityNotificationsScreen(onBack: () -> Unit) {
     }
 }
 
+/**
+ * A simple row item used to list specific encrypted data types.
+ */
 @Composable
 private fun SecurityDetailItem(icon: ImageVector, text: String) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -118,18 +128,18 @@ private fun SecurityDetailItem(icon: ImageVector, text: String) {
     }
 }
 
-@Preview(name = "Security Notifications (Dark)", showBackground = true)
+@Preview(name = "Security Notifications (Sky Dark)", showBackground = true)
 @Composable
 private fun SecurityNotificationsScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
         SecurityNotificationsScreen {}
     }
 }
 
-@Preview(name = "Security Notifications (Light)", showBackground = true)
+@Preview(name = "Security Notifications (Sky Light)", showBackground = true)
 @Composable
 private fun SecurityNotificationsScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
         SecurityNotificationsScreen {}
     }
 }

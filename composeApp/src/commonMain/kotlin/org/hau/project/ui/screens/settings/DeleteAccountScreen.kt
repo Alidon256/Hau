@@ -14,8 +14,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.hau.project.ui.components.SettingsTopAppBar
 import org.hau.project.ui.theme.AppTheme
+import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A critical screen allowing users to permanently delete their account.
+ *
+ * It provides a stark warning about the consequences of deletion (data loss,
+ * group removal, etc.) and offers "Change Number" as a less destructive
+ * alternative. Deletion requires confirmation of the country and phone number.
+ *
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeleteAccountScreen(onBack: () -> Unit) {
@@ -110,18 +120,18 @@ fun DeleteAccountScreen(onBack: () -> Unit) {
 }
 
 
-@Preview(name = "Delete Account (Dark)", showBackground = true)
+@Preview(name = "Delete Account (Sky Dark)", showBackground = true)
 @Composable
 private fun DeleteAccountScreenDarkPreview() {
-    AppTheme(useDarkTheme = true) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = true) {
         DeleteAccountScreen {}
     }
 }
 
-@Preview(name = "Delete Account (Light)", showBackground = true)
+@Preview(name = "Delete Account (Sky Light)", showBackground = true)
 @Composable
 private fun DeleteAccountScreenLightPreview() {
-    AppTheme(useDarkTheme = false) {
+    AppTheme(theme = SocialTheme.Sky, useDarkTheme = false) {
         DeleteAccountScreen {}
     }
 }

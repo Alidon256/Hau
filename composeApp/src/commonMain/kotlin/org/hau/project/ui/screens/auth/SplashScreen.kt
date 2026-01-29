@@ -27,6 +27,16 @@ import org.hau.project.ui.theme.SocialTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * A visually engaging splash screen that serves as the entry point of the application.
+ *
+ * It features a fade-in animation for the application logo and a futuristic 
+ * pulsing loading indicator. The screen automatically triggers a callback 
+ * once the animation sequence is complete.
+ *
+ * @param onAnimationFinished Callback invoked when the splash animation concludes, 
+ * typically used to navigate to the next screen (e.g., Onboarding or Home).
+ */
 @Composable
 fun SplashScreen(onAnimationFinished: () -> Unit) {
     var startAnimation by remember { mutableStateOf(false) }
@@ -37,7 +47,6 @@ fun SplashScreen(onAnimationFinished: () -> Unit) {
         label = "Splash Alpha"
     )
 
-    // This effect triggers the animation and the callback
     LaunchedEffect(Unit) {
         startAnimation = true
         // Allow time for the animation to play before finishing.
@@ -49,13 +58,11 @@ fun SplashScreen(onAnimationFinished: () -> Unit) {
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        // Use a Column to position the indicator below the logo
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Your Logo
             Image(
                 painter = painterResource(Res.drawable.ic_launcher_playstore),
                 contentDescription = "Hau App Logo",
@@ -64,10 +71,9 @@ fun SplashScreen(onAnimationFinished: () -> Unit) {
                     .alpha(alphaAnimation.value)
             )
 
-            // The Pulsing Loading Indicator
             PulsingLoadingIndicator(
                 modifier = Modifier
-                    .size(80.dp) // A smaller size suitable for being under the logo
+                    .size(80.dp)
                     .alpha(alphaAnimation.value)
             )
         }
@@ -78,6 +84,10 @@ fun SplashScreen(onAnimationFinished: () -> Unit) {
 /**
  * A sleek, futuristic loading indicator featuring a central dot with three
  * orbiting ripple rings that animate outward in smooth, rhythmic pulses.
+ *
+ * @param modifier Custom modifier for the indicator.
+ * @param color The primary color for the ripples and dot.
+ * @param centralDotSize The diameter of the static central dot.
  */
 @Composable
 private fun PulsingLoadingIndicator(
@@ -89,16 +99,14 @@ private fun PulsingLoadingIndicator(
     val ripples = 3
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        // Render each ripple with a different animation delay
         for (i in 0 until ripples) {
             Ripple(
                 transition = transition,
                 color = color,
-                delay = i * 500 // Stagger the start of each ripple's animation
+                delay = i * 500
             )
         }
 
-        // Central Dot
         Canvas(modifier = Modifier.matchParentSize()) {
             drawCircle(
                 color = color,
@@ -108,6 +116,9 @@ private fun PulsingLoadingIndicator(
     }
 }
 
+/**
+ * A single animated ripple circle used within the [PulsingLoadingIndicator].
+ */
 @Composable
 private fun Ripple(
     transition: InfiniteTransition,
@@ -127,15 +138,14 @@ private fun Ripple(
         label = "Ripple Animation"
     )
 
-    // Delay the effective animation value for each ripple
     val effectiveValue = (animationValue - (delay / 2000f)).let {
         if (it < 0) it + 1 else it
     }
 
     val easedValue = FastOutSlowInEasing.transform(effectiveValue)
-    val animatedRadius = easedValue * 40f // Max radius based on the smaller size
-    val animatedStrokeWidth = (1f - easedValue) * 6f // Stroke gets thinner as it expands
-    val animatedAlpha = (1f - easedValue) * 0.8f // Ripple fades out as it expands
+    val animatedRadius = easedValue * 40f
+    val animatedStrokeWidth = (1f - easedValue) * 6f
+    val animatedAlpha = (1f - easedValue) * 0.8f
 
     val brush = Brush.radialGradient(
         colors = listOf(color.copy(alpha = 0f), color.copy(alpha = animatedAlpha))
@@ -149,9 +159,6 @@ private fun Ripple(
         )
     }
 }
-
-
-// --- PREVIEWS ---
 
 @Preview(name = "Splash Screen - Light", showBackground = true)
 @Composable
