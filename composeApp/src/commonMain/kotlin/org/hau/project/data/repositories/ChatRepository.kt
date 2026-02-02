@@ -297,7 +297,113 @@ open class ChatRepository {
                     text = "Okay, sounds good.",
                     time = "10:15 AM",
                     status = MessageStatus.READ
-                )
+                ),
+                Message(
+                        "m2_1",
+                sender = MessageSender.Them,
+                text = "Did you get the project update I sent?",
+                time = "9:30 AM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_2",
+                sender = MessageSender.Me,
+                text = "Yes, I just saw it. Looks good, thanks for the hard work!",
+                time = "9:45 AM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_3",
+                sender = MessageSender.Them,
+                text = "Great! Let me know if you have any feedback.",
+                time = "9:46 AM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_4",
+                sender = MessageSender.Me,
+                text = "Will do. I'll review it in detail this afternoon.",
+                time = "9:50 AM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_5",
+                sender = MessageSender.Them,
+                text = "Okay, sounds good.",
+                time = "10:15 AM",
+                status = MessageStatus.READ
+            ),
+            // --- Additional 10 Messages for a "Top-Notch" Conversation Flow ---
+            Message(
+                "m2_6",
+                sender = MessageSender.Me,
+                text = "I just finished the review. The new navigation logic is brilliant.",
+                time = "2:15 PM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_7",
+                sender = MessageSender.Me,
+                text = "One small thing: the transition on the 'Settings' screen feels a bit sluggish on low-end devices.",
+                time = "2:16 PM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_8",
+                sender = MessageSender.Them,
+                text = "Ah, I suspected that. It's likely the heavy blur effect I used in the background.",
+                time = "2:18 PM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_9",
+                sender = MessageSender.Them,
+                text = "Should I swap it for a simple solid color surface?",
+                time = "2:18 PM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_10",
+                sender = MessageSender.Me,
+                text = "Maybe just lower the sampling rate first. We don't want to lose that premium feel.",
+                time = "2:20 PM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_11",
+                sender = MessageSender.Them,
+                text = "Good point. I'll optimize the shader and push a fix by EOD.",
+                time = "2:22 PM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_12",
+                sender = MessageSender.Me,
+                text = "Perfect. Also, the stakeholders loved the new 'Hau' branding you integrated into the header.",
+                time = "2:25 PM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_13",
+                sender = MessageSender.Them,
+                text = "That's a relief! I was worried the blue might be too 'Electric' for them.",
+                time = "2:26 PM",
+                status = MessageStatus.READ
+            ),
+            Message(
+                "m2_14",
+                sender = MessageSender.Me,
+                text = "It's just right. Let's touch base tomorrow morning to finalize the build.",
+                time = "2:30 PM",
+                status = MessageStatus.DELIVERED
+            ),
+            Message(
+                "m2_15",
+                sender = MessageSender.Them,
+                text = "Deal. Catch you later! 👋",
+                time = "2:32 PM",
+                status = MessageStatus.SENT
+            )
             ),
             "3" to listOf(
                 // Conversation with John Smith
@@ -350,6 +456,77 @@ open class ChatRepository {
                     time = "Yesterday",
                     status = MessageStatus.READ
                 ),
+                // --- Additional 10 Messages ---
+                Message(
+                    "m3_8",
+                    sender = MessageSender.Me,
+                    text = "Just sent the .env template to your email. Check the 'AUTH_V2' key.",
+                    time = "Yesterday",
+                    status = MessageStatus.READ
+                ),
+                Message(
+                    "m3_9",
+                    sender = MessageSender.Them,
+                    text = "Got it! Let me try it out real quick.",
+                    time = "Yesterday",
+                    status = MessageStatus.READ
+                ),
+                Message(
+                    "m3_10",
+                    sender = MessageSender.Them,
+                    text = "Works perfectly now! Thanks for saving my afternoon 🚀",
+                    time = "Yesterday",
+                    status = MessageStatus.READ
+                ),
+                Message(
+                    "m3_11",
+                    sender = MessageSender.Me,
+                    text = "No worries. Are you going to be at the sprint planning later?",
+                    time = "Yesterday",
+                    status = MessageStatus.READ
+                ),
+                Message(
+                    "m3_12",
+                    sender = MessageSender.Them,
+                    text = "Yeah, I'll be there. I want to demo the new profile navigation we built.",
+                    time = "Yesterday",
+                    status = MessageStatus.READ
+                ),
+                Message(
+                    "m3_13",
+                    sender = MessageSender.Me,
+                    text = "Great. I saw the PR, the animations look very smooth on Desktop.",
+                    time = "Yesterday",
+                    status = MessageStatus.READ
+                ),
+                Message(
+                    "m3_14",
+                    sender = MessageSender.Them,
+                    text = "Thanks! I spent way too long tweaking those spring specs lol.",
+                    time = "Yesterday",
+                    status = MessageStatus.READ
+                ),
+                Message(
+                    "m3_15",
+                    sender = MessageSender.Me,
+                    text = "It paid off! See you in the meeting room at 3 PM.",
+                    time = "Yesterday",
+                    status = MessageStatus.READ
+                ),
+                Message(
+                    "m3_16",
+                    sender = MessageSender.Them,
+                    text = "Wait, is it in Room A or is it remote today?",
+                    time = "Yesterday",
+                    status = MessageStatus.READ
+                ),
+                Message(
+                    "m3_17",
+                    sender = MessageSender.Me,
+                    text = "It's hybrid, but most of the lead team is in Room A. See ya!",
+                    time = "Yesterday",
+                    status = MessageStatus.SENT
+                )
             ),
             "default" to listOf(
                 Message(
